@@ -20,29 +20,6 @@ services:
       retries: 5
       start_period: 30s
 
-  dgpt_proxy_api:
-    container_name: dgpt_proxy_api
-    build:
-      context: .
-      dockerfile: apps/api/Dockerfile
-    restart: always
-    environment:
-      DATABASE_URL: postgresql://dgpt:test1234@dgpt_db:5432/dgpt
-      API_BASE_URL: http://127.0.0.1:3002
-    ports:
-      - '3002:3000'
-    networks:
-      - postgres_network
-    depends_on:
-      dgpt_db:
-        condition: service_healthy
-    healthcheck:
-      test: ['CMD-SHELL', 'curl http://127.0.0.1:3000/health']
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
-
 networks:
   postgres_network:
     driver: bridge

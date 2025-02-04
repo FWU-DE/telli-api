@@ -4,14 +4,16 @@ import { initSwagger } from "./swagger";
 import cors from "@fastify/cors";
 import fastifyMultipart from "@fastify/multipart";
 
+const nodeEnv = process.env.NODE_ENV ?? "development";
+
 async function main() {
   const fastify = Fastify({
     logger: true,
   });
 
   await fastify.register(cors, {
-    origin: "*",
-    // origin: [env.NEXT_PUBLIC_baseUrl],
+    // TODO: uncomment if you want to enable cors
+    // origin: "*",
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   });
@@ -31,8 +33,7 @@ async function main() {
 
   fastify.listen(
     {
-      port:
-        process.env.NODE_ENV ?? "development" === "development" ? 3002 : 3000,
+      port: nodeEnv === "development" ? 3002 : 3000,
       host: "0.0.0.0",
     },
     (err, address) => {

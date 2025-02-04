@@ -2,3 +2,4 @@
 **/.next/**
 .turbo/
 .env*
+!.env.example

@@ -6,7 +6,7 @@ import { completionRequestSchemaSwagger } from "./routes/(app)/v1/chat/completio
 import { modelRequestSwaggerSchema } from "./routes/(app)/v1/models/swagger-schema";
 import { usageRequestSwaggerSchema } from "./routes/(app)/v1/usage/swagger-schemas";
 
-type RouteHandlerDefinition = {
+export type RouteHandlerDefinition = {
   path: string;
   method: "GET" | "POST" | "PUT" | "DELETE";
   schema?: object;
@@ -25,7 +25,7 @@ export const healthSchema = {
   },
 };
 
-const routeHandlerDefinitions: Array<RouteHandlerDefinition> = [
+export const routeHandlerDefinitions: Array<RouteHandlerDefinition> = [
   {
     path: "/health",
     method: "GET",
@@ -57,19 +57,19 @@ const routeHandlerDefinitions: Array<RouteHandlerDefinition> = [
 export function constructHandlers(fastify: FastifyInstance) {
   for (const def of routeHandlerDefinitions) {
     if (def.method === "GET") {
-      fastify.get(def.path, { schema: def.schema }, def.handler);
+      fastify.get(def.path, def.handler);
       continue;
     }
     if (def.method === "PUT") {
-      fastify.put(def.path, { schema: def.schema }, def.handler);
+      fastify.put(def.path, def.handler);
       continue;
     }
     if (def.method === "POST") {
-      fastify.post(def.path, { schema: def.schema }, def.handler);
+      fastify.post(def.path, def.handler);
       continue;
     }
     if (def.method === "DELETE") {
-      fastify.delete(def.path, { schema: def.schema }, def.handler);
+      fastify.delete(def.path, def.handler);
       continue;
     }
   }

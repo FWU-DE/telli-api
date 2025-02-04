@@ -1,0 +1,279 @@
+openapi: 3.0.0
+info:
+  title: DeutschlandGPT API Documentation
+  description: DeutschlandGPT API Swagger Documentation.
+  version: 0.1.0
+
+servers:
+  - url: ${API_BASE_URL}
+    description: DGPT API Server
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+
+externalDocs:
+  url: ${API_BASE_URL}
+  description: Find more info here
+
+paths:
+  "/health":
+    get:
+      response:
+        '200':
+          type: object
+          properties:
+            status:
+              type: string
+              default: OK
+          required:
+          - status
+  "/v1/chat/completions":
+    post:
+      response:
+        '200':
+          type: object
+          description: Default response
+          properties:
+            id:
+              type: string
+            object:
+              type: string
+              default: chat.completion
+            created:
+              type: number
+            model:
+              type: string
+            choices:
+              type: array
+              items:
+                type: object
+                properties:
+                  index:
+                    type: number
+                  message:
+                    type: object
+                    properties:
+                      role:
+                        type: string
+                        enum:
+                        - system
+                        - user
+                        - assistant
+                      content:
+                        type: string
+                  finish_reason:
+                    type: string
+            usage:
+              type: object
+              properties:
+                prompt_tokens:
+                  type: number
+                completion_tokens:
+                  type: number
+                total_tokens:
+                  type: number
+        '400':
+          type: object
+          description: Bad request
+          properties:
+            error:
+              type: string
+        '401':
+          type: object
+          description: Unauthorized
+          properties:
+            error:
+              type: string
+        '403':
+          type: object
+          description: Forbidden
+          properties:
+            error:
+              type: string
+        '404':
+          type: object
+          description: Not found
+          properties:
+            error:
+              type: string
+        '429':
+          type: object
+          description: Too many requests / Budget limit reached
+          properties:
+            error:
+              type: string
+        '500':
+          type: object
+          description: Internal server error
+          properties:
+            error:
+              type: string
+            details:
+              type: string
+      body:
+        type: object
+        properties:
+          model:
+            type: string
+          messages:
+            type: array
+            items:
+              type: object
+              properties:
+                role:
+                  type: string
+                  enum:
+                  - system
+                  - user
+                  - assistant
+                content:
+                  type: string
+              required:
+              - role
+              - content
+          max_tokens:
+            type: number
+            nullable: true
+          temperature:
+            type: number
+            default: 1
+          stream:
+            type: boolean
+        required:
+        - model
+        - messages
+      headers:
+        type: object
+        properties:
+          Authorization:
+            type: string
+            description: Bearer token for authorization
+        required:
+        - Authorization
+  "/v1/models":
+    get:
+      response:
+        '200':
+          type: array
+          description: Default response
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              name:
+                type: string
+              createdAt:
+                type: string
+                format: date-time
+              provider:
+                type: string
+              displayName:
+                type: string
+              description:
+                type: string
+        '400':
+          type: object
+          description: Bad request
+          properties:
+            error:
+              type: string
+        '401':
+          type: object
+          description: Unauthorized
+          properties:
+            error:
+              type: string
+        '403':
+          type: object
+          description: Forbidden
+          properties:
+            error:
+              type: string
+        '404':
+          type: object
+          description: Not found
+          properties:
+            error:
+              type: string
+        '429':
+          type: object
+          description: Too many requests / Budget limit reached
+          properties:
+            error:
+              type: string
+        '500':
+          type: object
+          description: Internal server error
+          properties:
+            error:
+              type: string
+            details:
+              type: string
+      headers:
+        type: object
+        properties:
+          Authorization:
+            type: string
+            description: Bearer token for authorization
+        required:
+        - Authorization
+  "/v1/usage":
+    get:
+      response:
+        '200':
+          type: object
+          properties:
+            remainingLimitInCent:
+              type: number
+            limitInCent:
+              type: number
+        '400':
+          type: object
+          description: Bad request
+          properties:
+            error:
+              type: string
+        '401':
+          type: object
+          description: Unauthorized
+          properties:
+            error:
+              type: string
+        '403':
+          type: object
+          description: Forbidden
+          properties:
+            error:
+              type: string
+        '404':
+          type: object
+          description: Not found
+          properties:
+            error:
+              type: string
+        '429':
+          type: object
+          description: Too many requests / Budget limit reached
+          properties:
+            error:
+              type: string
+        '500':
+          type: object
+          description: Internal server error
+          properties:
+            error:
+              type: string
+            details:
+              type: string
+      headers:
+        type: object
+        properties:
+          Authorization:
+            type: string
+            description: Bearer token for authorization
+        required:
+        - Authorization

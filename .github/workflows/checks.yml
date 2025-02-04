@@ -1,0 +1,35 @@
+name: Basic Checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  checks:
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set timezone
+        run: sudo timedatectl set-timezone Europe/Warsaw
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Install PNPM
+        run: npm i -g pnpm@9.12.3
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Check formatting
+        run: pnpm format:check
+
+      - name: Check types
+        run: pnpm types

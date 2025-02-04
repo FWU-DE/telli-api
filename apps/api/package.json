@@ -1,0 +1,35 @@
+{
+  "name": "@dgpt/api",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "NODE_ENV=development dotenv -e ../../.env -- tsx src/index.ts",
+    "clean": "find . -type d \\( -name node_modules -o -name dist -o -name .next \\) -not -path \"./.vercel/*\" -prune -exec rm -rf {} \\;",
+    "start": "NODE_ENV=production dotenv -e ../../.env -- tsx src/index.ts",
+    "build": "node build.js",
+    "lint": "tsc --noEmit && eslint \"src/**/*.ts*\" --max-warnings 0",
+    "types": "tsc --noEmit",
+    "test": "jest --detectOpenHandles"
+  },
+  "packageManager": "pnpm@9.12.3",
+  "dependencies": {
+    "@dgpt/db": "workspace:*",
+    "@dgpt/utils": "workspace:*",
+    "@fastify/cors": "10.0.2",
+    "@fastify/multipart": "9.0.2",
+    "@fastify/swagger": "9.4.2",
+    "@fastify/swagger-ui": "5.2.1",
+    "fastify": "5.2.1",
+    "openai": "4.80.1",
+    "tsx": "4.19.2",
+    "zod": "3.24.1"
+  },
+  "devDependencies": {
+    "@dgpt/eslint-config": "workspace:*",
+    "@dgpt/typescript-config": "workspace:*",
+    "@types/node": "20.11.24",
+    "dotenv-cli": "8.0.0",
+    "eslint": "8.57.0",
+    "typescript": "5.5.4"
+  }
+}

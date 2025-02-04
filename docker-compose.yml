@@ -1,0 +1,29 @@
+services:
+  dgpt_db:
+    image: postgres:16
+    container_name: dgpt_db
+    restart: always
+    environment:
+      POSTGRES_DB: dgpt
+      POSTGRES_USER: dgpt
+      POSTGRES_PASSWORD: test1234
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - '6543:5432'
+    networks:
+      - postgres_network
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U dgpt -d dgpt']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+networks:
+  postgres_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local

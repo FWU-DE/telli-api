@@ -1,0 +1,30 @@
+{
+  "name": "dgpt",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "start": "turbo run start",
+    "start:api": "turbo run start -F @dgpt/api",
+    "clean": "find . -type d \\( -name node_modules -o -name dist -o -name .next \\) -not -path \"./.vercel/*\" -prune -exec rm -rf {} \\;",
+    "dev": "turbo run dev",
+    "dev:api": "dotenv -e .env -- turbo run dev -F @dgpt/api",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,md}\"",
+    "types": "turbo run types",
+    "lint": "turbo run lint",
+    "test": "turbo run test"
+  },
+  "dependencies": {
+    "dotenv-cli": "8.0.0"
+  },
+  "devDependencies": {
+    "prettier": "3.2.5",
+    "turbo": "2.3.3"
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=7.0.0"
+  },
+  "packageManager": "pnpm@9.12.3"
+}

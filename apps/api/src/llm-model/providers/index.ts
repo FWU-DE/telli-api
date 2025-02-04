@@ -1,16 +1,13 @@
 import { LlmModel } from "@dgpt/db";
-import { getIonosCompletion, getIonosCompletionStream } from "./ionos";
-import { CommonLlmProviderStreamParameter } from "../types";
-import { getOpenAICompletion, getOpenAICompletionStream } from "./openai";
-import OpenAI from "openai";
-
-type CompletionStreamFn = (
-  param: CommonLlmProviderStreamParameter,
-) => Promise<ReadableStream<any>>;
-
-type CompletionFn = (
-  param: OpenAI.Chat.Completions.ChatCompletionCreateParamsNonStreaming,
-) => Promise<OpenAI.Chat.Completions.ChatCompletion>;
+import {
+  constructIonosCompletionFn,
+  constructIonosCompletionStreamFn,
+} from "./ionos";
+import { CompletionFn, CompletionStreamFn } from "../types";
+import {
+  constructOpenAiCompletionFn,
+  constructOpenAiCompletionStreamFn,
+} from "./openai";
 
 export function getCompletionStreamFnByModel({
   model,
@@ -18,10 +15,10 @@ export function getCompletionStreamFnByModel({
   model: LlmModel;
 }): CompletionStreamFn | undefined {
   if (model.provider === "ionos") {
-    return getIonosCompletionStream;
+    return constructIonosCompletionStreamFn(model);
   }
   if (model.provider === "openai") {
-    return getOpenAICompletionStream;
+    return constructOpenAiCompletionStreamFn(model);
   }
 
   return undefined;
@@ -33,10 +30,10 @@ export function getCompletionFnByModel({
   model: LlmModel;
 }): CompletionFn | undefined {
   if (model.provider === "ionos") {
-    return getIonosCompletion;
+    return constructIonosCompletionFn(model);
   }
   if (model.provider === "openai") {
-    return getOpenAICompletion;
+    return constructOpenAiCompletionFn(model);
   }
 
   return undefined;

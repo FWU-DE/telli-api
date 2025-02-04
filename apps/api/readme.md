@@ -14,6 +14,6 @@ The server listens on `http://127.0.0.1:3002` per default.
 
 Swagger docs will be served here: `http://127.0.0.1:3002`.
 
-## tooling 
+## tooling
 
 We use [fastify](https://fastify.dev/) as our web framework.

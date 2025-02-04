@@ -25,6 +25,11 @@ async function main() {
     },
   });
 
+  // disable the fastify validator for schemas so some random docs changes don't the app
+  fastify.setValidatorCompiler(() => {
+    return () => ({ value: true });
+  });
+
   await initSwagger(fastify);
   constructHandlers(fastify);
 

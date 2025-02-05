@@ -64,10 +64,12 @@ export async function handler(
   const requestParseResult = completionRequestSchema.safeParse(request.body);
 
   if (!requestParseResult.success) {
-    reply.send({
-      error: "Bad request",
-      details: requestParseResult.error.message,
-    });
+    reply
+      .send({
+        error: "Bad request",
+        details: requestParseResult.error.message,
+      })
+      .status(404);
     return;
   }
 

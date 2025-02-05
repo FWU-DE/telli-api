@@ -26,10 +26,8 @@ async function main() {
     },
   });
 
-  // disable the fastify validator for schemas so some random docs changes don't the app
-  fastify.setValidatorCompiler(({ url, schema }) => {
-    console.debug({ url, schema });
-    return () => ({ value: true });
+  fastify.setSerializerCompiler(({}) => {
+    return (data) => JSON.stringify(data);
   });
 
   await initSwagger(fastify);

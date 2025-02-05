@@ -57,19 +57,19 @@ export const routeHandlerDefinitions: Array<RouteHandlerDefinition> = [
 export function constructHandlers(fastify: FastifyInstance) {
   for (const def of routeHandlerDefinitions) {
     if (def.method === "GET") {
-      fastify.get(def.path, def.handler);
+      fastify.get(def.path, { schema: def.schema }, def.handler);
       continue;
     }
     if (def.method === "PUT") {
-      fastify.put(def.path, def.handler);
+      fastify.put(def.path, { schema: def.schema }, def.handler);
       continue;
     }
     if (def.method === "POST") {
-      fastify.post(def.path, def.handler);
+      fastify.post(def.path, { schema: def.schema }, def.handler);
       continue;
     }
     if (def.method === "DELETE") {
-      fastify.delete(def.path, def.handler);
+      fastify.delete(def.path, { schema: def.schema }, def.handler);
       continue;
     }
   }

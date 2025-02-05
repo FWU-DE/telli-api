@@ -6,7 +6,7 @@ export function generateOpenApiPaths(
   const result = routes.reduce(
     (paths, route) => {
       const { path, method, schema } = route;
-      const lowerMethod = method.toLowerCase(); // Convert method to lowercase (OpenAPI spec uses lowercase)
+      const lowerMethod = method.toLowerCase();
 
       if (!paths[path]) {
         paths[path] = {};
@@ -20,7 +20,6 @@ export function generateOpenApiPaths(
     },
     {} as Record<string, any>,
   );
-  console.debug({ result: JSON.stringify(result) });
 
   return result;
 }

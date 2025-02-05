@@ -9,6 +9,7 @@ const nodeEnv = process.env.NODE_ENV ?? "development";
 async function main() {
   const fastify = Fastify({
     logger: true,
+    ajv: { customOptions: { strict: false } },
   });
 
   await fastify.register(cors, {
@@ -25,9 +26,8 @@ async function main() {
     },
   });
 
-  // disable the fastify validator for schemas so some random docs changes don't the app
-  fastify.setValidatorCompiler(() => {
-    return () => ({ value: true });
+  fastify.setSerializerCompiler(({}) => {
+    return (data) => JSON.stringify(data);
   });
 
   await initSwagger(fastify);

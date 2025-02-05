@@ -2,7 +2,7 @@ export const completionSchema = {
   body: {
     type: "object",
     properties: {
-      model: { type: "string", enum: ["dgpt-1.1"] },
+      model: { type: "string" },
       messages: {
         type: "array",
         items: {

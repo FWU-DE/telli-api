@@ -5,7 +5,7 @@ export const SWAGGER_DEFAULT_RESPONSES_SCHEMA = {
     properties: {
       error: { type: "string" },
     },
-    required: ["error"],
+    // required: ["error"],
   },
   401: {
     type: "object",
@@ -13,7 +13,7 @@ export const SWAGGER_DEFAULT_RESPONSES_SCHEMA = {
     properties: {
       error: { type: "string" },
     },
-    required: ["error"],
+    // required: ["error"],
   },
   403: {
     type: "object",
@@ -21,7 +21,7 @@ export const SWAGGER_DEFAULT_RESPONSES_SCHEMA = {
     properties: {
       error: { type: "string" },
     },
-    required: ["error"],
+    // required: ["error"],
   },
   404: {
     type: "object",
@@ -29,7 +29,7 @@ export const SWAGGER_DEFAULT_RESPONSES_SCHEMA = {
     properties: {
       error: { type: "string" },
     },
-    required: ["error"],
+    // required: ["error"],
   },
   429: {
     type: "object",
@@ -37,7 +37,7 @@ export const SWAGGER_DEFAULT_RESPONSES_SCHEMA = {
     properties: {
       error: { type: "string" },
     },
-    required: ["error"],
+    // required: ["error"],
   },
   500: {
     type: "object",
@@ -46,6 +46,6 @@ export const SWAGGER_DEFAULT_RESPONSES_SCHEMA = {
       error: { type: "string" },
       details: { type: "string" },
     },
-    required: ["error"],
+    // required: ["error"],
   },
 };

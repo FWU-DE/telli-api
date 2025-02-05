@@ -6,7 +6,7 @@ import { completionRequestSchemaSwagger } from "./routes/(app)/v1/chat/completio
 import { modelRequestSwaggerSchema } from "./routes/(app)/v1/models/swagger-schema";
 import { usageRequestSwaggerSchema } from "./routes/(app)/v1/usage/swagger-schemas";
 
-type RouteHandlerDefinition = {
+export type RouteHandlerDefinition = {
   path: string;
   method: "GET" | "POST" | "PUT" | "DELETE";
   schema?: object;
@@ -25,7 +25,7 @@ export const healthSchema = {
   },
 };
 
-const routeHandlerDefinitions: Array<RouteHandlerDefinition> = [
+export const routeHandlerDefinitions: Array<RouteHandlerDefinition> = [
   {
     path: "/health",
     method: "GET",

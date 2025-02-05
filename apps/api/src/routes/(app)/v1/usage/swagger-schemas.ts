@@ -8,7 +8,7 @@ export const usageRequestSwaggerSchema = {
         remainingLimitInCent: { type: "number" },
         limitInCent: { type: "number" },
       },
-      required: ["remainingLimitInCent", "limitInCent"],
+      // required: ["remainingLimitInCent", "limitInCent"],
     },
     ...SWAGGER_DEFAULT_RESPONSES_SCHEMA,
   },

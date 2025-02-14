@@ -119,10 +119,12 @@ export async function handler(
     }
 
     reply.raw.writeHead(200, {
-      "Content-Type": "text/event-stream",
+      "Content-Type": "text/event-stream; charset=utf-8",
       "Cache-Control": "no-cache",
       "Transfer-Encoding": "chunked",
+      Connection: "keep-alive",
     });
+
     const stream = await completionStreamFn({
       messages: body.messages,
       model: model.name,
@@ -142,7 +144,7 @@ export async function handler(
           break;
         }
         const chunkString = new TextDecoder().decode(value);
-        reply.raw.write(`${chunkString}\n`);
+        reply.raw.write(`data: ${chunkString}\n`);
       }
     }
 

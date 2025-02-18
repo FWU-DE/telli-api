@@ -12,14 +12,5 @@ export const usageRequestSwaggerSchema = {
     },
     ...SWAGGER_DEFAULT_RESPONSES_SCHEMA,
   },
-  headers: {
-    type: "object",
-    properties: {
-      Authorization: {
-        type: "string",
-        description: "Bearer token for authorization",
-      },
-    },
-    required: ["Authorization"],
-  },
+  security: [{ bearerAuth: [] }],
 };

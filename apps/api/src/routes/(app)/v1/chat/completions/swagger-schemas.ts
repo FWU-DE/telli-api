@@ -67,14 +67,5 @@ export const completionRequestSchemaSwagger = {
     },
     required: ["model", "messages"],
   },
-  headers: {
-    type: "object",
-    properties: {
-      Authorization: {
-        type: "string",
-        description: "Bearer token for authorization",
-      },
-    },
-    required: ["Authorization"],
-  },
+  security: [{ bearerAuth: [] }],
 };

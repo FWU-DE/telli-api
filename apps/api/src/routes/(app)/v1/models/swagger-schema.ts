@@ -1,6 +1,7 @@
 import { SWAGGER_DEFAULT_RESPONSES_SCHEMA } from "@/swagger/const";
+import { FastifySchema } from "fastify/types/schema";
 
-export const modelRequestSwaggerSchema = {
+export const modelRequestSwaggerSchema: FastifySchema = {
   response: {
     200: {
       type: "array",
@@ -27,14 +28,5 @@ export const modelRequestSwaggerSchema = {
     },
     ...SWAGGER_DEFAULT_RESPONSES_SCHEMA,
   },
-  headers: {
-    type: "object",
-    properties: {
-      Authorization: {
-        type: "string",
-        description: "Bearer token for authorization",
-      },
-    },
-    required: ["Authorization"],
-  },
+  security: [{ bearerAuth: [] }],
 };

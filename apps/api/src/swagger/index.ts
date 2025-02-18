@@ -21,9 +21,10 @@ export async function initSwagger(fastify: FastifyInstance) {
       ],
       components: {
         securitySchemes: {
-          BearerAuth: {
+          bearerAuth: {
             type: "http",
             scheme: "bearer",
+            bearerFormat: "JWT",
           },
         },
       },

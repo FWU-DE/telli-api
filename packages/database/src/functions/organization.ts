@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { db, organizationTable, projectTable } from "..";
-import { isNotNull } from "../utils";
+import { isNotNull } from "@dgpt/utils";
 
 export async function dbGetAllOrganizations() {
   return await db

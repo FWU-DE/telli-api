@@ -6,6 +6,7 @@ import {
   CompletionStreamFn,
 } from "../types";
 import { LlmModel } from "@dgpt/db";
+import { calculateCompletionUsage } from "../utils";
 
 export function constructIonosCompletionStreamFn(
   llmModel: LlmModel,
@@ -24,23 +25,48 @@ export function constructIonosCompletionStreamFn(
 
   return async function getIonosCompletionStream({
     onUsageCallback,
+    messages,
     ...props
   }: Omit<CommonLlmProviderStreamParameter, "model">): Promise<
     ReadableStream<any>
   > {
     const stream = await client.chat.completions.create({
       model: llmModel.id,
+      messages,
       stream: true,
       stream_options: { include_usage: true },
       ...props,
     });
 
     async function* fetchChunks() {
+      let content = "";
+      let firstChunk: OpenAI.Chat.Completions.ChatCompletionChunk | null = null;
       for await (const chunk of stream) {
-        if (chunk.usage) {
-          onUsageCallback(chunk.usage);
+        if (firstChunk === null) {
+          firstChunk = chunk;
+        }
+        const maybeContent = chunk.choices[0]?.delta.content;
+        if (maybeContent) {
+          content += maybeContent;
         }
         yield JSON.stringify(chunk);
+      }
+      // calculate the token usage manually as ionos does not return it
+      const usage = calculateCompletionUsage({
+        messages,
+        modelMessage: { role: "assistant", content },
+      });
+      onUsageCallback(usage);
+      // we need to manually construct an openai compatible chunk which includes the usage
+      if (firstChunk !== null) {
+        yield JSON.stringify({
+          id: firstChunk.id,
+          model: firstChunk.model,
+          created: firstChunk.created,
+          choices: [],
+          object: firstChunk.object,
+          usage,
+        });
       }
     }
 

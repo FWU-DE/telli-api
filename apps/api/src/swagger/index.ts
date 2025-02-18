@@ -9,14 +9,14 @@ export async function initSwagger(fastify: FastifyInstance) {
     openapi: {
       openapi: "3.0.0",
       info: {
-        title: "DeutschlandGPT API Documentation",
-        description: "DeutschlandGPT API Swagger Documentation.",
+        title: `${env.apiName} API Documentation`,
+        description: `${env.apiName} API Swagger Documentation.`,
         version: "0.1.0",
       },
       servers: [
         {
           url: env.apiBaseUrl,
-          description: "DGPT API Server",
+          description: env.apiName,
         },
       ],
       components: {

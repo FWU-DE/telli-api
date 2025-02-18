@@ -41,6 +41,8 @@ Following environment variables are required:
 ```.env
 DATABASE_URL=
 API_BASE_URL=
+# Optional, defaults to DeutschlandGPT
+API_NAME=
 ```
 
 You can find example env variables inside the [`.env.example`](./.env.example) file.

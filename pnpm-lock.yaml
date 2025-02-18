@@ -24,6 +24,9 @@ importers:
       '@dgpt/db':
         specifier: workspace:*
         version: link:../../packages/database
+      '@dgpt/llm-model':
+        specifier: workspace:*
+        version: link:../../packages/llm-model
       '@dgpt/utils':
         specifier: workspace:*
         version: link:../../packages/utils
@@ -45,6 +48,9 @@ importers:
       openai:
         specifier: 4.80.1
         version: 4.80.1(zod@3.24.1)
+      tiktoken:
+        specifier: 1.0.20
+        version: 1.0.20
       tsx:
         specifier: 4.19.2
         version: 4.19.2
@@ -2772,6 +2778,9 @@ packages:
 
   thread-stream@3.1.0:
     resolution: {integrity: sha512-OqyPZ9u96VohAyMfJykzmivOrY2wfMSf3C5TtFJVgN+Hm6aj+voFhlK+kZEIv2FBh1X6Xp3DlnCOfEQ3B2J86A==}
+
+  tiktoken@1.0.20:
+    resolution: {integrity: sha512-zVIpXp84kth/Ni2me1uYlJgl2RZ2EjxwDaWLeDY/s6fZiyO9n1QoTOM5P7ZSYfToPvAvwYNMbg5LETVYVKyzfQ==}
 
   tinyglobby@0.2.10:
     resolution: {integrity: sha512-Zc+8eJlFMvgatPZTl6A9L/yht8QqdmUNtURHaKZLmKBE12hNPSrqNkUp2cs3M/UKmNVVAMFQYSjYIVHDjW5zew==}
@@ -5658,6 +5667,8 @@ snapshots:
   thread-stream@3.1.0:
     dependencies:
       real-require: 0.2.0
+
+  tiktoken@1.0.20: {}
 
   tinyglobby@0.2.10:
     dependencies:

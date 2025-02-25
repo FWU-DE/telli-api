@@ -3,7 +3,8 @@
   "globalPassThroughEnv": [
     "DATABASE_URL",
     "API_BASE_URL",
-    "API_NAME"
+    "API_NAME",
+    "API_KEY"
   ],
   "tasks": {
     "build": {

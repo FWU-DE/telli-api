@@ -1,5 +1,5 @@
 import { eq } from "drizzle-orm";
-import { db, organizationTable, projectTable } from "..";
+import { db, llmModelTable, organizationTable, projectTable } from "..";
 import { isNotNull } from "@dgpt/utils";
 
 export async function dbGetAllOrganizations() {
@@ -14,21 +14,46 @@ export async function dbGetOrganizationAndProjectsByOrganizationId({
 }: {
   organizationId: string;
 }) {
-  const rows = await db
+  const organizationResult = await db
     .select()
     .from(organizationTable)
-    .leftJoin(
-      projectTable,
-      eq(projectTable.organizationId, organizationTable.id),
-    )
     .where(eq(organizationTable.id, organizationId));
 
-  const firstRow = rows[0];
+  const organization = organizationResult[0];
+  if (!organization) return undefined;
 
-  if (firstRow === undefined) return undefined;
+  const projects = await db
+    .select()
+    .from(projectTable)
+    .where(eq(projectTable.organizationId, organizationId));
+
+  const models = await db
+    .select()
+    .from(llmModelTable)
+    .where(eq(llmModelTable.organizationId, organizationId));
 
   return {
-    organization: firstRow.organization,
-    projects: rows.map((r) => r.project).filter(isNotNull),
+    organization,
+    projects: projects.filter(isNotNull),
+    models: models.filter(isNotNull),
   };
+}
+
+export async function dbGetOrganizationByProjectId({
+  projectId,
+}: {
+  projectId: string;
+}) {
+  const [row] = await db
+    .select()
+    .from(projectTable)
+    .innerJoin(
+      organizationTable,
+      eq(projectTable.organizationId, organizationTable.id),
+    )
+    .where(eq(projectTable.id, projectId));
+
+  if (row === undefined) return undefined;
+
+  return row.organization;
 }

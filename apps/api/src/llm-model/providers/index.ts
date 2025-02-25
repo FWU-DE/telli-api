@@ -8,6 +8,10 @@ import {
   constructOpenAiCompletionFn,
   constructOpenAiCompletionStreamFn,
 } from "./openai";
+import {
+  constructAzureCompletionFn,
+  constructAzureCompletionStreamFn,
+} from "./azure";
 
 export function getCompletionStreamFnByModel({
   model,
@@ -19,6 +23,9 @@ export function getCompletionStreamFnByModel({
   }
   if (model.provider === "openai") {
     return constructOpenAiCompletionStreamFn(model);
+  }
+  if (model.provider === "azure") {
+    return constructAzureCompletionStreamFn(model);
   }
 
   return undefined;
@@ -34,6 +41,10 @@ export function getCompletionFnByModel({
   }
   if (model.provider === "openai") {
     return constructOpenAiCompletionFn(model);
+  }
+
+  if (model.provider === "azure") {
+    return constructAzureCompletionFn(model);
   }
 
   return undefined;

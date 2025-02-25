@@ -5,6 +5,7 @@ import { handler as v1_usage_getHandler } from "./routes/(app)/v1/usage/get";
 import { completionRequestSchemaSwagger } from "./routes/(app)/v1/chat/completions/swagger-schemas";
 import { modelRequestSwaggerSchema } from "./routes/(app)/v1/models/swagger-schema";
 import { usageRequestSwaggerSchema } from "./routes/(app)/v1/usage/swagger-schemas";
+import { adminRouteHandlerDefinitions } from "./routes/(app)/v1/admin/const";
 
 export type RouteHandlerDefinition = {
   path: string;
@@ -26,6 +27,7 @@ export const healthSchema = {
 };
 
 export const routeHandlerDefinitions: Array<RouteHandlerDefinition> = [
+  ...adminRouteHandlerDefinitions,
   {
     path: "/health",
     method: "GET",

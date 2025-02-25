@@ -97,11 +97,20 @@ export async function handler(
 
   const availableModels = await dbGetModelsByApiKeyId({ apiKeyId: apiKey.id });
 
-  const model = availableModels.find((model) => model.name === body.model);
+  const maybeProviderHeader = request.headers["x-llm-provider"];
+  const model =
+    maybeProviderHeader === undefined
+      ? availableModels.find((model) => model.name === body.model)
+      : availableModels.find(
+          (model) =>
+            model.name === body.model && model.provider === maybeProviderHeader,
+        );
 
   if (model === undefined) {
     reply
-      .send({ error: `No model with name ${body.model} found.` })
+      .send({
+        error: `No model with name ${body.model} found.${maybeProviderHeader !== undefined ? ` Requested Provider: ${maybeProviderHeader}` : ""}`,
+      })
       .status(404);
     return;
   }

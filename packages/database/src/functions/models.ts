@@ -1,6 +1,5 @@
 import { eq, inArray } from "drizzle-orm";
 import { db, LlmModel, llmModelApiKeyMappingTable, llmModelTable } from "..";
-import { llmModelSettingsSchema } from "@dgpt/llm-model";
 
 export async function dbGetAllModels() {
   return db.select().from(llmModelTable).orderBy(llmModelTable.createdAt);

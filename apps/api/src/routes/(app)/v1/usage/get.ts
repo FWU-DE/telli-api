@@ -1,5 +1,6 @@
 import { validateApiKey } from "@/routes/utils";
 import { getCurrentUsageInCentByApiKeyIdWithResult } from "@dgpt/db";
+import { getEndOfCurrentMonth, getStartOfCurrentMonth } from "@dgpt/utils";
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export async function handler(
@@ -10,8 +11,12 @@ export async function handler(
 
   if (apiKey === undefined) return;
 
+  const startDate = getStartOfCurrentMonth();
+  const endDate = getEndOfCurrentMonth();
   const [error, result] = await getCurrentUsageInCentByApiKeyIdWithResult({
     apiKeyId: apiKey.id,
+    startDate,
+    endDate,
   });
 
   if (error !== null) {

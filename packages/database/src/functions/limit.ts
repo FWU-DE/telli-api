@@ -14,13 +14,19 @@ import {
 export const checkLimitsByApiKeyIdWithResult = errorifyAsyncFn(
   checkLimitsByApiKeyId,
 );
+// given an api key id, checks whether the usage is in the budget for the current month
 export async function checkLimitsByApiKeyId({
   apiKeyId,
 }: {
   apiKeyId: string;
 }): Promise<{ hasReachedLimit: boolean }> {
-  const { actualPrice, apiKey } = await getCurrentUsageInCentByApiKeyId({
+  const startDate = getStartOfCurrentMonth();
+  const endDate = getEndOfCurrentMonth();
+
+  const { actualPrice, apiKey } = await getUsageInCentByApiKeyId({
     apiKeyId,
+    startDate,
+    endDate,
   });
 
   if (actualPrice >= apiKey.limitInCent || actualPrice < 0) {
@@ -31,12 +37,16 @@ export async function checkLimitsByApiKeyId({
 }
 
 export const getCurrentUsageInCentByApiKeyIdWithResult = errorifyAsyncFn(
-  getCurrentUsageInCentByApiKeyId,
+  getUsageInCentByApiKeyId,
 );
-export async function getCurrentUsageInCentByApiKeyId({
+export async function getUsageInCentByApiKeyId({
   apiKeyId,
+  startDate,
+  endDate,
 }: {
   apiKeyId: string;
+  startDate: Date;
+  endDate: Date;
 }): Promise<{ apiKey: ApiKeyModel; actualPrice: number }> {
   const apiKey = await dbGetApiKeyById({ apiKeyId });
 
@@ -44,7 +54,11 @@ export async function getCurrentUsageInCentByApiKeyId({
     throw Error("Could not find api key");
   }
 
-  const modelUsages = await dbGetModelUsageByApiKeyId({ apiKeyId });
+  const modelUsages = await dbGetModelUsageByApiKeyId({
+    apiKeyId,
+    startDate,
+    endDate,
+  });
 
   const models = await dbGetModelsByIds({
     modelIds: modelUsages.map((m) => m.modelId),
@@ -84,12 +98,14 @@ type Interval =
 
 export async function dbGetModelUsageByApiKeyId({
   apiKeyId,
+  startDate,
+  endDate,
 }: {
   apiKeyId: string;
+  startDate: Date;
+  endDate: Date;
 }) {
   const interval: Interval = "month";
-  const startDate = getStartOfCurrentMonth();
-  const endDate = getEndOfCurrentMonth();
 
   const rows: {
     period: string;

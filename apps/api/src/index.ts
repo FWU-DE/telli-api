@@ -1,9 +1,12 @@
+// this import has to be at the top of the file for fastify to be instrumented properly
+import "./instrumentation";
 import Fastify from "fastify";
 import { constructHandlers } from "./handlers";
 import { initSwagger } from "./swagger";
 import cors from "@fastify/cors";
 import fastifyMultipart from "@fastify/multipart";
 
+import Sentry from "@sentry/node";
 const nodeEnv = process.env.NODE_ENV ?? "development";
 
 async function main() {
@@ -11,6 +14,8 @@ async function main() {
     logger: true,
     ajv: { customOptions: { strict: false } },
   });
+
+  Sentry.setupFastifyErrorHandler(fastify);
 
   await fastify.register(cors, {
     // TODO: uncomment if you want to enable cors

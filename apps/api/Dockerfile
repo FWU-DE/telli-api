@@ -1,4 +1,4 @@
-FROM node:23.3.0-alpine3.21 AS base
+FROM node:22.11.0-alpine3.20 AS base
 
 FROM base AS builder
 RUN apk update

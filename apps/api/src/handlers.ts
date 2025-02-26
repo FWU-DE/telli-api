@@ -10,7 +10,7 @@ import { adminRouteHandlerDefinitions } from "./routes/(app)/v1/admin/const";
 export type RouteHandlerDefinition = {
   path: string;
   method: "GET" | "POST" | "PUT" | "DELETE";
-  schema?: object;
+  schema?: object | { hide: true };
   handler: RouteHandlerMethod;
 };
 
@@ -34,6 +34,14 @@ export const routeHandlerDefinitions: Array<RouteHandlerDefinition> = [
     schema: healthSchema,
     async handler() {
       return { message: "Ok" };
+    },
+  },
+  {
+    path: "/error",
+    method: "GET",
+    schema: { hide: true },
+    async handler() {
+      throw Error("Test Error");
     },
   },
   {

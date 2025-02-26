@@ -2,6 +2,8 @@
   "$schema": "https://turbo.build/schema.json",
   "globalPassThroughEnv": [
     "DATABASE_URL",
+    "SENTRY_ENVIRONMENT",
+    "SENTRY_DSN",
     "API_BASE_URL",
     "API_NAME",
     "API_KEY"

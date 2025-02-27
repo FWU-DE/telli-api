@@ -107,13 +107,15 @@ export async function dbGetModelUsageByApiKeyId({
 }) {
   const interval: Interval = "month";
 
+  //@ts-expect-error weird typing errors due to the pg driver
   const rows: {
     period: string;
     model_id: string;
     prompt_tokens: string;
     completion_tokens: string;
     nof_requests: string;
-  }[] = await db.execute(sql`
+  }[] = (
+    await db.execute(sql`
 SELECT
     DATE_TRUNC(${interval}, tracking.created_at) AS period,
     tracking.model_id,
@@ -124,7 +126,8 @@ FROM completion_usage_tracking as tracking
 WHERE tracking.created_at BETWEEN ${startDate.toISOString()} AND ${endDate.toISOString()} AND tracking.api_key_id = ${apiKeyId}
 GROUP BY period, tracking.model_id
 ORDER BY period, tracking.model_id
-`);
+`)
+  ).rows;
 
   const mappedRows = rows.map((row) => ({
     period: new Date(row.period),

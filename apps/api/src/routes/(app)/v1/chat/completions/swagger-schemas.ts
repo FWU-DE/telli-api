@@ -21,7 +21,7 @@ export const completionRequestSchemaSwagger = {
                 properties: {
                   role: {
                     type: "string",
-                    enum: ["system", "user", "assistant"],
+                    enum: ["system", "user", "assistant", "developer"],
                   },
                   content: { type: "string" },
                 },
@@ -55,7 +55,10 @@ export const completionRequestSchemaSwagger = {
         items: {
           type: "object",
           properties: {
-            role: { type: "string", enum: ["system", "user", "assistant"] },
+            role: {
+              type: "string",
+              enum: ["system", "user", "assistant", "developer"],
+            },
             content: { type: "string" },
           },
           required: ["role", "content"],

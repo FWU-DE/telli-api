@@ -18,7 +18,6 @@ export async function handler(
   const organization = await dbGetOrganizationAndProjectsByOrganizationId({
     organizationId,
   });
-  console.debug({ organization });
 
   if (organization === undefined) {
     return reply.status(404).send({ error: "Organization not found" });

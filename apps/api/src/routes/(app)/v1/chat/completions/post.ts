@@ -18,7 +18,7 @@ const completionRequestSchema = z.object({
   model: z.string(),
   messages: z.array(
     z.object({
-      role: z.enum(["system", "user", "assistant"]),
+      role: z.enum(["system", "user", "assistant", "developer"]),
       content: z.string(),
     }),
   ),

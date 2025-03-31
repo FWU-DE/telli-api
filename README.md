@@ -1,16 +1,18 @@
-# deutschlandgpt knotenpunkt
+# telli api
 
-## requirements
+based on: https://github.com/deutschlandgpt/knotenpunkt
+
+## Requirements
 
 1. [nvm](https://github.com/nvm-sh/nvm)
 2. [docker](https://docs.docker.com/engine/install/) (for proper local development)
 
-## docs
+## Docs
 
 If you want to understand the project in-depth, you can find more docs in the [`docs`](./docs) folder.
 [Project Structure](./docs/project-structure.md) is a good starting point.
 
-## development
+## Development
 
 Set the correct versions of the tools:
 
@@ -34,7 +36,7 @@ Start the server (you will need environment variables for this to work properly)
 pnpm dev:api
 ```
 
-## environment variables
+## Environment variables
 
 Following environment variables are required:
 
@@ -52,7 +54,7 @@ If you develop locally it is enough to just copy the variables over:
 cp .env.example .env
 ```
 
-## database
+## Database
 
 We use postgres as our database.
 To spin up a local database, run the following command:
@@ -67,3 +69,7 @@ If you want to have a fresh database run:
 docker compose -f docker-compose.db.yml down --volumes
 docker compose -f docker-compose.db.yml up -d
 ```
+
+## Security issues
+
+Please see [SECURITY.md](SECURITY.md) for guidance on reporting security-related issues.

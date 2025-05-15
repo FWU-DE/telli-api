@@ -24,7 +24,7 @@ jobs:
     name: Build and Push to DockerHub
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    if: github.ref == 'refs/heads/main'
+    # if: github.ref == 'refs/heads/main'
 
     permissions:
       contents: read

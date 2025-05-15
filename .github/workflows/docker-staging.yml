@@ -21,7 +21,7 @@ env:
 
 jobs:
   dockerize-staging:
-    name: Build and Push to DockerHub
+    name: Build and Push to GitHub Container Registry
     runs-on: ubuntu-latest
     timeout-minutes: 10
     # if: github.ref == 'refs/heads/main'
@@ -89,5 +89,5 @@ jobs:
           COMMIT_HASH=${{ env.commit_hash }}
           echo "Updating Kubernetes Deployment with image: ghcr.io/${{ github.repository }}:latest"
           kubectl set image deployment/telli-api-staging \
-            telli-api-staging=ghcr.io/${{ github.repository }}:latest
+            telli-api-staging=ghcr.io/${{ github.repository }}:pr-3
           kubectl rollout restart deployment telli-api-staging

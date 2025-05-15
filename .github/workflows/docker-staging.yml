@@ -5,36 +5,86 @@ on:
     branches: [main]
 
 env:
-  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  COMMIT_HASH: ${{ github.sha }}
 
 jobs:
   dockerize-staging:
-    name: Build and Push to DockerHub
+    name: Build and Push to GitHub Container Registry
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     if: github.ref == 'refs/heads/main'
+
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+      attestations: write
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Log in to Docker Hub
+      - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Get Commit Hash
-        id: commit
-        run: echo "commit_hash=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-      - name: Build and Push Docker Image
+      - name: Build and push
+        id: build
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./apps/api/Dockerfile
+          file: apps/api/Dockerfile
+          tags: |
+            ${{ env.REGISTRY }}/fwu-de/telli-api:${{ env.COMMIT_HASH }}
+          labels: ${{ steps.meta.outputs.labels }}
           push: true
-          tags: deutschlandgpt/ai-proxy:${{ env.commit_hash }}
+
+  deploy-staging:
+    name: Rollout to Staging
+    needs: dockerize-staging
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set Kubernetes Context
+        uses: azure/k8s-set-context@v4
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBE_CONFIG }}
+          context: ""
+
+      - name: Create image pull secret
+        run: |
+          kubectl create secret docker-registry ghcr-cred \
+            --docker-server=ghcr.io \
+            --docker-username=${{ github.actor }} \
+            --docker-password=${{ secrets.GITHUB_TOKEN }} \
+            --docker-email=ci@github.com \
+            --dry-run=client -o yaml | kubectl apply -f -
+
+      - name: Update Kubernetes Deployment
+        run: |
+          COMMIT_HASH=${{ env.commit_hash }}
+          echo "Updating Kubernetes Deployment with image: ghcr.io/fwu-de/telli-api:${{ env.COMMIT_HASH }}"
+          kubectl set image deployment/telli-api-staging \
+            telli-api-staging=ghcr.io/fwu-de/telli-api:${{ env.COMMIT_HASH }}
+          kubectl rollout restart deployment telli-api-staging
+      - name: Wait for rollout to complete
+        run: |
+          echo "Waiting for rollout to complete"
+          kubectl rollout status deployment/telli-api-staging
+

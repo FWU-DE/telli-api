@@ -87,9 +87,9 @@ jobs:
       - name: Update Kubernetes Deployment
         run: |
           COMMIT_HASH=${{ env.commit_hash }}
-          echo "Updating Kubernetes Deployment with image: ghcr.io/${{ github.repository }}:latest"
+          echo "Updating Kubernetes Deployment with image: ghcr.io/fwu-dev/telli-api:pr-3"
           kubectl set image deployment/telli-api-staging \
-            telli-api-staging=ghcr.io/${{ github.repository }}:pr-3
+            telli-api-staging=ghcr.io/fwu-dev/telli-api:pr-3
           kubectl rollout restart deployment telli-api-staging
       - name: Wait for rollout to complete
         run: |

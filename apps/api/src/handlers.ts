@@ -27,7 +27,6 @@ export const healthSchema = {
   },
 };
 
-
 export const routeHandlerDefinitions: Array<RouteHandlerDefinition> = [
   ...adminRouteHandlerDefinitions,
   {

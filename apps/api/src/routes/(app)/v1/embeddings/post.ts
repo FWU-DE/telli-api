@@ -62,7 +62,8 @@ export async function handler(
   const body = requestParseResult.data;
 
   // Normalize input to always be an array of strings
-  const normalizedInput = typeof body.input === "string" ? [body.input] : body.input;
+  const normalizedInput =
+    typeof body.input === "string" ? [body.input] : body.input;
 
   const availableModels = await dbGetModelsByApiKeyId({ apiKeyId: apiKey.id });
 

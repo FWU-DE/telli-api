@@ -59,6 +59,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           push: true
 
+
       - name: Get Commit Hash
         id: commit
         run: echo "commit_hash=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
@@ -66,26 +67,27 @@ jobs:
 
 
 
-  # deploy-staging:
-  #   name: Rollout to Staging
-  #   needs: dockerize-staging
-  #   runs-on: ubuntu-latest
-  #   timeout-minutes: 10
+  deploy-staging:
+    name: Rollout to Staging
+    needs: dockerize-staging
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
     
-  #   steps:
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v4
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-  #     - name: Set Kubernetes Context
-  #       uses: azure/k8s-set-context@v4
-  #       with:
-  #         method: kubeconfig
-  #         kubeconfig: ${{ secrets.KUBE_CONFIG }}
-  #         context: ''
+      - name: Set Kubernetes Context
+        uses: azure/k8s-set-context@v4
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBE_CONFIG }}
+          context: ''
 
-  #     - name: Update Kubernetes Deployment
-  #       run: |
-  #         COMMIT_HASH=${{ env.commit_hash }}
-  #         echo "Updating Kubernetes Deployment with image: ghcr.io/${{ github.repository }}:${COMMIT_HASH}"
-  #         kubectl set image telli-api-staging api=ghcr.io/${{ github.repository }}:${COMMIT_HASH}
-  #         kubectl rollout restart deployment telli-api-staging
+      - name: Update Kubernetes Deployment
+        run: |
+          COMMIT_HASH=${{ env.commit_hash }}
+          echo "Updating Kubernetes Deployment with image: ghcr.io/${{ github.repository }}:latest"
+          kubectl set image deployment/telli-api-staging \
+            telli-api-staging=ghcr.io/${{ github.repository }}:latest
+          kubectl rollout restart deployment telli-api-staging

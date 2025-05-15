@@ -157,11 +157,12 @@ export async function dbCreateModelWithApiKeyLinks({
     return { error: "Organization not found" };
   }
   // Find API keys by name
-  const apiKeysToLink = apiKeyNames
-    ?.map((name) => {
-      return allApiKeys.find((k) => k.name === name);
-    })
-    .filter((k) => k !== undefined);
+  const apiKeysToLink =
+    apiKeyNames
+      ?.map((name) => {
+        return allApiKeys.find((k) => k.name === name);
+      })
+      .filter((k) => k !== undefined) ?? allApiKeys;
 
   if (apiKeysToLink === undefined) {
     return { error: "One or more API key names not found in organization" };

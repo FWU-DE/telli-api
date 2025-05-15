@@ -10,6 +10,10 @@ export const llmModelPriceMetadataSchema = z.union([
     type: z.literal("image"),
     pricePerImage: z.number(),
   }),
+  z.object({
+    type: z.literal("embedding"),
+    promptTokenPrice: z.number(),
+  }),
 ]);
 
 export type Budget = {

@@ -7,7 +7,7 @@ import { modelRequestSwaggerSchema } from "./routes/(app)/v1/models/swagger-sche
 import { usageRequestSwaggerSchema } from "./routes/(app)/v1/usage/swagger-schemas";
 import { adminRouteHandlerDefinitions } from "./routes/(app)/v1/admin/const";
 import { handler as v1_embeddings_postHandler } from "./routes/(app)/v1/embeddings/post";
-
+import { embeddingRequestSwaggerSchema } from "./routes/(app)/v1/embeddings/swagger-schemas";
 export type RouteHandlerDefinition = {
   path: string;
   method: "GET" | "POST" | "PUT" | "DELETE";
@@ -27,39 +27,6 @@ export const healthSchema = {
   },
 };
 
-export const embeddingRequestSwaggerSchema = {
-  response: {
-    200: {
-      type: "object",
-      properties: {
-        object: { type: "string", default: "embedding" },
-        embedding: { type: "array", items: { type: "number" } },
-        model: { type: "string" },
-        usage: {
-          type: "object",
-          properties: {
-            prompt_tokens: { type: "number" },
-            total_tokens: { type: "number" },
-          },
-        },
-      },
-    },
-  },
-  body: {
-    type: "object",
-    properties: {
-      model: { type: "string" },
-      input: {
-        oneOf: [
-          { type: "string" },
-          { type: "array", items: { type: "string" } },
-        ],
-      },
-    },
-    required: ["model", "input"],
-  },
-  security: [{ bearerAuth: [] }],
-};
 
 export const routeHandlerDefinitions: Array<RouteHandlerDefinition> = [
   ...adminRouteHandlerDefinitions,

@@ -7,12 +7,10 @@ import {
 } from "@dgpt/db";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
-import { get_encoding } from "tiktoken";
-import { CompletionUsage } from "openai/resources/completions.mjs";
 
 const embeddingRequestSchema = z.object({
   model: z.string(),
-  input: z.union([z.string(), z.array(z.string())]),
+  input: z.array(z.string()),
 });
 
 export type EmbeddingRequest = z.infer<typeof embeddingRequestSchema>;
@@ -31,7 +29,6 @@ export async function handler(
   if (apiKey === undefined) return;
 
   const requestParseResult = embeddingRequestSchema.safeParse(request.body);
-
   if (!requestParseResult.success) {
     reply
       .send({
@@ -63,6 +60,9 @@ export async function handler(
   }
 
   const body = requestParseResult.data;
+
+  // Normalize input to always be an array of strings
+  const normalizedInput = typeof body.input === "string" ? [body.input] : body.input;
 
   const availableModels = await dbGetModelsByApiKeyId({ apiKeyId: apiKey.id });
 

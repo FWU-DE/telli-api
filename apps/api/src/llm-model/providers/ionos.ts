@@ -120,16 +120,12 @@ export function constructIonosEmbeddingFn(llmModel: LlmModel) {
     input,
     model,
   }: Parameters<EmbeddingFn>[0]): Promise<{
-    embedding: OpenAI.Embeddings.Embedding;
+    embedding: OpenAI.Embeddings.Embedding[];
     usage: CompletionUsage;
   }> {
     const result = await client.embeddings.create({ input, model });
     return {
-      embedding: {
-        embedding: result.data[0]?.embedding ?? [],
-        object: "embedding",
-        index: result.data[0]?.index ?? 0,
-      },
+      embedding: result.data,
       usage: {
         prompt_tokens: result.usage.prompt_tokens,
         completion_tokens: 0,

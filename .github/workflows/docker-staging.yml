@@ -91,3 +91,7 @@ jobs:
           kubectl set image deployment/telli-api-staging \
             telli-api-staging=ghcr.io/${{ github.repository }}:pr-3
           kubectl rollout restart deployment telli-api-staging
+      - name: Wait for rollout to complete
+        run: |
+          echo "Waiting for rollout to complete"
+          kubectl rollout status deployment/telli-api-staging

@@ -6,6 +6,7 @@ import { completionRequestSchemaSwagger } from "./routes/(app)/v1/chat/completio
 import { modelRequestSwaggerSchema } from "./routes/(app)/v1/models/swagger-schema";
 import { usageRequestSwaggerSchema } from "./routes/(app)/v1/usage/swagger-schemas";
 import { adminRouteHandlerDefinitions } from "./routes/(app)/v1/admin/const";
+import { handler as v1_embeddings_postHandler } from "./routes/(app)/v1/embeddings/post";
 
 export type RouteHandlerDefinition = {
   path: string;
@@ -24,6 +25,40 @@ export const healthSchema = {
       required: ["status"],
     },
   },
+};
+
+export const embeddingRequestSwaggerSchema = {
+  response: {
+    200: {
+      type: "object",
+      properties: {
+        object: { type: "string", default: "embedding" },
+        embedding: { type: "array", items: { type: "number" } },
+        model: { type: "string" },
+        usage: {
+          type: "object",
+          properties: {
+            prompt_tokens: { type: "number" },
+            total_tokens: { type: "number" },
+          },
+        },
+      },
+    },
+  },
+  body: {
+    type: "object",
+    properties: {
+      model: { type: "string" },
+      input: {
+        oneOf: [
+          { type: "string" },
+          { type: "array", items: { type: "string" } },
+        ],
+      },
+    },
+    required: ["model", "input"],
+  },
+  security: [{ bearerAuth: [] }],
 };
 
 export const routeHandlerDefinitions: Array<RouteHandlerDefinition> = [
@@ -61,6 +96,12 @@ export const routeHandlerDefinitions: Array<RouteHandlerDefinition> = [
     method: "GET",
     schema: usageRequestSwaggerSchema,
     handler: v1_usage_getHandler,
+  },
+  {
+    path: "/v1/embeddings",
+    method: "POST",
+    schema: embeddingRequestSwaggerSchema,
+    handler: v1_embeddings_postHandler,
   },
 ];
 

@@ -53,7 +53,7 @@ jobs:
         id: build
         uses: docker/build-push-action@v5
         with:
-          context: apps/api
+          context: .
           file: apps/api/Dockerfile
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

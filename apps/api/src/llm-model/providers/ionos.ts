@@ -4,9 +4,11 @@ import {
   CommonLlmProviderStreamParameter,
   CompletionFn,
   CompletionStreamFn,
+  EmbeddingFn,
 } from "../types";
 import { LlmModel } from "@dgpt/db";
 import { calculateCompletionUsage } from "../utils";
+import { CompletionUsage } from "openai/resources/completions.mjs";
 
 export function constructIonosCompletionStreamFn(
   llmModel: LlmModel,
@@ -98,5 +100,37 @@ export function constructIonosCompletionFn(llmModel: LlmModel): CompletionFn {
       ...props,
     });
     return result;
+  };
+}
+
+export function constructIonosEmbeddingFn(llmModel: LlmModel) {
+  if (llmModel.setting.provider !== "ionos" || !llmModel.setting) {
+    throw new Error("Invalid model configuration for IONOS");
+  }
+
+  const client = new OpenAI({
+    apiKey: llmModel.setting.apiKey,
+    defaultHeaders: {
+      Authorization: `Bearer ${llmModel.setting.apiKey}`,
+    },
+    baseURL: llmModel.setting.baseUrl,
+  });
+
+  return async function getIonosEmbedding({
+    input,
+    model,
+  }: Parameters<EmbeddingFn>[0]): Promise<{
+    embedding: OpenAI.Embeddings.Embedding[];
+    usage: CompletionUsage;
+  }> {
+    const result = await client.embeddings.create({ input, model });
+    return {
+      embedding: result.data,
+      usage: {
+        prompt_tokens: result.usage.prompt_tokens,
+        completion_tokens: 0,
+        total_tokens: result.usage.total_tokens,
+      },
+    };
   };
 }

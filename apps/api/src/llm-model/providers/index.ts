@@ -2,8 +2,9 @@ import { LlmModel } from "@dgpt/db";
 import {
   constructIonosCompletionFn,
   constructIonosCompletionStreamFn,
+  constructIonosEmbeddingFn,
 } from "./ionos";
-import { CompletionFn, CompletionStreamFn } from "../types";
+import { CompletionFn, CompletionStreamFn, EmbeddingFn } from "../types";
 import {
   constructOpenAiCompletionFn,
   constructOpenAiCompletionStreamFn,
@@ -12,6 +13,13 @@ import {
   constructAzureCompletionFn,
   constructAzureCompletionStreamFn,
 } from "./azure";
+
+export function getEmbeddingFnByModel({ model }: { model: LlmModel }) {
+  if (model.provider === "ionos") {
+    return constructIonosEmbeddingFn(model);
+  }
+  throw new Error(`Unsupported model provider: ${model.provider}`);
+}
 
 export function getCompletionStreamFnByModel({
   model,

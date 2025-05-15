@@ -22,3 +22,8 @@ export type CompletionFn = (args: {
   temperature: number;
   max_tokens: number | undefined | null;
 }) => Promise<OpenAI.Chat.Completions.ChatCompletion>;
+
+export type EmbeddingFn = (args: {
+  input: string | string[];
+  model: string;
+}) => Promise<OpenAI.Embeddings.Embedding>;

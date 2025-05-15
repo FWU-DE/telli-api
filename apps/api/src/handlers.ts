@@ -6,7 +6,8 @@ import { completionRequestSchemaSwagger } from "./routes/(app)/v1/chat/completio
 import { modelRequestSwaggerSchema } from "./routes/(app)/v1/models/swagger-schema";
 import { usageRequestSwaggerSchema } from "./routes/(app)/v1/usage/swagger-schemas";
 import { adminRouteHandlerDefinitions } from "./routes/(app)/v1/admin/const";
-
+import { handler as v1_embeddings_postHandler } from "./routes/(app)/v1/embeddings/post";
+import { embeddingRequestSwaggerSchema } from "./routes/(app)/v1/embeddings/swagger-schemas";
 export type RouteHandlerDefinition = {
   path: string;
   method: "GET" | "POST" | "PUT" | "DELETE";
@@ -61,6 +62,12 @@ export const routeHandlerDefinitions: Array<RouteHandlerDefinition> = [
     method: "GET",
     schema: usageRequestSwaggerSchema,
     handler: v1_usage_getHandler,
+  },
+  {
+    path: "/v1/embeddings",
+    method: "POST",
+    schema: embeddingRequestSwaggerSchema,
+    handler: v1_embeddings_postHandler,
   },
 ];
 

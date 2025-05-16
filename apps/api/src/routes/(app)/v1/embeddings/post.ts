@@ -95,7 +95,7 @@ export async function handler(
       .status(400);
     return;
   }
-  const { embedding, usage } = await embeddingFn({
+  const result = await embeddingFn({
     input: body.input,
     model: model.name,
   });
@@ -105,8 +105,8 @@ export async function handler(
     apiKeyId: apiKey.id,
     modelId: model.id,
     completionTokens: 0,
-    promptTokens: usage.prompt_tokens,
-    totalTokens: usage.total_tokens,
+    promptTokens: result.usage.prompt_tokens,
+    totalTokens: result.usage.total_tokens,
   });
-  reply.send(embedding).status(200);
+  reply.send(result).status(200);
 }

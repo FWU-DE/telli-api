@@ -46,7 +46,7 @@ const completionRequestSchema = z.object({
     }),
   ),
   max_tokens: z.number().optional().nullable(),
-  temperature: z.coerce.number().optional().default(1),
+  temperature: z.coerce.number().optional().default(0.4),
   stream: z.boolean().optional(),
 });
 
@@ -81,12 +81,12 @@ export async function handler(
     reply.send({ error: apiKeyError.message });
     return;
   }
-
+  
   if (apiKey === undefined) return;
 
   const requestParseResult = completionRequestSchema.safeParse(request.body);
   if (!requestParseResult.success) {
-    console.log("invalid request", JSON.stringify(request.body, null, 2));
+  
     reply
       .send({
         error: "Bad request",

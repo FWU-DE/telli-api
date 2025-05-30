@@ -11,15 +11,38 @@ import {
   LlmModel,
 } from "@dgpt/db";
 import { FastifyReply, FastifyRequest } from "fastify";
+import { ChatCompletionMessageParam } from "openai/resources/chat/completions.mjs";
 import { CompletionUsage } from "openai/resources/completions.mjs";
 import { z } from "zod";
+
+// Define content part schemas for image and text
+const textContentPartSchema = z.object({
+  type: z.literal("text"),
+  text: z.string(),
+});
+
+const imageUrlContentPartSchema = z.object({
+  type: z.literal("image_url"),
+  image_url: z.object({
+    url: z.string(),
+    detail: z.enum(["auto", "low", "high"]).optional(),
+  }),
+});
+
+const contentPartSchema = z.union([textContentPartSchema, imageUrlContentPartSchema]);
+
+// Content can be either a string (legacy format) or an array of content parts (new format with image support)
+const messageContentSchema = z.union([
+  z.string(),
+  z.array(contentPartSchema),
+]);
 
 const completionRequestSchema = z.object({
   model: z.string(),
   messages: z.array(
     z.object({
       role: z.enum(["system", "user", "assistant", "developer"]),
-      content: z.string(),
+      content: messageContentSchema,
     }),
   ),
   max_tokens: z.number().optional().nullable(),
@@ -62,8 +85,8 @@ export async function handler(
   if (apiKey === undefined) return;
 
   const requestParseResult = completionRequestSchema.safeParse(request.body);
-
   if (!requestParseResult.success) {
+    console.log("invalid request", JSON.stringify(request.body, null, 2));
     reply
       .send({
         error: "Bad request",
@@ -115,6 +138,7 @@ export async function handler(
     return;
   }
 
+
   if (body.stream) {
     const completionStreamFn = getCompletionStreamFnByModel({ model });
 
@@ -135,7 +159,7 @@ export async function handler(
     });
 
     const stream = await completionStreamFn({
-      messages: body.messages,
+      messages: body.messages as ChatCompletionMessageParam[],
       model: model.name,
       temperature: body.temperature,
       max_tokens: body.max_tokens,
@@ -179,7 +203,7 @@ export async function handler(
     }
 
     const response = await completionFn({
-      messages: body.messages,
+      messages: body.messages as ChatCompletionMessageParam[],
       model: model.name,
       temperature: body.temperature,
       max_tokens: body.max_tokens,

@@ -12,7 +12,7 @@ Apps:
 
 Packages:
 
-- [database](./packages/database) - Contains all of the database related utilities
+- [database](./packages/database) - Contains all of the database related utilities, including migrations and seeding
 - [eslint-config](./packages/eslint-config) - Contains general eslint-config files to use across packages and apps
 - [llm-model](./packages/llm-model) - Contains llm model utilies
 - [typescript-config](./packages/typescript-config) - Contains general typescript-config files to use across packages and apps

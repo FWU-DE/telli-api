@@ -9,6 +9,8 @@
     "clean": "find . -type d \\( -name node_modules -o -name dist -o -name .next \\) -not -path \"./.vercel/*\" -prune -exec rm -rf {} \\;",
     "dev": "turbo run dev",
     "dev:api": "dotenv -e .env -- turbo run dev -F @dgpt/api",
+    "db:migrate": "dotenv -e .env -- turbo run db:migrate -F @dgpt/db",
+    "db:seed": "dotenv -e .env -- turbo run db:seed -F @dgpt/db",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,md}\"",
     "types": "turbo run types",

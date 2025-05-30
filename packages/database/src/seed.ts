@@ -54,12 +54,12 @@ const DEFAULT_MODELS: LlmInsertModel[] = [
   },
   {
     id: "9e51dda7-0b5c-4fec-a3fc-19836cad702d",
-    provider: "openai",
+    provider: "azure",
     name: "gpt-4o-mini",
     displayName: "OpenAI GPT-4o Mini",
     description: "OpenAI GPT-4o Mini model for testing",
     setting: {
-      provider: "openai",
+      provider: "azure",
       apiKey: "API_KEY_PLACEHOLDER",
       baseUrl: "PLACEHOLDER_BASE_URL",
     },

@@ -3,6 +3,13 @@ module.exports = {
   env: {
     node: true,
     es6: true,
+    es2017: true,
+    es2018: true,
+  },
+  globals: {
+    AsyncGenerator: "readonly",
+    AsyncIterable: "readonly",
+    AsyncIterator: "readonly",
   },
   parserOptions: {
     ecmaVersion: "latest",

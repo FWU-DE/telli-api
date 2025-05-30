@@ -10,7 +10,7 @@ import {
   type ApiKeyInsertModel,
   type LlmInsertModel,
 } from "./schema";
-import { eq, and } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 
 const ORGANIZATION_ID = "cfeb82c6-396a-4c2d-954b-53e77acbbe7e";
 const PROJECT_ID = "test-project-0";
@@ -86,7 +86,6 @@ export async function seedDatabase() {
       .onConflictDoNothing()
       .returning();
 
-    
     // 2. Create/update test project (using primary key for upsert)
     await db
       .insert(projectTable)
@@ -116,6 +115,7 @@ export async function seedDatabase() {
         .update(apiKeyTable)
         .set({
           name: API_KEY_NAME,
+          keyId,
           secretHash,
           projectId: PROJECT_ID,
           limitInCent: 5000,
@@ -165,7 +165,7 @@ export async function seedDatabase() {
     console.log(`   • Organization: Test Organization`);
     console.log(`   • Project: Test Project (ID: ${PROJECT_ID})`);
     console.log(
-      `   • LLM Models: ${DEFAULT_MODELS.map((m) => m.name).join(", ")}`
+      `   • LLM Models: ${DEFAULT_MODELS.map((m) => m.name).join(", ")}`,
     );
     console.log(`   • Model-Key Mapping: configured`);
 
@@ -174,11 +174,11 @@ export async function seedDatabase() {
 
     console.log(`Created API key: ${apiKey?.name} (${apiKey?.keyId})`);
     console.log(
-      `\n SAVE THIS API KEY VALUE IT CANNOT BE VIEWED AGAIN: ${fullKey} \n`
+      `\n SAVE THIS API KEY VALUE IT CANNOT BE VIEWED AGAIN: ${fullKey} \n`,
     );
 
     console.log(
-      "\n⚠️  Remember to replace API key placeholders with real values:"
+      "\n⚠️  Remember to replace API key placeholders with real values:",
     );
     console.log(`   • YOUR_IONOS_API_KEY_PLACEHOLDER`);
 

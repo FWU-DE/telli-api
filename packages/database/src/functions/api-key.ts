@@ -27,13 +27,13 @@ export async function dbCreateApiKey({
     throw Error("Cannot create api key without assigned models.");
   }
 
-  const apiKeys = await dbGetAllApiKeysByProjectId({ projectId });
   const project = await dbGetProjectById({ projectId });
 
   if (project === undefined) {
     throw Error("Could not find project");
   }
 
+  // const apiKeys = await dbGetAllApiKeysByProjectId({ projectId });
   // TODO: currently there is no check for project limit needed
   // const currentAllocatedBudget = apiKeys
   //   .map((apiKey) => apiKey.limitInCent)

@@ -31,6 +31,7 @@ async function main() {
     },
   });
 
+  // eslint-disable-next-line no-empty-pattern
   fastify.setSerializerCompiler(({}) => {
     return (data) => JSON.stringify(data);
   });

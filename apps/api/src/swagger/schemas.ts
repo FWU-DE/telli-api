@@ -13,21 +13,22 @@ export const completionSchema = {
               oneOf: [
                 {
                   type: "string",
-                  description: "Text content (legacy format)"
+                  description: "Text content (legacy format)",
                 },
                 {
                   type: "array",
-                  description: "Array of content parts (supports text and images)",
+                  description:
+                    "Array of content parts (supports text and images)",
                   items: {
                     oneOf: [
                       {
                         type: "object",
                         properties: {
                           type: { type: "string", enum: ["text"] },
-                          text: { type: "string" }
+                          text: { type: "string" },
                         },
                         required: ["type", "text"],
-                        description: "Text content part"
+                        description: "Text content part",
                       },
                       {
                         type: "object",
@@ -36,26 +37,28 @@ export const completionSchema = {
                           image_url: {
                             type: "object",
                             properties: {
-                              url: { 
+                              url: {
                                 type: "string",
-                                description: "URL of the image or base64 encoded image data (data:image/jpeg;base64,...)"
+                                description:
+                                  "URL of the image or base64 encoded image data (data:image/jpeg;base64,...)",
                               },
-                              detail: { 
-                                type: "string", 
+                              detail: {
+                                type: "string",
                                 enum: ["auto", "low", "high"],
-                                description: "Image detail level for processing"
-                              }
+                                description:
+                                  "Image detail level for processing",
+                              },
                             },
-                            required: ["url"]
-                          }
+                            required: ["url"],
+                          },
                         },
                         required: ["type", "image_url"],
-                        description: "Image content part"
-                      }
-                    ]
-                  }
-                }
-              ]
+                        description: "Image content part",
+                      },
+                    ],
+                  },
+                },
+              ],
             },
           },
           required: ["role", "content"],

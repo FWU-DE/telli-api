@@ -33,14 +33,14 @@ function extractTextFromMessage(message: ChatCompletionMessageParam): string {
   if (typeof message.content === "string") {
     return message.content;
   }
-  
+
   if (Array.isArray(message.content)) {
     return message.content
       .filter((part) => part.type === "text")
       .map((part) => (part as any).text)
       .join(" ");
   }
-  
+
   return "";
 }
 

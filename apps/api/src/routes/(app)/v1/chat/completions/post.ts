@@ -29,13 +29,13 @@ const imageUrlContentPartSchema = z.object({
   }),
 });
 
-const contentPartSchema = z.union([textContentPartSchema, imageUrlContentPartSchema]);
+const contentPartSchema = z.union([
+  textContentPartSchema,
+  imageUrlContentPartSchema,
+]);
 
 // Content can be either a string (legacy format) or an array of content parts (new format with image support)
-const messageContentSchema = z.union([
-  z.string(),
-  z.array(contentPartSchema),
-]);
+const messageContentSchema = z.union([z.string(), z.array(contentPartSchema)]);
 
 const completionRequestSchema = z.object({
   model: z.string(),
@@ -81,12 +81,11 @@ export async function handler(
     reply.send({ error: apiKeyError.message });
     return;
   }
-  
+
   if (apiKey === undefined) return;
 
   const requestParseResult = completionRequestSchema.safeParse(request.body);
   if (!requestParseResult.success) {
-  
     reply
       .send({
         error: "Bad request",
@@ -137,7 +136,6 @@ export async function handler(
       .status(404);
     return;
   }
-
 
   if (body.stream) {
     const completionStreamFn = getCompletionStreamFnByModel({ model });

@@ -85,7 +85,7 @@ export function constructAzureCompletionFn(model: LlmModel): CompletionFn {
 
   return async function getAzureCompletion({
     // eslint-disable-next-line no-unused-vars
-    model: _modelName, // Ignored for Azure
+    model: modelName, // Ignored for Azure
     ...props
   }: Parameters<CompletionFn>[0]) {
     const result = await client.chat.completions.create(

@@ -15,6 +15,7 @@ import { eq } from "drizzle-orm";
 const ORGANIZATION_ID = "cfeb82c6-396a-4c2d-954b-53e77acbbe7e";
 const PROJECT_ID = "test-project-0";
 const API_KEY_NAME = "Test API Key";
+// All prices are rough estimates, probably outdated and just for mocking purposes
 // Static ids are used to ensure that the models are not created again
 const DEFAULT_MODELS: LlmInsertModel[] = [
   {
@@ -29,7 +30,7 @@ const DEFAULT_MODELS: LlmInsertModel[] = [
     },
     priceMetadata: {
       type: "embedding",
-      promptTokenPrice: 10,
+      promptTokenPrice: 20, // 0.02 € per 1M tokens,
     },
     organizationId: ORGANIZATION_ID,
   },
@@ -46,8 +47,8 @@ const DEFAULT_MODELS: LlmInsertModel[] = [
     },
     priceMetadata: {
       type: "text",
-      promptTokenPrice: 10,
-      completionTokenPrice: 10,
+      promptTokenPrice: 150, // 0.15 € per 1M tokens,
+      completionTokenPrice: 250, // 0.25 € per 1M tokens,
     },
     organizationId: ORGANIZATION_ID,
   },
@@ -64,8 +65,8 @@ const DEFAULT_MODELS: LlmInsertModel[] = [
     },
     priceMetadata: {
       type: "text",
-      promptTokenPrice: 10,
-      completionTokenPrice: 10,
+      promptTokenPrice: 165, // 0.165 € per 1M tokens,
+      completionTokenPrice: 60, // 0.60 € per 1M tokens,
     },
     organizationId: ORGANIZATION_ID,
   },

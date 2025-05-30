@@ -27,7 +27,25 @@ export async function streamToController(
 }
 
 /**
- * Concatenates the prompt messages and the model’s final answer,
+ * Extracts text content from a message, handling both string and array content formats
+ */
+function extractTextFromMessage(message: ChatCompletionMessageParam): string {
+  if (typeof message.content === "string") {
+    return message.content;
+  }
+
+  if (Array.isArray(message.content)) {
+    return message.content
+      .filter((part) => part.type === "text")
+      .map((part) => (part as any).text)
+      .join(" ");
+  }
+
+  return "";
+}
+
+/**
+ * Concatenates the prompt messages and the model's final answer,
  * then calculates token usage using the tiktoken library.
  * This is a HEURISTIC calculation and only exists due to IONOS
  * not sending a completion usage when requestion chat completion with streams enabled
@@ -47,12 +65,12 @@ export function calculateCompletionUsage({
 }): CompletionUsage {
   const enc = get_encoding("cl100k_base");
   try {
-    const promptText = messages.map((msg) => msg.content).join(" ");
+    const promptText = messages.map(extractTextFromMessage).join(" ");
     const promptTokens = enc.encode(promptText).length;
 
-    const completionText = modelMessage.content?.toString();
+    const completionText = extractTextFromMessage(modelMessage);
     const completionTokens =
-      completionText !== undefined ? enc.encode(completionText).length : 0;
+      completionText !== "" ? enc.encode(completionText).length : 0;
 
     return {
       prompt_tokens: promptTokens,

@@ -9,7 +9,57 @@ export const completionSchema = {
           type: "object",
           properties: {
             role: { type: "string", enum: ["system", "user", "assistant"] },
-            content: { type: "string" },
+            content: {
+              oneOf: [
+                {
+                  type: "string",
+                  description: "Text content (legacy format)",
+                },
+                {
+                  type: "array",
+                  description:
+                    "Array of content parts (supports text and images)",
+                  items: {
+                    oneOf: [
+                      {
+                        type: "object",
+                        properties: {
+                          type: { type: "string", enum: ["text"] },
+                          text: { type: "string" },
+                        },
+                        required: ["type", "text"],
+                        description: "Text content part",
+                      },
+                      {
+                        type: "object",
+                        properties: {
+                          type: { type: "string", enum: ["image_url"] },
+                          image_url: {
+                            type: "object",
+                            properties: {
+                              url: {
+                                type: "string",
+                                description:
+                                  "URL of the image or base64 encoded image data (data:image/jpeg;base64,...)",
+                              },
+                              detail: {
+                                type: "string",
+                                enum: ["auto", "low", "high"],
+                                description:
+                                  "Image detail level for processing",
+                              },
+                            },
+                            required: ["url"],
+                          },
+                        },
+                        required: ["type", "image_url"],
+                        description: "Image content part",
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
           },
           required: ["role", "content"],
         },

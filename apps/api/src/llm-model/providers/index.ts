@@ -4,7 +4,7 @@ import {
   constructIonosCompletionStreamFn,
   constructIonosEmbeddingFn,
 } from "./ionos";
-import { CompletionFn, CompletionStreamFn, EmbeddingFn } from "../types";
+import { CompletionFn, CompletionStreamFn } from "../types";
 import {
   constructOpenAiCompletionFn,
   constructOpenAiCompletionStreamFn,

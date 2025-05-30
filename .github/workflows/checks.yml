@@ -33,3 +33,6 @@ jobs:
 
       - name: Check types
         run: pnpm types
+
+      - name: Check linting
+        run: pnpm lint

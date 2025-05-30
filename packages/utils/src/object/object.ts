@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Creates a deep copy of the provided object or array, and handling
  * a wider range of built-in types: Date, Map, Set, File.

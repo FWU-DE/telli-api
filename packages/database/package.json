@@ -9,6 +9,7 @@
   "scripts": {
     "db:generate": "dotenv -e ../../.env -- drizzle-kit generate",
     "db:migrate": "dotenv -e ../../.env -- drizzle-kit migrate --config=./drizzle.config.ts",
+    "db:seed": "dotenv -e ../../.env -- tsx src/seed.ts",
     "types": "tsc --noEmit",
     "lint": "eslint \"**/*.ts*\" --max-warnings 0"
   },

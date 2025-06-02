@@ -220,5 +220,8 @@ export const completionRequestSchemaSwagger = {
       },
     ],
   },
+  summary: "Chat completion",
+  description:
+    "proxy for openai compatible chat completion the standard is not fully implemented. Supports text input and image input. Image input is not supported for all models. If a model does not support image input, the request will fail with a generic 400 error. See examples for usage. example1 generic text usage, exampe 2-4 image usage. Usage is metered by the api key and the associated project. If the buget is exceeds the limit, the request will fail with a 429 error.",
   security: [{ bearerAuth: [] }],
 };

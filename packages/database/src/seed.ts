@@ -54,7 +54,7 @@ const DEFAULT_MODELS: LlmInsertModel[] = [
     organizationId: ORGANIZATION_ID,
   },
   {
-    id: "0c4d9640-549c-43a5-815d-c80512a8e7e2",
+    id: "9578ed80-b0c2-4968-b253-d897576e5512",
     provider: "azure",
     name: "gpt-4o-mini",
     displayName: "OpenAI GPT-4o Mini",

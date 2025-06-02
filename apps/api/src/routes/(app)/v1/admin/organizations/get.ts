@@ -12,5 +12,5 @@ export async function handler(
 
   const organizations = await dbGetAllOrganizations();
 
-  return reply.send({ organizations }).status(200);
+  return reply.status(200).send({ organizations });
 }

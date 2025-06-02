@@ -13,5 +13,5 @@ export async function handler(
 
   const models = await dbGetModelsByApiKeyId({ apiKeyId: apiKey.id });
 
-  reply.send(obscureModels(models)).status(200);
+  reply.status(200).send(obscureModels(models));
 }

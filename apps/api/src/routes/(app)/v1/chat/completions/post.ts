@@ -15,6 +15,23 @@ import { ChatCompletionMessageParam } from "openai/resources/chat/completions.mj
 import { CompletionUsage } from "openai/resources/completions.mjs";
 import { z } from "zod";
 
+const safetyCheckFailedChunk = {
+  choices: [
+    {
+      index: 0,
+      delta: {
+        content:
+          "Die Anfrage wurde wegen unangemessener Inhalte automatisch blockiert.",
+      },
+    },
+  ],
+  object: "chat.completion.chunk",
+  usage: {
+    prompt_tokens: 0,
+    completion_tokens: 0,
+  },
+};
+
 // Define content part schemas for image and text
 const textContentPartSchema = z.object({
   type: z.literal("text"),
@@ -78,7 +95,7 @@ export async function handler(
   const [apiKeyError, apiKey] = await validateApiKeyWithResult(request, reply);
 
   if (apiKeyError !== null) {
-    reply.send({ error: apiKeyError.message });
+    reply.status(401).send({ error: apiKeyError.message });
     return;
   }
 
@@ -86,12 +103,10 @@ export async function handler(
 
   const requestParseResult = completionRequestSchema.safeParse(request.body);
   if (!requestParseResult.success) {
-    reply
-      .send({
-        error: "Bad request",
-        details: requestParseResult.error.message,
-      })
-      .status(404);
+    reply.status(400).send({
+      error: "Bad request",
+      details: requestParseResult.error.message,
+    });
     return;
   }
 
@@ -101,17 +116,15 @@ export async function handler(
     });
 
   if (limitCalculationError !== null) {
-    reply
-      .send({
-        error: `Something went wrong while calculating the current limits.`,
-        details: limitCalculationError.message,
-      })
-      .status(500);
+    reply.status(500).send({
+      error: `Something went wrong while calculating the current limits.`,
+      details: limitCalculationError.message,
+    });
     return;
   }
 
   if (limitCalculationResult.hasReachedLimit) {
-    reply.send({ error: "You have reached the price limit" }).status(429);
+    reply.status(429).send({ error: "You have reached the price limit" });
     return;
   }
 
@@ -129,11 +142,9 @@ export async function handler(
         );
 
   if (model === undefined) {
-    reply
-      .send({
-        error: `No model with name ${body.model} found.${maybeProviderHeader !== undefined ? ` Requested Provider: ${maybeProviderHeader}` : ""}`,
-      })
-      .status(404);
+    reply.status(404).send({
+      error: `No model with name ${body.model} found.${maybeProviderHeader !== undefined ? ` Requested Provider: ${maybeProviderHeader}` : ""}`,
+    });
     return;
   }
 
@@ -141,11 +152,9 @@ export async function handler(
     const completionStreamFn = getCompletionStreamFnByModel({ model });
 
     if (completionStreamFn === undefined) {
-      reply
-        .send({
-          error: `Could not find a callback function for the provider ${model.provider}.`,
-        })
-        .send(400);
+      reply.status(400).send({
+        error: `Could not find a callback function for the provider ${model.provider}.`,
+      });
       return;
     }
 
@@ -155,17 +164,32 @@ export async function handler(
       "Transfer-Encoding": "chunked",
       Connection: "keep-alive",
     });
-
-    const stream = await completionStreamFn({
-      messages: body.messages as ChatCompletionMessageParam[],
-      model: model.name,
-      temperature: body.temperature,
-      max_tokens: body.max_tokens,
-      async onUsageCallback(usage) {
-        await onUsageCallback({ usage, apiKey, model });
-      },
-    });
-
+    let stream: ReadableStream<Uint8Array>;
+    try {
+      stream = await completionStreamFn({
+        messages: body.messages as ChatCompletionMessageParam[],
+        model: model.name,
+        temperature: body.temperature,
+        max_tokens: body.max_tokens,
+        async onUsageCallback(usage) {
+          await onUsageCallback({ usage, apiKey, model });
+        },
+      });
+    } catch (error) {
+      console.log("Error processing stream stream:", error);
+      stream = new ReadableStream({
+        start(controller) {
+          controller.enqueue(
+            new TextEncoder().encode(
+              JSON.stringify(safetyCheckFailedChunk) + "\n\n",
+            ),
+          );
+          controller.enqueue(new TextEncoder().encode("[DONE]\n\n"));
+          //controller.error(new Error("Inappropriate content or other error"));
+          controller.close();
+        },
+      });
+    }
     const reader = stream.getReader();
 
     async function processStream() {
@@ -192,11 +216,9 @@ export async function handler(
     const completionFn = getCompletionFnByModel({ model });
 
     if (completionFn === undefined) {
-      reply
-        .send({
-          error: `Could not find a callback function for the provider ${model.provider}.`,
-        })
-        .send(400);
+      reply.status(400).send({
+        error: `Could not find a callback function for the provider ${model.provider}.`,
+      });
       return;
     }
 
@@ -207,7 +229,7 @@ export async function handler(
       max_tokens: body.max_tokens,
     });
 
-    reply.send(response).status(200);
+    reply.status(200).send(response);
 
     if (response.usage !== undefined) {
       await onUsageCallback({ usage: response.usage, apiKey, model });

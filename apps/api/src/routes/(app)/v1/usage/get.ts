@@ -20,12 +20,10 @@ export async function handler(
   });
 
   if (error !== null) {
-    reply
-      .send({
-        error: "Something went wrong while calculating the usage",
-        details: error.message,
-      })
-      .status(500);
+    reply.status(500).send({
+      error: "Something went wrong while calculating the usage",
+      details: error.message,
+    });
     return;
   }
 
@@ -34,7 +32,7 @@ export async function handler(
     _remainingLimitInCent > 0 ? _remainingLimitInCent : 0;
 
   reply
-    .send({ remainingLimitInCent, limitInCent: apiKey.limitInCent })
-    .status(200);
+    .status(200)
+    .send({ remainingLimitInCent, limitInCent: apiKey.limitInCent });
   return;
 }

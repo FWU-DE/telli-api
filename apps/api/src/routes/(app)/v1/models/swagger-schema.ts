@@ -28,5 +28,8 @@ export const modelRequestSwaggerSchema: FastifySchema = {
     },
     ...SWAGGER_DEFAULT_RESPONSES_SCHEMA,
   },
+  summary: "List models for the current api key and project",
+  description:
+    "list the models as objects with the following properties: id, name, createdAt, provider, displayName, description, pricingData",
   security: [{ bearerAuth: [] }],
 };

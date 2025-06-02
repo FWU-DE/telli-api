@@ -54,6 +54,7 @@ export function constructIonosCompletionStreamFn(
         yield JSON.stringify(chunk);
       }
       // calculate the token usage manually as ionos does not return it
+      // TODO: add token count for image inputs. See guide for token count calculation https://platform.openai.com/docs/guides/images-vision?api-mode=responses&format=file
       const usage = calculateCompletionUsage({
         messages,
         modelMessage: { role: "assistant", content },

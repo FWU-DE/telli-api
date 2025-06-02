@@ -33,7 +33,15 @@ async function main() {
 
   // eslint-disable-next-line no-empty-pattern
   fastify.setSerializerCompiler(({}) => {
+    // eslint-disable-next-line no-unused-vars
     return (data) => JSON.stringify(data);
+  });
+
+  // This disables fastify's implicit logic validating and coercing the request body, because this is very error prone on complex schemas
+  // the validation is instead always done by the Zod schema
+  // eslint-disable-next-line no-empty-pattern
+  fastify.setValidatorCompiler(() => {
+    return () => true;
   });
 
   await initSwagger(fastify);

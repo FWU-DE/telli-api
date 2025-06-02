@@ -28,4 +28,7 @@ export const embeddingRequestSwaggerSchema = {
     required: ["model", "input"],
   },
   security: [{ bearerAuth: [] }],
+  summary: "Create embeddings for the given model and input of size 1024",
+  description:
+    "create embeddings for the given model and input. Supports batch-embedding. The input is an array of strings, type string as input is not supported. The embeddings are returned as an array of numbers the size is ALWAYS 1024. The embeddings are metered by the api key and the associated project. If the buget is exceeds the limit, the request will fail with a 429 error.",
 };

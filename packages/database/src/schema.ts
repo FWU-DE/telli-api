@@ -44,7 +44,10 @@ export const llmModelTable = pgTable("llm_model", {
   createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
     .defaultNow()
     .notNull(),
-  supportedImageFormats: json("supported_image_formats").$type<string[]>().notNull().default([]),
+  supportedImageFormats: json("supported_image_formats")
+    .$type<string[]>()
+    .notNull()
+    .default([]),
 });
 export type LlmInsertModel = typeof llmModelTable.$inferInsert;
 export type LlmModel = typeof llmModelTable.$inferSelect;

@@ -2,7 +2,10 @@ import {
   getCompletionFnByModel,
   getCompletionStreamFnByModel,
 } from "@/llm-model/providers";
-import { getContentFilterFailedChunk, validateApiKeyWithResult } from "@/routes/utils";
+import {
+  getContentFilterFailedChunk,
+  validateApiKeyWithResult,
+} from "@/routes/utils";
 import {
   ApiKeyModel,
   checkLimitsByApiKeyIdWithResult,
@@ -14,7 +17,6 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { ChatCompletionMessageParam } from "openai/resources/chat/completions.mjs";
 import { CompletionUsage } from "openai/resources/completions.mjs";
 import { z } from "zod";
-
 
 // Define content part schemas for image and text
 const textContentPartSchema = z.object({
@@ -44,7 +46,7 @@ const completionRequestSchema = z.object({
     z.object({
       role: z.enum(["system", "user", "assistant", "developer"]),
       content: messageContentSchema,
-    })
+    }),
   ),
   max_tokens: z.number().optional().nullable(),
   temperature: z.coerce.number().optional().default(0.4),
@@ -74,7 +76,7 @@ async function onUsageCallback({
 
 export async function handler(
   request: FastifyRequest,
-  reply: FastifyReply
+  reply: FastifyReply,
 ): Promise<void> {
   const [apiKeyError, apiKey] = await validateApiKeyWithResult(request, reply);
 
@@ -122,7 +124,7 @@ export async function handler(
       ? availableModels.find((model) => model.name === body.model)
       : availableModels.find(
           (model) =>
-            model.name === body.model && model.provider === maybeProviderHeader
+            model.name === body.model && model.provider === maybeProviderHeader,
         );
 
   if (model === undefined) {
@@ -161,23 +163,32 @@ export async function handler(
       });
     } catch (error) {
       // Check if error has a code field and evaluate its value not all providers have a code field
-      const errorCode = error instanceof Error && 'code' in error ? (error as any).code : undefined;
-      
-      const contentFilterTriggered = errorCode === 'content_filter';
-      
-      console.error('Error processing stream:', {
+      const errorCode =
+        error instanceof Error && "code" in error
+          ? (error as any).code
+          : undefined;
+
+      const contentFilterTriggered = errorCode === "content_filter";
+
+      console.error("Error processing stream:", {
         errorCode,
         contentFilterTriggered,
-        message: error instanceof Error ? error.message : 'Unknown error'
+        message: error instanceof Error ? error.message : "Unknown error",
       });
-      
+
       stream = new ReadableStream({
         start(controller) {
           if (contentFilterTriggered) {
             controller.enqueue(
               new TextEncoder().encode(
-                JSON.stringify(getContentFilterFailedChunk({id: crypto.randomUUID(), created: Date.now(), model: model.name})) + "\n\n"
-              )
+                JSON.stringify(
+                  getContentFilterFailedChunk({
+                    id: crypto.randomUUID(),
+                    created: Date.now(),
+                    model: model.name,
+                  }),
+                ) + "\n\n",
+              ),
             );
           }
           // Always send [DONE] to close the stream properly

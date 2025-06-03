@@ -185,7 +185,6 @@ export async function handler(
             ),
           );
           controller.enqueue(new TextEncoder().encode("[DONE]\n\n"));
-          //controller.error(new Error("Inappropriate content or other error"));
           controller.close();
         },
       });

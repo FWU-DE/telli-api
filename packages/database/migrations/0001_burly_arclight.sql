@@ -1,1 +1,1 @@
-ALTER TABLE "llm_model" ADD COLUMN "supported_file_formats" json DEFAULT '["docx","pdf","md","txt"]'::json NOT NULL;
+ALTER TABLE "llm_model" ADD COLUMN "supported_image_formats" json DEFAULT '[]'::json NOT NULL;

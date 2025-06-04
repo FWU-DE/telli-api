@@ -8,6 +8,13 @@
       "when": 1738621035963,
       "tag": "0000_amused_pandemic",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1748939578972,
+      "tag": "0001_burly_arclight",
+      "breakpoints": true
     }
   ]
 }

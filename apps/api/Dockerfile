@@ -26,4 +26,4 @@ COPY --from=installer /app .
 RUN npm i -g pnpm@9.12.3
 RUN pnpm i
 
-CMD ["pnpm", "start:api"]
+CMD pnpm db:migrate && pnpm start:api

@@ -15,21 +15,14 @@ export const modelRequestSwaggerSchema: FastifySchema = {
           provider: { type: "string" },
           displayName: { type: "string" },
           description: { type: "string" },
+          supportedImageFormats: { type: "array", items: { type: "string" } },
         },
-        // required: [
-        //   "id",
-        //   "name",
-        //   "createdAt",
-        //   "provider",
-        //   "displayName",
-        //   "description",
-        // ],
       },
     },
     ...SWAGGER_DEFAULT_RESPONSES_SCHEMA,
   },
   summary: "List models for the current api key and project",
   description:
-    "list the models as objects with the following properties: id, name, createdAt, provider, displayName, description, pricingData",
+    "list the models as objects with the following properties: id, name, createdAt, provider, displayName, description, pricingData, supportedImageFormats (array of strings). If no image formats are listed, the model does not support images.",
   security: [{ bearerAuth: [] }],
 };

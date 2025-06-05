@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { dbGetOrganizationAndProjectsByOrganizationId } from "@dgpt/db";
 import { validateAdminApiKey } from "../../utils";
-import z from "zod";
+import { z } from "zod";
 import { obscureModels } from "../../../models/utils";
 
 export async function handler(
@@ -26,6 +26,6 @@ export async function handler(
   return reply.status(200).send({
     ...organization,
     models: obscureModels(organization.models),
-    modelIds: organization.models.map((m) => m.id),
+    modelIds: organization.models.map((m: any) => m.id),
   });
 }

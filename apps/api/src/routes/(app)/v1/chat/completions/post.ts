@@ -1,8 +1,8 @@
 import {
   getCompletionFnByModel,
   getCompletionStreamFnByModel,
-} from "@/llm-model/providers";
-import { validateApiKeyWithResult } from "@/routes/utils";
+} from "../../../../../llm-model/providers";
+import { validateApiKeyWithResult } from "../../../../utils";
 import {
   ApiKeyModel,
   checkLimitsByApiKeyIdWithResult,
@@ -122,10 +122,10 @@ export async function handler(
   const maybeProviderHeader = request.headers["x-llm-provider"];
   const model =
     maybeProviderHeader === undefined
-      ? availableModels.find((model) => model.name === body.model)
+      ? availableModels.find((m: any) => m.name === body.model)
       : availableModels.find(
-          (model) =>
-            model.name === body.model && model.provider === maybeProviderHeader,
+          (m: any) =>
+            m.name === body.model && m.provider === maybeProviderHeader,
         );
 
   if (model === undefined) {
@@ -161,7 +161,7 @@ export async function handler(
       model: model.name,
       temperature: body.temperature,
       max_tokens: body.max_tokens,
-      async onUsageCallback(usage) {
+      async onUsageCallback(usage: any) {
         await onUsageCallback({ usage, apiKey, model });
       },
     });

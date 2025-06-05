@@ -36,7 +36,7 @@ export async function validateApiKey(
   const apiKeyValidationResponse = await dbValidateApiKey(authorizationHeader);
 
   if (!apiKeyValidationResponse.valid) {
-    reply.status(403).send({ error: apiKeyValidationResponse.reason });
+    reply.status(403).send({ error: (apiKeyValidationResponse as any).reason });
     return undefined;
   }
 

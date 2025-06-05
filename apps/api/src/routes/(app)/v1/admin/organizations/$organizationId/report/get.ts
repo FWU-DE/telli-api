@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { validateAdminApiKey } from "../../../utils";
 import { dbGetProjectsWithApiKeys } from "@dgpt/db";
-import z from "zod";
+import { z } from "zod";
 import { convertToCSV, createMonthlyCostReports } from "./utils";
 
 export async function handler(

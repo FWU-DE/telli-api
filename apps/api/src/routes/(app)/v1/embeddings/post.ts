@@ -1,5 +1,5 @@
-import { getEmbeddingFnByModel } from "@/llm-model/providers";
-import { validateApiKeyWithResult } from "@/routes/utils";
+import { getEmbeddingFnByModel } from "../../../../../llm-model/providers";
+import { validateApiKeyWithResult } from "../../../../utils";
 import {
   checkLimitsByApiKeyIdWithResult,
   dbGetModelsByApiKeyId,
@@ -66,10 +66,10 @@ export async function handler(
   const maybeProviderHeader = request.headers["x-llm-provider"];
   const model =
     maybeProviderHeader === undefined
-      ? availableModels.find((model) => model.name === body.model)
+      ? availableModels.find((m: any) => m.name === body.model)
       : availableModels.find(
-          (model) =>
-            model.name === body.model && model.provider === maybeProviderHeader,
+          (m: any) =>
+            m.name === body.model && m.provider === maybeProviderHeader,
         );
 
   if (model === undefined) {

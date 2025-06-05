@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { dbGetAllApiKeysByProjectId, dbGetProjectById } from "@dgpt/db";
-import z from "zod";
+import { z } from "zod";
 import { validateAdminApiKey } from "../../../utils";
 
 export async function handler(

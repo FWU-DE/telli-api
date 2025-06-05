@@ -6,7 +6,7 @@ import { initSwagger } from "./swagger";
 import cors from "@fastify/cors";
 import fastifyMultipart from "@fastify/multipart";
 
-import Sentry from "@sentry/node";
+import * as Sentry from "@sentry/node";
 const nodeEnv = process.env.NODE_ENV ?? "development";
 
 async function main() {

@@ -5,7 +5,7 @@ import {
   dbGetOrganizationByProjectId,
 } from "@dgpt/db";
 import { validateAdminApiKey } from "../utils";
-import z from "zod";
+import { z } from "zod";
 
 const createApiKeyRequestSchema = z.object({
   name: z.string(),
@@ -40,8 +40,8 @@ export async function handler(
   const apiKey = await dbCreateApiKey({
     organizationId: organization.id,
     projectId: body.projectId,
-    modelIds: body.modelIds.filter((modelId) =>
-      models.some((m) => m.id === modelId),
+    modelIds: body.modelIds.filter((modelId: string) =>
+      models.some((m: any) => m.id === modelId),
     ),
     name: body.name,
     budget: body.budget,

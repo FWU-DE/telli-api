@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { validateAdminApiKey } from "../utils";
 import { obscureModels } from "../../models/utils";
-import z from "zod";
+import { z } from "zod";
 import { llmModelSettingsSchema } from "@dgpt/llm-model";
 import { llmModelPriceMetadataSchema } from "@dgpt/db";
 import { dbCreateModelWithApiKeyLinks } from "@dgpt/db";
@@ -34,14 +34,14 @@ export async function handler(
 
   // Move all DB logic to the function
   const dbResult = await dbCreateModelWithApiKeyLinks({
-    provider: result.provider,
-    name: result.name,
-    displayName: result.displayName,
-    description: result.description,
+    provider: result.provider as string,
+    name: result.name as string,
+    displayName: result.displayName as string,
+    description: result.description as string | undefined,
     settings: result.settings,
-    priceMetadata: result.priceMetadata,
-    organizationId: result.organizationId,
-    apiKeyNames: result.apiKeyNames,
+    priceMetadata: result.priceMetadata as string,
+    organizationId: result.organizationId as string,
+    apiKeyNames: result.apiKeyNames as string[] | undefined,
   });
 
   if (dbResult?.error !== undefined) {

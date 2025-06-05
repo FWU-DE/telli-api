@@ -1,4 +1,4 @@
-import { validateApiKey } from "@/routes/utils";
+import { validateApiKey } from "../../../../utils";
 import { dbGetModelsByApiKeyId } from "@dgpt/db";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { obscureModels } from "./utils";

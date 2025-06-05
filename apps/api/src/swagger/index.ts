@@ -41,7 +41,14 @@ export async function initSwagger(fastify: FastifyInstance) {
       // docExpansion: "none",
       deepLinking: false,
     },
-    staticCSP: true,
+    staticCSP: {
+      "default-src": ["'none'"],
+      "connect-src": ["'self'", "127.0.0.1", "localhost"],
+      "style-src": ["'self'", "'unsafe-inline'", "https:"],
+      "script-src": ["'self'"],
+      "img-src": ["'self'", "data:", "https:"],
+      "font-src": ["'self'", "https:"],
+    },
     transformSpecification: (swaggerObject) => swaggerObject,
   });
 }

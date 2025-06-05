@@ -1,5 +1,5 @@
-import { env } from "@/env";
-import { getMaybeBearerToken } from "@/routes/utils";
+import { env } from "../../../../../env";
+import { getMaybeBearerToken } from "../../../../utils";
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export function validateAdminApiKey(

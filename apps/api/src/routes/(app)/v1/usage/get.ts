@@ -1,4 +1,4 @@
-import { validateApiKey } from "@/routes/utils";
+import { validateApiKey } from "../../../../utils";
 import { getCurrentUsageInCentByApiKeyIdWithResult } from "@dgpt/db";
 import { getEndOfCurrentMonth, getStartOfCurrentMonth } from "@dgpt/utils";
 import { FastifyReply, FastifyRequest } from "fastify";

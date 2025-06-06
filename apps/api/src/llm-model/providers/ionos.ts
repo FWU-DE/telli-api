@@ -125,6 +125,17 @@ export function constructIonosEmbeddingFn(llmModel: LlmModel) {
     usage: CompletionUsage;
     model: string;
   }> {
+    if (input.length === 0) {
+      return {
+        data: [],
+        usage: {
+          prompt_tokens: 0,
+          total_tokens: 0,
+          completion_tokens: 0,
+        },
+        model: llmModel.name,
+      };
+    }
     const { data, usage } = await client.embeddings.create({ input, model });
     return {
       data,

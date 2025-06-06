@@ -17,9 +17,10 @@ const PROJECT_ID = "test-project-0";
 const API_KEY_NAME = "Test API Key";
 // All prices are rough estimates, probably outdated and just for mocking purposes
 // Static ids are used to ensure that the models are not created again
+// the ids are taken from the staging/production database for interoperability to be able to connect to local telli api or staging
 const DEFAULT_MODELS: LlmInsertModel[] = [
   {
-    id: "1c4485dd-2f5e-4288-ab53-afa236ee659b",
+    id: "b870b74d-7458-4dcf-99f6-ace83ef514f4",
     provider: "ionos",
     name: "BAAI/bge-m3",
     displayName: "IONOS BGE M3",
@@ -35,7 +36,7 @@ const DEFAULT_MODELS: LlmInsertModel[] = [
     organizationId: ORGANIZATION_ID,
   },
   {
-    id: "5a3e3184-f0c1-4dee-8821-1bbd1f1e5ea6",
+    id: "7dcb063f-5241-4846-b11f-a621ea1dd4a9",
     provider: "ionos",
     name: "meta-llama/Meta-Llama-3.1-8B-Instruct",
     displayName: "IONOS Llama 3 8B Instruct",
@@ -53,7 +54,7 @@ const DEFAULT_MODELS: LlmInsertModel[] = [
     organizationId: ORGANIZATION_ID,
   },
   {
-    id: "9e51dda7-0b5c-4fec-a3fc-19836cad702d",
+    id: "9578ed80-b0c2-4968-b253-d897576e5512",
     provider: "azure",
     name: "gpt-4o-mini",
     displayName: "OpenAI GPT-4o Mini",

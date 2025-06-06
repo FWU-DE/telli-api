@@ -29,9 +29,9 @@ export async function handler(
 
   if (format === "csv") {
     const csvString = convertToCSV(report);
-    reply.send(csvString).status(200);
+    reply.status(200).send(csvString);
     return;
   }
 
-  return reply.send({ report }).status(200);
+  return reply.status(200).send({ report });
 }

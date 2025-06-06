@@ -2,7 +2,10 @@ import {
   getCompletionFnByModel,
   getCompletionStreamFnByModel,
 } from "@/llm-model/providers";
-import { validateApiKeyWithResult } from "@/routes/utils";
+import {
+  getContentFilterFailedChunk,
+  validateApiKeyWithResult,
+} from "@/routes/utils";
 import {
   ApiKeyModel,
   checkLimitsByApiKeyIdWithResult,
@@ -78,7 +81,7 @@ export async function handler(
   const [apiKeyError, apiKey] = await validateApiKeyWithResult(request, reply);
 
   if (apiKeyError !== null) {
-    reply.send({ error: apiKeyError.message });
+    reply.status(401).send({ error: apiKeyError.message });
     return;
   }
 
@@ -86,12 +89,10 @@ export async function handler(
 
   const requestParseResult = completionRequestSchema.safeParse(request.body);
   if (!requestParseResult.success) {
-    reply
-      .send({
-        error: "Bad request",
-        details: requestParseResult.error.message,
-      })
-      .status(404);
+    reply.status(400).send({
+      error: "Bad request",
+      details: requestParseResult.error.message,
+    });
     return;
   }
 
@@ -101,17 +102,15 @@ export async function handler(
     });
 
   if (limitCalculationError !== null) {
-    reply
-      .send({
-        error: `Something went wrong while calculating the current limits.`,
-        details: limitCalculationError.message,
-      })
-      .status(500);
+    reply.status(500).send({
+      error: `Something went wrong while calculating the current limits.`,
+      details: limitCalculationError.message,
+    });
     return;
   }
 
   if (limitCalculationResult.hasReachedLimit) {
-    reply.send({ error: "You have reached the price limit" }).status(429);
+    reply.status(429).send({ error: "You have reached the price limit" });
     return;
   }
 
@@ -129,11 +128,9 @@ export async function handler(
         );
 
   if (model === undefined) {
-    reply
-      .send({
-        error: `No model with name ${body.model} found.${maybeProviderHeader !== undefined ? ` Requested Provider: ${maybeProviderHeader}` : ""}`,
-      })
-      .status(404);
+    reply.status(404).send({
+      error: `No model with name ${body.model} found.${maybeProviderHeader !== undefined ? ` Requested Provider: ${maybeProviderHeader}` : ""}`,
+    });
     return;
   }
 
@@ -141,11 +138,9 @@ export async function handler(
     const completionStreamFn = getCompletionStreamFnByModel({ model });
 
     if (completionStreamFn === undefined) {
-      reply
-        .send({
-          error: `Could not find a callback function for the provider ${model.provider}.`,
-        })
-        .send(400);
+      reply.status(400).send({
+        error: `Could not find a callback function for the provider ${model.provider}.`,
+      });
       return;
     }
 
@@ -155,17 +150,53 @@ export async function handler(
       "Transfer-Encoding": "chunked",
       Connection: "keep-alive",
     });
+    let stream: ReadableStream<Uint8Array>;
+    try {
+      stream = await completionStreamFn({
+        messages: body.messages as ChatCompletionMessageParam[],
+        model: model.name,
+        temperature: body.temperature,
+        max_tokens: body.max_tokens,
+        async onUsageCallback(usage) {
+          await onUsageCallback({ usage, apiKey, model });
+        },
+      });
+    } catch (error) {
+      // Check if error has a code field and evaluate its value not all providers have a code field
+      const errorCode =
+        error instanceof Error && "code" in error
+          ? (error as any).code
+          : undefined;
 
-    const stream = await completionStreamFn({
-      messages: body.messages as ChatCompletionMessageParam[],
-      model: model.name,
-      temperature: body.temperature,
-      max_tokens: body.max_tokens,
-      async onUsageCallback(usage) {
-        await onUsageCallback({ usage, apiKey, model });
-      },
-    });
+      const contentFilterTriggered = errorCode === "content_filter";
 
+      console.error("Error processing stream:", {
+        errorCode,
+        contentFilterTriggered,
+        message: error instanceof Error ? error.message : "Unknown error",
+      });
+
+      stream = new ReadableStream({
+        start(controller) {
+          if (contentFilterTriggered) {
+            controller.enqueue(
+              new TextEncoder().encode(
+                JSON.stringify(
+                  getContentFilterFailedChunk({
+                    id: crypto.randomUUID(),
+                    created: Date.now(),
+                    model: model.name,
+                  }),
+                ) + "\n\n",
+              ),
+            );
+          }
+          // Always send [DONE] to close the stream properly
+          controller.enqueue(new TextEncoder().encode("[DONE]\n\n"));
+          controller.close();
+        },
+      });
+    }
     const reader = stream.getReader();
 
     async function processStream() {
@@ -192,11 +223,9 @@ export async function handler(
     const completionFn = getCompletionFnByModel({ model });
 
     if (completionFn === undefined) {
-      reply
-        .send({
-          error: `Could not find a callback function for the provider ${model.provider}.`,
-        })
-        .send(400);
+      reply.status(400).send({
+        error: `Could not find a callback function for the provider ${model.provider}.`,
+      });
       return;
     }
 
@@ -207,7 +236,7 @@ export async function handler(
       max_tokens: body.max_tokens,
     });
 
-    reply.send(response).status(200);
+    reply.status(200).send(response);
 
     if (response.usage !== undefined) {
       await onUsageCallback({ usage: response.usage, apiKey, model });

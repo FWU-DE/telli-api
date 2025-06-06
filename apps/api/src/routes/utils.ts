@@ -1,6 +1,7 @@
 import { ApiKeyModel, dbValidateApiKey } from "@dgpt/db";
 import { errorifyAsyncFn } from "@dgpt/utils";
 import { FastifyReply, FastifyRequest } from "fastify";
+import { ChatCompletionChunk } from "openai/resources/chat/completions.mjs";
 
 const BEARER_PREFIX = "Bearer ";
 
@@ -41,4 +42,31 @@ export async function validateApiKey(
   }
 
   return apiKeyValidationResponse.apiKey;
+}
+
+export function getContentFilterFailedChunk({
+  id,
+  created,
+  model,
+}: {
+  id: string;
+  created: number;
+  model: string;
+}): ChatCompletionChunk {
+  return {
+    choices: [
+      {
+        index: 0,
+        delta: {
+          content:
+            "Die Anfrage wurde wegen unangemessener Inhalte automatisch blockiert.",
+        },
+        finish_reason: "content_filter",
+      },
+    ],
+    id,
+    created,
+    model,
+    object: "chat.completion.chunk",
+  };
 }

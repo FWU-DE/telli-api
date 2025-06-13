@@ -1,5 +1,4 @@
 import {
-  boolean,
   integer,
   pgEnum,
   pgTable,
@@ -60,7 +59,7 @@ export type LlmModel = typeof llmModelTable.$inferSelect;
 export const apiKeyStateSchema = z.enum(["active", "inactive", "deleted"]);
 export const apiKeyStateEnum = pgEnum(
   "api_key_state",
-  apiKeyStateSchema.options
+  apiKeyStateSchema.options,
 );
 export type ApiKeyState = z.infer<typeof apiKeyStateSchema>;
 
@@ -116,7 +115,7 @@ export const completionUsageTrackingTable = pgTable(
     createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
       .defaultNow()
       .notNull(),
-  }
+  },
 );
 export type CompletionUsageInsertModel =
   typeof completionUsageTrackingTable.$inferInsert;

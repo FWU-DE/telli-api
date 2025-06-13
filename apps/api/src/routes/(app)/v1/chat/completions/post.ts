@@ -119,18 +119,18 @@ export async function handler(
   if (body.temperature === undefined) {
     body.temperature = 0.4;
   }
-  
+
   const availableModels = await dbGetModelsByApiKeyId({ apiKeyId: apiKey.id });
-  
+
   const maybeProviderHeader = request.headers["x-llm-provider"];
   const model =
-  maybeProviderHeader === undefined
-  ? availableModels.find((model) => model.name === body.model)
-  : availableModels.find(
-    (model) =>
-      model.name === body.model && model.provider === maybeProviderHeader,
-  );
-  
+    maybeProviderHeader === undefined
+      ? availableModels.find((model) => model.name === body.model)
+      : availableModels.find(
+          (model) =>
+            model.name === body.model && model.provider === maybeProviderHeader,
+        );
+
   if (model === undefined) {
     reply.status(404).send({
       error: `No model with name ${body.model} found.${maybeProviderHeader !== undefined ? ` Requested Provider: ${maybeProviderHeader}` : ""}`,

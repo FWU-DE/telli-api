@@ -49,7 +49,7 @@ const completionRequestSchema = z.object({
     }),
   ),
   max_tokens: z.number().optional().nullable(),
-  temperature: z.coerce.number().optional().default(0.4),
+  temperature: z.coerce.number().optional(),
   stream: z.boolean().optional(),
 });
 
@@ -116,22 +116,30 @@ export async function handler(
 
   const body = requestParseResult.data;
 
+  if (body.temperature === undefined) {
+    body.temperature = 0.4;
+  }
+  
   const availableModels = await dbGetModelsByApiKeyId({ apiKeyId: apiKey.id });
-
+  
   const maybeProviderHeader = request.headers["x-llm-provider"];
   const model =
-    maybeProviderHeader === undefined
-      ? availableModels.find((model) => model.name === body.model)
-      : availableModels.find(
-          (model) =>
-            model.name === body.model && model.provider === maybeProviderHeader,
-        );
-
+  maybeProviderHeader === undefined
+  ? availableModels.find((model) => model.name === body.model)
+  : availableModels.find(
+    (model) =>
+      model.name === body.model && model.provider === maybeProviderHeader,
+  );
+  
   if (model === undefined) {
     reply.status(404).send({
       error: `No model with name ${body.model} found.${maybeProviderHeader !== undefined ? ` Requested Provider: ${maybeProviderHeader}` : ""}`,
     });
     return;
+  }
+  if (model.name === "o3-mini") {
+    body.max_tokens = undefined;
+    body.temperature = undefined;
   }
 
   if (body.stream) {

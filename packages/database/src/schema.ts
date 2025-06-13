@@ -1,10 +1,15 @@
-import { pgEnum } from "drizzle-orm/pg-core";
-import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import {
+  boolean,
+  integer,
+  pgEnum,
+  pgTable,
+  text,
+  timestamp,
+  uuid,
+} from "drizzle-orm/pg-core";
 import { Budget, LlmModelPriceMetadata } from "./types";
 import { json } from "drizzle-orm/pg-core";
 import z from "zod";
-import { uuid } from "drizzle-orm/pg-core";
-import { integer } from "drizzle-orm/pg-core";
 import { LlmModelProviderSettings } from "@dgpt/llm-model";
 
 export const organizationTable = pgTable("organization", {
@@ -48,6 +53,7 @@ export const llmModelTable = pgTable("llm_model", {
     .$type<string[]>()
     .notNull()
     .default([]),
+  isReasoningModel: boolean("is_reasoning_model").notNull().default(false),
 });
 export type LlmInsertModel = typeof llmModelTable.$inferInsert;
 export type LlmModel = typeof llmModelTable.$inferSelect;
@@ -55,7 +61,7 @@ export type LlmModel = typeof llmModelTable.$inferSelect;
 export const apiKeyStateSchema = z.enum(["active", "inactive", "deleted"]);
 export const apiKeyStateEnum = pgEnum(
   "api_key_state",
-  apiKeyStateSchema.options,
+  apiKeyStateSchema.options
 );
 export type ApiKeyState = z.infer<typeof apiKeyStateSchema>;
 
@@ -111,7 +117,7 @@ export const completionUsageTrackingTable = pgTable(
     createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
       .defaultNow()
       .notNull(),
-  },
+  }
 );
 export type CompletionUsageInsertModel =
   typeof completionUsageTrackingTable.$inferInsert;

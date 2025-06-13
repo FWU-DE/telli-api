@@ -53,7 +53,6 @@ export const llmModelTable = pgTable("llm_model", {
     .$type<string[]>()
     .notNull()
     .default([]),
-  isReasoningModel: boolean("is_reasoning_model").notNull().default(false),
 });
 export type LlmInsertModel = typeof llmModelTable.$inferInsert;
 export type LlmModel = typeof llmModelTable.$inferSelect;

@@ -374,12 +374,12 @@
           "notNull": true,
           "default": "now()"
         },
-        "supported_file_formats": {
-          "name": "supported_file_formats",
+        "supported_image_formats": {
+          "name": "supported_image_formats",
           "type": "json",
           "primaryKey": false,
           "notNull": true,
-          "default": "'[\"docx\",\"pdf\",\"md\",\"txt\"]'::json"
+          "default": "'[]'::json"
         }
       },
       "indexes": {},

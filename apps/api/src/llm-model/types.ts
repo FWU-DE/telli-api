@@ -9,7 +9,7 @@ import {
 export type CommonLlmProviderStreamParameter = {
   messages: Array<ChatCompletionMessageParam>;
   model: string;
-  temperature: number;
+  temperature?: number;
   max_tokens: number | undefined | null;
   onUsageCallback(data: CompletionUsage): void;
 };
@@ -21,7 +21,7 @@ export type CompletionStreamFn = (
 export type CompletionFn = (args: {
   messages: ChatCompletionMessageParam[];
   model: string;
-  temperature: number;
+  temperature?: number;
   max_tokens: number | undefined | null;
 }) => Promise<OpenAI.Chat.Completions.ChatCompletion>;
 

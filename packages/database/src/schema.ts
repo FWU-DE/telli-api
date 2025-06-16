@@ -1,10 +1,14 @@
-import { pgEnum } from "drizzle-orm/pg-core";
-import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import {
+  integer,
+  pgEnum,
+  pgTable,
+  text,
+  timestamp,
+  uuid,
+} from "drizzle-orm/pg-core";
 import { Budget, LlmModelPriceMetadata } from "./types";
 import { json } from "drizzle-orm/pg-core";
 import z from "zod";
-import { uuid } from "drizzle-orm/pg-core";
-import { integer } from "drizzle-orm/pg-core";
 import { LlmModelProviderSettings } from "@dgpt/llm-model";
 
 export const organizationTable = pgTable("organization", {

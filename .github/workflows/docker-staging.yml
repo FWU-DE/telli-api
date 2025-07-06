@@ -3,6 +3,13 @@ name: Docker Staging
 on:
   push:
     branches: [main]
+    
+  workflow_dispatch:
+    inputs:
+      commit_hash:
+        description: 'Commit hash to build & deploy'
+        required: true
+        type: string
 
 env:
   REGISTRY: ghcr.io

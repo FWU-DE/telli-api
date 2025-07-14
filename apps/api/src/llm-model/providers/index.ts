@@ -3,8 +3,9 @@ import {
   constructIonosCompletionFn,
   constructIonosCompletionStreamFn,
   constructIonosEmbeddingFn,
+  constructIonosImageGenerationFn,
 } from "./ionos";
-import { CompletionFn, CompletionStreamFn } from "../types";
+import { CompletionFn, CompletionStreamFn, ImageGenerationFn } from "../types";
 import {
   constructOpenAiCompletionFn,
   constructOpenAiCompletionStreamFn,
@@ -12,6 +13,7 @@ import {
 import {
   constructAzureCompletionFn,
   constructAzureCompletionStreamFn,
+  constructAzureImageGenerationFn,
 } from "./azure";
 
 export function getEmbeddingFnByModel({ model }: { model: LlmModel }) {
@@ -53,6 +55,21 @@ export function getCompletionFnByModel({
 
   if (model.provider === "azure") {
     return constructAzureCompletionFn(model);
+  }
+
+  return undefined;
+}
+
+export function getImageGenerationFnByModel({
+  model,
+}: {
+  model: LlmModel;
+}): ImageGenerationFn | undefined {
+  if (model.provider === "ionos") {
+    return constructIonosImageGenerationFn(model);
+  }
+  if (model.provider === "azure") {
+    return constructAzureImageGenerationFn(model);
   }
 
   return undefined;

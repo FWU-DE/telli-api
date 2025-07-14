@@ -5,6 +5,7 @@ import {
   CompletionFn,
   CompletionStreamFn,
   EmbeddingFn,
+  ImageGenerationFn,
 } from "../types";
 import { LlmModel } from "@dgpt/db";
 import { calculateCompletionUsage } from "../utils";
@@ -142,5 +143,34 @@ export function constructIonosEmbeddingFn(llmModel: LlmModel) {
       usage: { ...usage, completion_tokens: 0 },
       model: llmModel.name,
     };
+  };
+}
+
+export function constructIonosImageGenerationFn(llmModel: LlmModel): ImageGenerationFn {
+  if (llmModel.setting.provider !== "ionos" || !llmModel.setting) {
+    throw new Error("Invalid model configuration for IONOS");
+  }
+
+  const client = new OpenAI({
+    apiKey: llmModel.setting.apiKey,
+    defaultHeaders: {
+      Authorization: `Bearer ${llmModel.setting.apiKey}`,
+    },
+    baseURL: llmModel.setting.baseUrl,
+  });
+
+  return async function getIonosImageGeneration({
+    prompt,
+    model,
+  }: Parameters<ImageGenerationFn>[0]) {
+    const result = await client.images.generate({
+      model,
+      prompt,
+      n: 1,
+      size: "1024x1024",
+      response_format: "b64_json",
+    });
+
+    return result;
   };
 }

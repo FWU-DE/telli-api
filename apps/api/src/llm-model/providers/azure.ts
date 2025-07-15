@@ -103,7 +103,9 @@ export function constructAzureCompletionFn(model: LlmModel): CompletionFn {
   };
 }
 
-export function constructAzureImageGenerationFn(model: LlmModel): ImageGenerationFn {
+export function constructAzureImageGenerationFn(
+  model: LlmModel,
+): ImageGenerationFn {
   if (model.setting.provider !== "azure") {
     throw new Error("Invalid model configuration for Azure");
   }

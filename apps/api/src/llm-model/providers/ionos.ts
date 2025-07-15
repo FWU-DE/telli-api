@@ -146,7 +146,9 @@ export function constructIonosEmbeddingFn(llmModel: LlmModel) {
   };
 }
 
-export function constructIonosImageGenerationFn(llmModel: LlmModel): ImageGenerationFn {
+export function constructIonosImageGenerationFn(
+  llmModel: LlmModel,
+): ImageGenerationFn {
   if (llmModel.setting.provider !== "ionos" || !llmModel.setting) {
     throw new Error("Invalid model configuration for IONOS");
   }

@@ -12,7 +12,9 @@ const imageGenerationRequestSchema = z.object({
   prompt: z.string(),
 });
 
-export type ImageGenerationRequest = z.infer<typeof imageGenerationRequestSchema>;
+export type ImageGenerationRequest = z.infer<
+  typeof imageGenerationRequestSchema
+>;
 
 export async function handler(
   request: FastifyRequest,
@@ -27,7 +29,9 @@ export async function handler(
 
   if (apiKey === undefined) return;
 
-  const requestParseResult = imageGenerationRequestSchema.safeParse(request.body);
+  const requestParseResult = imageGenerationRequestSchema.safeParse(
+    request.body,
+  );
   if (!requestParseResult.success) {
     reply.status(400).send({
       error: "Bad request",

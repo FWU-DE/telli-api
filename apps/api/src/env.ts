@@ -6,6 +6,6 @@ export const env = {
   apiKey: getDefinedOrThrow(process.env.API_KEY, "process.env.API_KEY"),
   sentryDsn: getDefinedOrThrow(
     process.env.SENTRY_DSN,
-    "process.env.SENTRY_DSN"
+    "process.env.SENTRY_DSN",
   ),
 };

@@ -46,7 +46,7 @@ const completionRequestSchema = z.object({
     z.object({
       role: z.enum(["system", "user", "assistant", "developer"]),
       content: messageContentSchema,
-    })
+    }),
   ),
   max_tokens: z.number().optional().nullable(),
   temperature: z.coerce.number().optional(),
@@ -76,7 +76,7 @@ async function onUsageCallback({
 
 export async function handler(
   request: FastifyRequest,
-  reply: FastifyReply
+  reply: FastifyReply,
 ): Promise<void> {
   const [apiKeyError, apiKey] = await validateApiKeyWithResult(request, reply);
 
@@ -128,7 +128,7 @@ export async function handler(
       ? availableModels.find((model) => model.name === body.model)
       : availableModels.find(
           (model) =>
-            model.name === body.model && model.provider === maybeProviderHeader
+            model.name === body.model && model.provider === maybeProviderHeader,
         );
 
   if (model === undefined) {
@@ -194,9 +194,9 @@ export async function handler(
                     id: crypto.randomUUID(),
                     created: Date.now(),
                     model: model.name,
-                  })
-                ) + "\n\n"
-              )
+                  }),
+                ) + "\n\n",
+              ),
             );
           }
           // Always send [DONE] to close the stream properly

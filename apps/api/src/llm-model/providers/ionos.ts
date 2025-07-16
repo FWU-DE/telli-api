@@ -20,9 +20,6 @@ export function constructIonosCompletionStreamFn(
 
   const client = new OpenAI({
     apiKey: llmModel.setting.apiKey,
-    defaultHeaders: {
-      Authorization: `Bearer ${llmModel.setting.apiKey}`,
-    },
     baseURL: llmModel.setting.baseUrl,
   });
 
@@ -89,9 +86,6 @@ export function constructIonosCompletionFn(llmModel: LlmModel): CompletionFn {
 
   const client = new OpenAI({
     apiKey: llmModel.setting.apiKey,
-    defaultHeaders: {
-      Authorization: `Bearer ${llmModel.setting.apiKey}`,
-    },
     baseURL: llmModel.setting.baseUrl,
   });
 
@@ -112,9 +106,6 @@ export function constructIonosEmbeddingFn(llmModel: LlmModel) {
 
   const client = new OpenAI({
     apiKey: llmModel.setting.apiKey,
-    defaultHeaders: {
-      Authorization: `Bearer ${llmModel.setting.apiKey}`,
-    },
     baseURL: llmModel.setting.baseUrl,
   });
 
@@ -155,9 +146,6 @@ export function constructIonosImageGenerationFn(
 
   const client = new OpenAI({
     apiKey: llmModel.setting.apiKey,
-    defaultHeaders: {
-      Authorization: `Bearer ${llmModel.setting.apiKey}`,
-    },
     baseURL: llmModel.setting.baseUrl,
   });
 

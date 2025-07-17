@@ -5,12 +5,7 @@ export const defaultLlmProviderProps = z.object({
   name: z.string(),
 });
 
-export const llmModelProviderSchema = z.enum([
-  "ionos",
-  "openai",
-  "azure",
-  "bedrock",
-]);
+export const llmModelProviderSchema = z.enum(["ionos", "openai", "azure"]);
 
 export const llmModelSettingsIonos = z.object({
   provider: z.literal(llmModelProviderSchema.enum.ionos),
@@ -30,16 +25,8 @@ export const llmModelSettingsAzureSchema = z.object({
   baseUrl: z.string(),
 });
 
-export const llmModelSettingsBedrockSchema = z.object({
-  provider: z.literal(llmModelProviderSchema.enum.bedrock),
-  awsAccessKeyId: z.string(),
-  awsSecretAccessKey: z.string(),
-  awsRegion: z.string(),
-});
-
 export const llmModelSettingsSchema = llmModelSettingsIonos
   .or(llmModelSettingsOpenAiSchema)
-  .or(llmModelSettingsAzureSchema)
-  .or(llmModelSettingsBedrockSchema);
+  .or(llmModelSettingsAzureSchema);
 
 export type LlmModelProviderSettings = z.infer<typeof llmModelSettingsSchema>;

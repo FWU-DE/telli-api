@@ -43,7 +43,7 @@ Following environment variables are required:
 ```.env
 DATABASE_URL=
 API_BASE_URL=
-# Optional, defaults to DeutschlandGPT
+# Optional, defaults to telli API
 API_NAME=
 ```
 

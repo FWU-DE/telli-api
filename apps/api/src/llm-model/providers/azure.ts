@@ -4,6 +4,7 @@ import {
   CommonLlmProviderStreamParameter,
   CompletionFn,
   CompletionStreamFn,
+  ImageGenerationFn,
 } from "../types";
 import { LlmModel } from "@dgpt/db";
 
@@ -95,6 +96,49 @@ export function constructAzureCompletionFn(model: LlmModel): CompletionFn {
       },
       {
         path: `/openai/deployments/${deployment}/chat/completions`,
+      },
+    );
+
+    return result;
+  };
+}
+
+export function constructAzureImageGenerationFn(
+  model: LlmModel,
+): ImageGenerationFn {
+  if (model.setting.provider !== "azure") {
+    throw new Error("Invalid model configuration for Azure");
+  }
+
+  const { basePath, deployment, searchParams } = parseAzureOpenAIUrl({
+    baseUrl: model.setting.baseUrl,
+  });
+
+  const client = new OpenAI({
+    apiKey: model.setting.apiKey,
+    defaultHeaders: {
+      "api-key": model.setting.apiKey,
+    },
+    baseURL: basePath,
+    defaultQuery: Object.fromEntries(searchParams.entries()),
+  });
+
+  return async function getAzureImageGeneration({
+    prompt,
+    // eslint-disable-next-line no-unused-vars
+    model: modelName, // Ignored for Azure
+  }: Parameters<ImageGenerationFn>[0]) {
+    const result = await client.images.generate(
+      {
+        prompt,
+        size: "1024x1024",
+        n: 1,
+        quality: "standard",
+        style: "vivid",
+        response_format: "b64_json",
+      },
+      {
+        path: `/openai/deployments/${deployment}/images/generations`,
       },
     );
 

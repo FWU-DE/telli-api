@@ -29,3 +29,8 @@ export type EmbeddingFn = (args: {
   input: string | string[];
   model: string;
 }) => Promise<OpenAI.Embeddings.Embedding>;
+
+export type ImageGenerationFn = (args: {
+  prompt: string;
+  model: string;
+}) => Promise<OpenAI.Images.ImagesResponse>;

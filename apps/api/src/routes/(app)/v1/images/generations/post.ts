@@ -1,8 +1,11 @@
 import { getImageGenerationFnByModel } from "@/llm-model/providers";
 import { validateApiKeyWithResult } from "@/routes/utils";
 import {
+  ApiKeyModel,
   checkLimitsByApiKeyIdWithResult,
+  dbCreateImageGenerationUsage,
   dbGetModelsByApiKeyId,
+  LlmModel,
 } from "@dgpt/db";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
@@ -15,6 +18,21 @@ const imageGenerationRequestSchema = z.object({
 export type ImageGenerationRequest = z.infer<
   typeof imageGenerationRequestSchema
 >;
+
+async function onUsageCallback({
+  apiKey,
+  model,
+}: {
+  apiKey: ApiKeyModel;
+  model: LlmModel;
+}) {
+  await dbCreateImageGenerationUsage({
+    projectId: apiKey.projectId,
+    apiKeyId: apiKey.id,
+    modelId: model.id,
+    numberOfImages: 1,
+  });
+}
 
 export async function handler(
   request: FastifyRequest,
@@ -94,6 +112,8 @@ export async function handler(
     });
 
     reply.status(200).send(response);
+
+    await onUsageCallback({ apiKey, model });
   } catch (error) {
     console.error("Error generating image:", error);
     reply.status(500).send({

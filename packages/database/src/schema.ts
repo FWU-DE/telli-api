@@ -122,6 +122,31 @@ export type CompletionUsageInsertModel =
 export type CompletionUsageModel =
   typeof completionUsageTrackingTable.$inferSelect;
 
+export const imageGenerationUsageTrackingTable = pgTable(
+  "image_generation_usage_tracking",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    numberOfImages: integer("number_of_images").notNull(),
+    modelId: uuid("model_id")
+      .references(() => llmModelTable.id)
+      .notNull(),
+    apiKeyId: uuid("api_key_id")
+      .notNull()
+      .references(() => apiKeyTable.id),
+    // this violates the norm of database tables, but is used to have one less join
+    projectId: text("project_id")
+      .notNull()
+      .references(() => projectTable.id),
+    createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+);
+export type ImageGenerationUsageInsertModel =
+  typeof imageGenerationUsageTrackingTable.$inferInsert;
+export type ImageGenerationUsageModel =
+  typeof imageGenerationUsageTrackingTable.$inferSelect;
+
 export const adminTable = pgTable("admin", {
   id: uuid("id").primaryKey().defaultRandom(),
   email: text("email").notNull().unique(),

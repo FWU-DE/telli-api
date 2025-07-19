@@ -15,6 +15,13 @@
       "when": 1748939578972,
       "tag": "0001_burly_arclight",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1752706451859,
+      "tag": "0002_previous_wither",
+      "breakpoints": true
     }
   ]
 }

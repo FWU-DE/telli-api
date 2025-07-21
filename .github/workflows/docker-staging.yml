@@ -78,10 +78,9 @@ jobs:
         run: |
           COMMIT_HASH=${{ env.commit_hash }}
           echo "Updating Kubernetes Deployment with image: ghcr.io/fwu-de/telli-api:${{ env.COMMIT_HASH }}"
-          kubectl set image deployment/telli-api-staging \
-            telli-api-staging=ghcr.io/fwu-de/telli-api:${{ env.COMMIT_HASH }} -n telli-stage
-          kubectl rollout restart deployment telli-api-staging -n telli-stage
+          kubectl set image deployment/telli-api-stage \
+            telli-api-stage=ghcr.io/fwu-de/telli-api:${{ env.COMMIT_HASH }} -n telli-stage
       - name: Wait for rollout to complete
         run: |
           echo "Waiting for rollout to complete"
-          kubectl rollout status deployment/telli-api-staging -n telli-stage
+          kubectl rollout status deployment/telli-api-stage -n telli-stage

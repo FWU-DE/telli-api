@@ -3,11 +3,11 @@ name: Docker Staging
 on:
   push:
     branches: [main]
-    
+
   workflow_dispatch:
     inputs:
       commit_hash:
-        description: 'Commit hash to build & deploy'
+        description: "Commit hash to build & deploy"
         required: true
         type: string
 
@@ -79,10 +79,9 @@ jobs:
           COMMIT_HASH=${{ env.commit_hash }}
           echo "Updating Kubernetes Deployment with image: ghcr.io/fwu-de/telli-api:${{ env.COMMIT_HASH }}"
           kubectl set image deployment/telli-api-staging \
-            telli-api-staging=ghcr.io/fwu-de/telli-api:${{ env.COMMIT_HASH }}
-          kubectl rollout restart deployment telli-api-staging
+            telli-api-staging=ghcr.io/fwu-de/telli-api:${{ env.COMMIT_HASH }} -n telli-stage
+          kubectl rollout restart deployment telli-api-staging -n telli-stage
       - name: Wait for rollout to complete
         run: |
           echo "Waiting for rollout to complete"
-          kubectl rollout status deployment/telli-api-staging
-
+          kubectl rollout status deployment/telli-api-staging -n telli-stage

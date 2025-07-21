@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       commit_hash:
-        description: 'Commit hash to deploy'
+        description: "Commit hash to deploy"
         required: true
         type: string
 
@@ -33,9 +33,9 @@ jobs:
         run: |
           echo "Updating Kubernetes Deployment with image: ghcr.io/fwu-de/telli-api:${{ env.COMMIT_HASH }}"
           kubectl set image deployment/telli-api-production \
-            telli-api-production=ghcr.io/fwu-de/telli-api:${{ env.COMMIT_HASH }}
-          kubectl rollout restart deployment telli-api-production
+            telli-api-production=ghcr.io/fwu-de/telli-api:${{ env.COMMIT_HASH }} -n telli-prod
+          kubectl rollout restart deployment telli-api-production -n telli-prod
       - name: Wait for rollout to complete
         run: |
           echo "Waiting for rollout to complete"
-          kubectl rollout status deployment/telli-api-production
+          kubectl rollout status deployment/telli-api-production -n telli-prod

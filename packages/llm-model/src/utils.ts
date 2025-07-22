@@ -1,4 +1,6 @@
-export function calculatePriceByTextModelAndUsage({
+import { PRICE_AND_CENT_MULTIPLIER } from "./const";
+
+export function calculatePriceInCentByTextModelAndUsage({
   completionTokens,
   promptTokens,
   priceMetadata,
@@ -11,5 +13,15 @@ export function calculatePriceByTextModelAndUsage({
     completionTokens * priceMetadata.completionTokenPrice;
   const promptTokenPrice = promptTokens * priceMetadata.promptTokenPrice;
 
-  return completionTokenPrice + promptTokenPrice;
+  return (completionTokenPrice + promptTokenPrice) / PRICE_AND_CENT_MULTIPLIER;
+}
+
+export function calculatePriceInCentByImageModelAndUsage({
+  numberOfImages,
+  priceMetadata,
+}: {
+  priceMetadata: { pricePerImageInCent: number };
+  numberOfImages: number;
+}) {
+  return numberOfImages * priceMetadata.pricePerImageInCent;
 }

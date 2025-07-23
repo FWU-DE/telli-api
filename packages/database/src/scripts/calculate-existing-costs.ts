@@ -19,7 +19,7 @@ import {
 async function updateCompletionUsageCosts() {
   console.log("Starting completion usage cost updates...");
 
-  // Get all completion usage records without costs calculated (costs_in_cent = 0 or null)
+  // Get all completion usage records without costs calculated
   const completionUsages = await db
     .select()
     .from(completionUsageTrackingTable)
@@ -52,7 +52,6 @@ async function updateCompletionUsageCosts() {
   }
 
   let updatedCount = 0;
-
   for (const usage of completionUsages) {
     const model = modelMap.get(usage.modelId);
 
@@ -88,10 +87,6 @@ async function updateCompletionUsageCosts() {
       .where(eq(completionUsageTrackingTable.id, usage.id));
 
     updatedCount++;
-
-    if (updatedCount % 100 === 0) {
-      console.log(`Updated ${updatedCount} completion usage records...`);
-    }
   }
 
   console.log(`Completed updating ${updatedCount} completion usage records`);
@@ -133,7 +128,6 @@ async function updateImageGenerationUsageCosts() {
   }
 
   let updatedCount = 0;
-
   for (const usage of imageUsages) {
     const model = modelMap.get(usage.modelId);
 
@@ -163,10 +157,6 @@ async function updateImageGenerationUsageCosts() {
       .where(eq(imageGenerationUsageTrackingTable.id, usage.id));
 
     updatedCount++;
-
-    if (updatedCount % 100 === 0) {
-      console.log(`Updated ${updatedCount} image generation usage records...`);
-    }
   }
 
   console.log(
@@ -176,8 +166,6 @@ async function updateImageGenerationUsageCosts() {
 
 async function main() {
   try {
-    console.log("Starting cost calculation for existing usage records...");
-
     await updateCompletionUsageCosts();
     await updateImageGenerationUsageCosts();
 

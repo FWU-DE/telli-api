@@ -16,9 +16,6 @@ export function constructOpenAiCompletionStreamFn(
 
   const client = new OpenAI({
     apiKey: model.setting.apiKey,
-    defaultHeaders: {
-      Authorization: `Bearer ${model.setting.apiKey}`,
-    },
     baseURL: model.setting.baseUrl,
   });
 
@@ -59,9 +56,6 @@ export function constructOpenAiCompletionFn(model: LlmModel): CompletionFn {
 
   const client = new OpenAI({
     apiKey: model.setting.apiKey,
-    defaultHeaders: {
-      Authorization: `Bearer ${model.setting.apiKey}`,
-    },
     baseURL: model.setting.baseUrl,
   });
 

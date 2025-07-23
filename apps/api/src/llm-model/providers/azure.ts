@@ -8,9 +8,10 @@ import {
 } from "../types";
 import { LlmModel } from "@dgpt/db";
 
-export function constructAzureCompletionStreamFn(
-  model: LlmModel,
-): CompletionStreamFn {
+function createAzureClient(model: LlmModel): {
+  client: OpenAI;
+  deployment: string;
+} {
   if (model.setting.provider !== "azure") {
     throw new Error("Invalid model configuration for Azure");
   }
@@ -21,27 +22,30 @@ export function constructAzureCompletionStreamFn(
 
   const client = new OpenAI({
     apiKey: model.setting.apiKey,
-    defaultHeaders: {
-      "api-key": model.setting.apiKey,
-    },
     baseURL: basePath,
     defaultQuery: Object.fromEntries(searchParams.entries()),
   });
 
+  return { client, deployment };
+}
+
+export function constructAzureCompletionStreamFn(
+  model: LlmModel,
+): CompletionStreamFn {
+  const { client, deployment } = createAzureClient(model);
+
   return async function getAzureCompletionStream({
-    // eslint-disable-next-line no-unused-vars
-    model: modelName, // Ignored for Azure
     onUsageCallback,
     ...props
   }: CommonLlmProviderStreamParameter) {
     const stream = await client.chat.completions.create(
       {
+        ...props,
         model: deployment, // Use the deployment ID as the model
         stream: true,
         stream_options: {
           include_usage: true,
         },
-        ...props,
       },
       {
         path: `/openai/deployments/${deployment}/chat/completions`,
@@ -67,32 +71,15 @@ export function constructAzureCompletionStreamFn(
 }
 
 export function constructAzureCompletionFn(model: LlmModel): CompletionFn {
-  if (model.setting.provider !== "azure") {
-    throw new Error("Invalid model configuration for Azure");
-  }
-
-  const { basePath, deployment, searchParams } = parseAzureOpenAIUrl({
-    baseUrl: model.setting.baseUrl,
-  });
-
-  const client = new OpenAI({
-    apiKey: model.setting.apiKey,
-    defaultHeaders: {
-      "api-key": model.setting.apiKey,
-    },
-    baseURL: basePath,
-    defaultQuery: Object.fromEntries(searchParams.entries()),
-  });
+  const { client, deployment } = createAzureClient(model);
 
   return async function getAzureCompletion({
-    // eslint-disable-next-line no-unused-vars
-    model: modelName, // Ignored for Azure
     ...props
   }: Parameters<CompletionFn>[0]) {
     const result = await client.chat.completions.create(
       {
-        model: deployment, // Use the deployment ID as the model
         ...props,
+        model: deployment, // Use the deployment ID as the model
       },
       {
         path: `/openai/deployments/${deployment}/chat/completions`,
@@ -106,28 +93,12 @@ export function constructAzureCompletionFn(model: LlmModel): CompletionFn {
 export function constructAzureImageGenerationFn(
   model: LlmModel,
 ): ImageGenerationFn {
-  if (model.setting.provider !== "azure") {
-    throw new Error("Invalid model configuration for Azure");
-  }
+  const { client, deployment } = createAzureClient(model);
 
-  const { basePath, deployment, searchParams } = parseAzureOpenAIUrl({
-    baseUrl: model.setting.baseUrl,
-  });
-
-  const client = new OpenAI({
-    apiKey: model.setting.apiKey,
-    defaultHeaders: {
-      "api-key": model.setting.apiKey,
-    },
-    baseURL: basePath,
-    defaultQuery: Object.fromEntries(searchParams.entries()),
-  });
-
-  return async function getAzureImageGeneration({
-    prompt,
-    // eslint-disable-next-line no-unused-vars
-    model: modelName, // Ignored for Azure
-  }: Parameters<ImageGenerationFn>[0]) {
+  return async function getAzureImageGeneration(
+    params: Parameters<ImageGenerationFn>[0],
+  ) {
+    const { prompt } = params;
     const result = await client.images.generate(
       {
         prompt,

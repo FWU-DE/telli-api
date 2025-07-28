@@ -108,7 +108,13 @@ export async function handler(
     await onUsageCallback({ apiKey, model });
   } catch (error) {
     console.error("Error generating image:", error);
-    reply.status(500).send({
+
+    let statusCode = 500;
+    if (error && typeof error === "object" && "status" in error) {
+      statusCode = (error as any).status || 500;
+    }
+
+    reply.status(statusCode).send({
       error: "Failed to generate image",
       details: error instanceof Error ? error.message : "Unknown error",
     });

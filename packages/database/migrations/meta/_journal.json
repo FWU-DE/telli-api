@@ -22,6 +22,13 @@
       "when": 1752706451859,
       "tag": "0002_previous_wither",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1753309651963,
+      "tag": "0003_graceful_goblin_queen",
+      "breakpoints": true
     }
   ]
 }

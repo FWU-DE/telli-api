@@ -25,3 +25,14 @@ export function calculatePriceInCentByImageModelAndUsage({
 }) {
   return numberOfImages * priceMetadata.pricePerImageInCent;
 }
+
+export function calculatePriceInCentByEmbeddingModelAndUsage({
+  promptTokens,
+  priceMetadata,
+}: {
+  priceMetadata: { promptTokenPrice: number };
+  promptTokens: number;
+}) {
+  const promptTokenPrice = promptTokens * priceMetadata.promptTokenPrice;
+  return promptTokenPrice / PRICE_AND_CENT_MULTIPLIER;
+}

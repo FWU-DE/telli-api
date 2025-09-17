@@ -7,6 +7,7 @@ import {
   ImageGenerationFn,
 } from "../types";
 import { LlmModel } from "@dgpt/db";
+import { CompletionUsage } from "openai/resources/completions.mjs";
 
 function createAzureClient(model: LlmModel): {
   client: OpenAI;
@@ -38,14 +39,13 @@ export function constructAzureCompletionStreamFn(
     onUsageCallback,
     ...props
   }: CommonLlmProviderStreamParameter) {
-    const stream = await client.chat.completions.create(
+    const stream = await client.responses.create(
       {
         ...props,
         model: deployment, // Use the deployment ID as the model
         stream: true,
-        stream_options: {
-          include_usage: true,
-        },
+        store: false,
+        ...model.additionalParameters
       },
       {
         path: `/openai/deployments/${deployment}/chat/completions`,
@@ -53,12 +53,47 @@ export function constructAzureCompletionStreamFn(
     );
 
     async function* fetchChunks() {
+      const starttime = Date.now();
       for await (const chunk of stream) {
-        const maybeUsage = chunk.usage ?? undefined;
-        if (maybeUsage !== undefined) {
-          onUsageCallback(maybeUsage);
+        if (chunk.type === "response.completed") {
+          let usage: CompletionUsage = {
+            ...chunk.response.usage,
+            prompt_tokens: chunk.response.usage?.input_tokens ?? 0,
+            completion_tokens: chunk.response.usage?.output_tokens ?? 0,
+            total_tokens: chunk.response.usage?.total_tokens ?? 0,
+          };
+          
+          onUsageCallback(usage);
+
+          let output: OpenAI.Chat.Completions.ChatCompletionChunk = {
+            id: chunk.response.id,
+            object: "chat.completion.chunk",
+            model: model.name,
+            choices: [],
+            created: starttime,
+            usage: usage,
+          };
+          yield JSON.stringify(output);
+          continue;
         }
-        yield JSON.stringify(chunk);
+        if (chunk.type === "response.output_text.delta") {
+          // Typing is important here
+          let output: OpenAI.Chat.Completions.ChatCompletionChunk = {
+            id: chunk.item_id,
+            object: "chat.completion.chunk",
+            model: model.name,
+            choices: [
+              {
+                delta: { content: chunk.delta },
+                index: chunk.sequence_number,
+                finish_reason: null,
+              },
+            ],
+            created: starttime,
+          };
+          yield JSON.stringify(output);
+          continue;
+        }
       }
     }
 
@@ -80,6 +115,7 @@ export function constructAzureCompletionFn(model: LlmModel): CompletionFn {
       {
         ...props,
         model: deployment, // Use the deployment ID as the model
+        ...model.additionalParameters
       },
       {
         path: `/openai/deployments/${deployment}/chat/completions`,

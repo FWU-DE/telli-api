@@ -56,39 +56,24 @@ const completionRequestSchema = z.object({
 
 export type CompletionRequest = z.infer<typeof completionRequestSchema>;
 
-function instanceOfA(usage: any): usage is CompletionUsage {
-  return "completion_tokens" in usage;
-}
 
 async function onUsageCallback({
   apiKey,
   usage,
   model,
 }: {
-  usage: CompletionUsage | ResponseUsage;
+  usage: CompletionUsage;
   apiKey: ApiKeyModel;
   model: LlmModel;
 }) {
-  // if usage is type CompletionsUsage
-  if (instanceOfA(usage)) {
-    await dbCreateCompletionUsage({
-      projectId: apiKey.projectId,
-      apiKeyId: apiKey.id,
-      modelId: model.id,
-      completionTokens: usage.completion_tokens,
-      promptTokens: usage.prompt_tokens,
-      totalTokens: usage.total_tokens,
-    });
-  } else {
-    await dbCreateCompletionUsage({
-      projectId: apiKey.projectId,
-      apiKeyId: apiKey.id,
-      modelId: model.id,
-      completionTokens: usage.output_tokens,
-      promptTokens: usage.input_tokens,
-      totalTokens: usage.total_tokens,
-    });
-  }
+  await dbCreateCompletionUsage({
+    projectId: apiKey.projectId,
+    apiKeyId: apiKey.id,
+    modelId: model.id,
+    completionTokens: usage.completion_tokens,
+    promptTokens: usage.prompt_tokens,
+    totalTokens: usage.total_tokens,
+  });
 }
 
 export async function handler(

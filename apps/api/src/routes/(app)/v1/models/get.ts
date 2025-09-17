@@ -11,7 +11,10 @@ export async function handler(
 
   if (apiKey === undefined) return;
 
-  const models = await dbGetModelsByApiKeyId({ apiKeyId: apiKey.id });
+  const models = await dbGetModelsByApiKeyId({
+    apiKeyId: apiKey.id,
+    includeDeleted: true,
+  });
 
   reply.status(200).send(obscureModels(models));
 }

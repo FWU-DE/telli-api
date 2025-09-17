@@ -30,10 +30,19 @@ export async function dbGetAllModelsByOrganizationId({
     .orderBy(llmModelTable.name, llmModelTable.createdAt);
 }
 
+/**
+ * Returns the list of llm models linked to the given API key.
+ * If you want to include llm models that are soft-deleted, set includeDeleted to true.
+ * @param apiKeyId: The id of the API key.
+ * @param includeDeleted: If true, includes soft-deleted models. Default is false.
+ * @returns
+ */
 export async function dbGetModelsByApiKeyId({
   apiKeyId,
+  includeDeleted = false,
 }: {
   apiKeyId: string;
+  includeDeleted?: boolean;
 }) {
   const rows = await db
     .select()
@@ -44,7 +53,13 @@ export async function dbGetModelsByApiKeyId({
     )
     .where(eq(llmModelApiKeyMappingTable.apiKeyId, apiKeyId));
 
-  return rows.map((r) => r.llm_model);
+  if (includeDeleted) {
+    return rows.map((r) => r.llm_model);
+  } else {
+    return rows
+      .filter((model) => model.llm_model.isDeleted === false)
+      .map((r) => r.llm_model);
+  }
 }
 
 export async function dbUpdateLlmModel(llmModel: LlmModel) {

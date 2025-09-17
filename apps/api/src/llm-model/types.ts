@@ -3,6 +3,7 @@ import {
   ChatCompletionMessageParam,
   CompletionUsage,
 } from "openai/resources/index.mjs";
+import { ResponseUsage } from "openai/resources/responses/responses.mjs";
 
 /* eslint-disable no-unused-vars */
 
@@ -11,7 +12,7 @@ export type CommonLlmProviderStreamParameter = {
   model: string;
   temperature?: number;
   max_tokens: number | undefined | null;
-  onUsageCallback(data: CompletionUsage): void;
+  onUsageCallback(data: CompletionUsage | ResponseUsage): void;
 };
 
 export type CompletionStreamFn = (

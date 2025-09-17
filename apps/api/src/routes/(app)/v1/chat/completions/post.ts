@@ -16,6 +16,7 @@ import {
 import { FastifyReply, FastifyRequest } from "fastify";
 import { ChatCompletionMessageParam } from "openai/resources/chat/completions.mjs";
 import { CompletionUsage } from "openai/resources/completions.mjs";
+import { ResponseUsage } from "openai/resources/responses/responses.mjs";
 import { z } from "zod";
 
 // Define content part schemas for image and text
@@ -55,23 +56,39 @@ const completionRequestSchema = z.object({
 
 export type CompletionRequest = z.infer<typeof completionRequestSchema>;
 
+function instanceOfA(usage: any): usage is CompletionUsage {
+  return "completion_tokens" in usage;
+}
+
 async function onUsageCallback({
   apiKey,
   usage,
   model,
 }: {
-  usage: CompletionUsage;
+  usage: CompletionUsage | ResponseUsage;
   apiKey: ApiKeyModel;
   model: LlmModel;
 }) {
-  await dbCreateCompletionUsage({
-    projectId: apiKey.projectId,
-    apiKeyId: apiKey.id,
-    modelId: model.id,
-    completionTokens: usage.completion_tokens,
-    promptTokens: usage.prompt_tokens,
-    totalTokens: usage.total_tokens,
-  });
+  // if usage is type CompletionsUsage
+  if (instanceOfA(usage)) {
+    await dbCreateCompletionUsage({
+      projectId: apiKey.projectId,
+      apiKeyId: apiKey.id,
+      modelId: model.id,
+      completionTokens: usage.completion_tokens,
+      promptTokens: usage.prompt_tokens,
+      totalTokens: usage.total_tokens,
+    });
+  } else {
+    await dbCreateCompletionUsage({
+      projectId: apiKey.projectId,
+      apiKeyId: apiKey.id,
+      modelId: model.id,
+      completionTokens: usage.output_tokens,
+      promptTokens: usage.input_tokens,
+      totalTokens: usage.total_tokens,
+    });
+  }
 }
 
 export async function handler(

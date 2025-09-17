@@ -53,6 +53,10 @@ export const llmModelTable = pgTable("llm_model", {
     .$type<string[]>()
     .notNull()
     .default([]),
+  additionalParameters: json("additional_parameters")
+    .$type<Record<string, any>[]>()
+    .notNull()
+    .default([]),
 });
 export type LlmInsertModel = typeof llmModelTable.$inferInsert;
 export type LlmModel = typeof llmModelTable.$inferSelect;

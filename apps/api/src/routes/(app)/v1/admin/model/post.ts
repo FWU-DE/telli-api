@@ -15,6 +15,7 @@ const createModelRequestSchema = z.object({
   priceMetadata: llmModelPriceMetadataSchema,
   organizationId: z.string(),
   apiKeyNames: z.array(z.string()).optional(), // If omitted, link to all API keys in org
+  additionalParameters: z.array(z.record(z.any())).optional(),
 });
 
 export type CreateModelRequest = z.infer<typeof createModelRequestSchema>;

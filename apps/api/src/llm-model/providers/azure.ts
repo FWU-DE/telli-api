@@ -35,74 +35,125 @@ export function constructAzureCompletionStreamFn(
 ): CompletionStreamFn {
   const { client, deployment } = createAzureClient(model);
 
-  return async function getAzureCompletionStream({
-    onUsageCallback,
-    ...props
-  }: CommonLlmProviderStreamParameter) {
-    const stream = await client.responses.create(
-      {
-        ...props,
-        model: deployment, // Use the deployment ID as the model
-        stream: true,
-        store: false,
-        ...model.additionalParameters
-      },
-      {
-        path: `/openai/deployments/${deployment}/chat/completions`,
-      },
-    );
+  if (["gpt-5", "gpt-5-mini", "gpt-5-nano"].includes(model.name)) {
+    return async function getAzureCompletionStream({
+      onUsageCallback,
+      ...props
+    }: CommonLlmProviderStreamParameter) {
+      const input: OpenAI.Responses.ResponseInputItem[] = props.messages
+        .filter(
+          (msg) =>
+            msg.role === "user" ||
+            msg.role === "assistant" ||
+            msg.role === "system",
+        )
+        .map((msg) => ({
+          role: msg.role,
+          content: typeof msg.content === "string" ? msg.content : "",
+        }));
+      const stream = await client.responses.create(
+        {
+          max_output_tokens: props.max_tokens,
+          input: input,
+          model: deployment, // Use the deployment ID as the model
+          stream: true,
+          store: false,
+          ...model.additionalParameters,
+        },
+        {
+          path: `/openai/responses`,
+        },
+      );
 
-    async function* fetchChunks() {
-      const starttime = Date.now();
-      for await (const chunk of stream) {
-        if (chunk.type === "response.completed") {
-          let usage: CompletionUsage = {
-            ...chunk.response.usage,
-            prompt_tokens: chunk.response.usage?.input_tokens ?? 0,
-            completion_tokens: chunk.response.usage?.output_tokens ?? 0,
-            total_tokens: chunk.response.usage?.total_tokens ?? 0,
-          };
-          
-          onUsageCallback(usage);
+      async function* fetchChunks() {
+        const starttime = Date.now();
+        for await (const chunk of stream) {
+          console.log(chunk.type);
+          if (chunk.type === "response.output_text.delta") {
+            // Typing is important here
+            let output: OpenAI.Chat.Completions.ChatCompletionChunk = {
+              id: chunk.item_id,
+              object: "chat.completion.chunk",
+              model: model.name,
+              choices: [
+                {
+                  delta: { content: chunk.delta },
+                  index: 0,
+                  finish_reason: null,
+                  logprobs: null,
+                },
+              ],              
+              created: starttime,
+            };
+            yield JSON.stringify(output);
+            continue;
+          }
+          if (chunk.type === "response.completed") {
+            let usage: CompletionUsage = {
+              ...chunk.response.usage,
+              prompt_tokens: chunk.response.usage?.input_tokens ?? 0,
+              completion_tokens: chunk.response.usage?.output_tokens ?? 0,
+              total_tokens: chunk.response.usage?.total_tokens ?? 0,
+            };
 
-          let output: OpenAI.Chat.Completions.ChatCompletionChunk = {
-            id: chunk.response.id,
-            object: "chat.completion.chunk",
-            model: model.name,
-            choices: [],
-            created: starttime,
-            usage: usage,
-          };
-          yield JSON.stringify(output);
-          continue;
-        }
-        if (chunk.type === "response.output_text.delta") {
-          // Typing is important here
-          let output: OpenAI.Chat.Completions.ChatCompletionChunk = {
-            id: chunk.item_id,
-            object: "chat.completion.chunk",
-            model: model.name,
-            choices: [
-              {
-                delta: { content: chunk.delta },
-                index: chunk.sequence_number,
-                finish_reason: null,
-              },
-            ],
-            created: starttime,
-          };
-          yield JSON.stringify(output);
-          continue;
+            onUsageCallback(usage);
+
+            let output: OpenAI.Chat.Completions.ChatCompletionChunk = {
+              id: chunk.response.id,
+              object: "chat.completion.chunk",
+              model: model.name,
+              choices: [{"delta":{},"finish_reason":"stop","index":0,}],
+              created: starttime,
+              usage: usage,
+            };
+            yield JSON.stringify(output);
+            continue;
+          }
         }
       }
-    }
 
-    return new ReadableStream({
-      async start(controller) {
-        await streamToController(controller, fetchChunks());
-      },
-    });
-  };
+      return new ReadableStream({
+        async start(controller) {
+          await streamToController(controller, fetchChunks());
+        },
+      });
+    };
+  } else {
+    return async function getAzureCompletionStream({
+      onUsageCallback,
+      ...props
+    }: CommonLlmProviderStreamParameter) {
+      const stream = await client.chat.completions.create(
+        {
+          ...props,
+          model: deployment, // Use the deployment ID as the model
+          stream: true,
+          stream_options: {
+            include_usage: true,
+          },
+        },
+        {
+          path: `/openai/deployments/${deployment}/chat/completions`,
+        },
+      );
+
+      async function* fetchChunks() {
+        for await (const chunk of stream) {
+          const maybeUsage = chunk.usage ?? undefined;
+          if (maybeUsage !== undefined) {
+            onUsageCallback(maybeUsage);
+          }
+          yield JSON.stringify(chunk);
+        }
+      }
+
+      return new ReadableStream({
+        async start(controller) {
+          await streamToController(controller, fetchChunks());
+        },
+      });
+    };
+  }
 }
 
 export function constructAzureCompletionFn(model: LlmModel): CompletionFn {
@@ -115,7 +166,7 @@ export function constructAzureCompletionFn(model: LlmModel): CompletionFn {
       {
         ...props,
         model: deployment, // Use the deployment ID as the model
-        ...model.additionalParameters
+        ...model.additionalParameters,
       },
       {
         path: `/openai/deployments/${deployment}/chat/completions`,

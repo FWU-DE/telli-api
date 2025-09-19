@@ -56,7 +56,6 @@ const completionRequestSchema = z.object({
 
 export type CompletionRequest = z.infer<typeof completionRequestSchema>;
 
-
 async function onUsageCallback({
   apiKey,
   usage,

@@ -82,7 +82,7 @@ export function constructAzureCompletionStreamFn(
                   finish_reason: null,
                   logprobs: null,
                 },
-              ],              
+              ],
               created: starttime,
             };
             yield JSON.stringify(output);
@@ -102,7 +102,7 @@ export function constructAzureCompletionStreamFn(
               id: chunk.response.id,
               object: "chat.completion.chunk",
               model: model.name,
-              choices: [{"delta":{},"finish_reason":"stop","index":0,}],
+              choices: [{ delta: {}, finish_reason: "stop", index: 0 }],
               created: starttime,
               usage: usage,
             };

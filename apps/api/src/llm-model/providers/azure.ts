@@ -68,7 +68,6 @@ export function constructAzureCompletionStreamFn(
       async function* fetchChunks() {
         const starttime = Date.now();
         for await (const chunk of stream) {
-          console.log(chunk.type);
           if (chunk.type === "response.output_text.delta") {
             // Typing is important here
             let output: OpenAI.Chat.Completions.ChatCompletionChunk = {

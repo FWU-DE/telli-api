@@ -30,6 +30,12 @@ export async function dbGetAllModelsByOrganizationId({
     .orderBy(llmModelTable.name, llmModelTable.createdAt);
 }
 
+/**
+ * Returns the list of llm models linked to the given API key.
+ * The deleted flag is ignored for now because telli-dialog needs all models and the deleted flag needs to be mirrored.
+ * @param apiKeyId: The id of the API key.
+ * @returns
+ */
 export async function dbGetModelsByApiKeyId({
   apiKeyId,
 }: {
@@ -102,6 +108,8 @@ export async function dbCreateModelWithApiKeyLinks({
   priceMetadata,
   organizationId,
   apiKeyNames,
+  isNew,
+  isDeleted,
 }: {
   provider: string;
   name: string;
@@ -111,6 +119,8 @@ export async function dbCreateModelWithApiKeyLinks({
   priceMetadata: any;
   organizationId: string;
   apiKeyNames?: string[];
+  isNew?: boolean;
+  isDeleted?: boolean;
 }): Promise<{
   error?: string;
   model?: any;
@@ -145,6 +155,8 @@ export async function dbCreateModelWithApiKeyLinks({
       setting: settings,
       priceMetadata,
       organizationId,
+      isNew,
+      isDeleted,
     })
     .returning();
 

@@ -24,7 +24,7 @@
     "@sentry/profiling-node": "9.2.0",
     "@opentelemetry/instrumentation-pg": "0.51.0",
     "fastify": "5.2.1",
-    "openai": "4.80.1",
+    "openai": "5.20.1",
     "tiktoken": "1.0.20",
     "tsx": "4.19.2",
     "zod": "3.24.1"

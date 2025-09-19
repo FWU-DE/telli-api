@@ -11,6 +11,7 @@ import { Budget, LlmModelPriceMetadata } from "./types";
 import { json } from "drizzle-orm/pg-core";
 import z from "zod";
 import { LlmModelProviderSettings } from "@dgpt/llm-model";
+import { boolean } from "drizzle-orm/pg-core";
 
 export const organizationTable = pgTable("organization", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -53,6 +54,12 @@ export const llmModelTable = pgTable("llm_model", {
     .$type<string[]>()
     .notNull()
     .default([]),
+  additionalParameters: json("additional_parameters")
+    .$type<Record<string, any>[]>()
+    .notNull()
+    .default([]),
+  isNew: boolean("is_new").notNull().default(false),
+  isDeleted: boolean("is_deleted").notNull().default(false),
 });
 export type LlmInsertModel = typeof llmModelTable.$inferInsert;
 export type LlmModel = typeof llmModelTable.$inferSelect;

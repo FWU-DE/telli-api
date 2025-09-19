@@ -15,6 +15,9 @@ const createModelRequestSchema = z.object({
   priceMetadata: llmModelPriceMetadataSchema,
   organizationId: z.string(),
   apiKeyNames: z.array(z.string()).optional(), // If omitted, link to all API keys in org
+  additionalParameters: z.array(z.record(z.any())).optional(),
+  isNew: z.boolean().optional(),
+  isDeleted: z.boolean().optional(),
 });
 
 export type CreateModelRequest = z.infer<typeof createModelRequestSchema>;
@@ -42,6 +45,8 @@ export async function handler(
     priceMetadata: result.priceMetadata,
     organizationId: result.organizationId,
     apiKeyNames: result.apiKeyNames,
+    isNew: result.isNew,
+    isDeleted: result.isDeleted,
   });
 
   if (dbResult?.error !== undefined) {

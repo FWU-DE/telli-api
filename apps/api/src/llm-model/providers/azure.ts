@@ -7,7 +7,7 @@ import {
   ImageGenerationFn,
 } from "../types";
 import { LlmModel } from "@dgpt/db";
-import { CompletionUsage } from "openai/resources/completions.js";
+import { CompletionUsage } from "openai/resources/completions.mjs";
 
 function createAzureClient(model: LlmModel): {
   client: OpenAI;

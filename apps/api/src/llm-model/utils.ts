@@ -2,7 +2,7 @@ import { get_encoding } from "tiktoken";
 import {
   ChatCompletionMessageParam,
   CompletionUsage,
-} from "openai/resources/index.js";
+} from "openai/resources/index.mjs";
 
 const textEncoder = new TextEncoder();
 

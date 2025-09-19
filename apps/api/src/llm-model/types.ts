@@ -2,7 +2,7 @@ import OpenAI from "openai";
 import {
   ChatCompletionMessageParam,
   CompletionUsage,
-} from "openai/resources/index.js";
+} from "openai/resources/index.mjs";
 
 /* eslint-disable no-unused-vars */
 

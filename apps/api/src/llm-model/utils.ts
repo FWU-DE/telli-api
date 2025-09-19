@@ -1,5 +1,5 @@
 import { get_encoding } from "tiktoken";
-import { CompletionUsage } from "openai/resources/index.mjs";
+import { CompletionUsage } from "openai/resources/index.js";
 import { ChatCompletionMessageParam } from "openai/src/resources/index.js";
 
 const textEncoder = new TextEncoder();

@@ -9,7 +9,7 @@ import {
 } from "../types";
 import { LlmModel } from "@dgpt/db";
 import { calculateCompletionUsage } from "../utils";
-import { CompletionUsage } from "openai/resources/completions.mjs";
+import { CompletionUsage } from "openai/resources/completions.js";
 
 export function constructIonosCompletionStreamFn(
   llmModel: LlmModel,

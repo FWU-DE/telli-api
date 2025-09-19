@@ -14,9 +14,8 @@ import {
   LlmModel,
 } from "@dgpt/db";
 import { FastifyReply, FastifyRequest } from "fastify";
-import { ChatCompletionMessageParam } from "openai/resources/chat/completions.mjs";
-import { CompletionUsage } from "openai/resources/completions.mjs";
-import { ResponseUsage } from "openai/resources/responses/responses.mjs";
+import { ChatCompletionMessageParam } from "openai/resources/chat/completions.js";
+import { CompletionUsage } from "openai/resources/completions.js";
 import { z } from "zod";
 
 // Define content part schemas for image and text

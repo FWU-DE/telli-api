@@ -1,7 +1,7 @@
 import { ApiKeyModel, dbValidateApiKey } from "@dgpt/db";
 import { errorifyAsyncFn } from "@dgpt/utils";
 import { FastifyReply, FastifyRequest } from "fastify";
-import { ChatCompletionChunk } from "openai/resources/chat/completions.mjs";
+import { ChatCompletionChunk } from "openai/resources/chat/completions.js";
 
 const BEARER_PREFIX = "Bearer ";
 

@@ -109,6 +109,8 @@ export async function dbCreateModelWithApiKeyLinks({
   priceMetadata,
   organizationId,
   apiKeyNames,
+  isNew,
+  isDeleted,
 }: {
   provider: string;
   name: string;
@@ -118,6 +120,8 @@ export async function dbCreateModelWithApiKeyLinks({
   priceMetadata: any;
   organizationId: string;
   apiKeyNames?: string[];
+  isNew?: boolean;
+  isDeleted?: boolean;
 }): Promise<{
   error?: string;
   model?: any;
@@ -152,6 +156,8 @@ export async function dbCreateModelWithApiKeyLinks({
       setting: settings,
       priceMetadata,
       organizationId,
+      isNew,
+      isDeleted,
     })
     .returning();
 

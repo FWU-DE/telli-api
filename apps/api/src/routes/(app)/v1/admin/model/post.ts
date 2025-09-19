@@ -45,6 +45,8 @@ export async function handler(
     priceMetadata: result.priceMetadata,
     organizationId: result.organizationId,
     apiKeyNames: result.apiKeyNames,
+    isNew: result.isNew,
+    isDeleted: result.isDeleted,
   });
 
   if (dbResult?.error !== undefined) {

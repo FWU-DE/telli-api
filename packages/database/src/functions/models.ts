@@ -34,7 +34,6 @@ export async function dbGetAllModelsByOrganizationId({
  * Returns the list of llm models linked to the given API key.
  * The deleted flag is ignored for now because telli-dialog needs all models and the deleted flag needs to be mirrored.
  * @param apiKeyId: The id of the API key.
- * @param includeDeleted: If true, includes soft-deleted models. Default is false.
  * @returns
  */
 export async function dbGetModelsByApiKeyId({

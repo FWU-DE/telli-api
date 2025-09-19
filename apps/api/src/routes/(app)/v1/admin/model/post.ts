@@ -16,6 +16,8 @@ const createModelRequestSchema = z.object({
   organizationId: z.string(),
   apiKeyNames: z.array(z.string()).optional(), // If omitted, link to all API keys in org
   additionalParameters: z.array(z.record(z.any())).optional(),
+  isNew: z.boolean().optional(),
+  isDeleted: z.boolean().optional(),
 });
 
 export type CreateModelRequest = z.infer<typeof createModelRequestSchema>;

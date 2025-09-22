@@ -1,4 +1,5 @@
-import OpenAI from "openaiv4";
+import { OpenAI as OpenAIv4 } from "openaiv4";
+import OpenAI from "openai";
 import { streamToController } from "../utils";
 import {
   CommonLlmProviderStreamParameter,
@@ -32,8 +33,7 @@ export function constructIonosCompletionStreamFn(
   > {
     const stream = await client.chat.completions.create({
       model: llmModel.id,
-      messages:
-        messages as OpenAI.Chat.Completions.ChatCompletionAssistantMessageParam[],
+      messages,
       stream: true,
       stream_options: { include_usage: true },
       ...props,
@@ -95,8 +95,6 @@ export function constructIonosCompletionFn(llmModel: LlmModel): CompletionFn {
   }: Parameters<CompletionFn>[0]): Promise<OpenAI.Chat.Completions.ChatCompletion> {
     const result = await client.chat.completions.create({
       ...props,
-      messages:
-        props.messages as OpenAI.Chat.Completions.ChatCompletionAssistantMessageParam[],
     });
     return result;
   };
@@ -107,7 +105,7 @@ export function constructIonosEmbeddingFn(llmModel: LlmModel) {
     throw new Error("Invalid model configuration for IONOS");
   }
 
-  const client = new OpenAI({
+  const client = new OpenAIv4({
     apiKey: llmModel.setting.apiKey,
     baseURL: llmModel.setting.baseUrl,
   });

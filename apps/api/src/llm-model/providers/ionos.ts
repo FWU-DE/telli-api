@@ -9,7 +9,7 @@ import {
 } from "../types";
 import { LlmModel } from "@dgpt/db";
 import { calculateCompletionUsage } from "../utils";
-import { CompletionUsage } from "openai/resources/completions.mjs";
+import { CompletionUsage } from "openai/resources/completions.js";
 
 export function constructIonosCompletionStreamFn(
   llmModel: LlmModel,
@@ -32,7 +32,7 @@ export function constructIonosCompletionStreamFn(
   > {
     const stream = await client.chat.completions.create({
       model: llmModel.id,
-      messages,
+      messages: messages as OpenAI.Chat.Completions.ChatCompletionAssistantMessageParam[],
       stream: true,
       stream_options: { include_usage: true },
       ...props,
@@ -93,7 +93,8 @@ export function constructIonosCompletionFn(llmModel: LlmModel): CompletionFn {
     ...props
   }: Parameters<CompletionFn>[0]): Promise<OpenAI.Chat.Completions.ChatCompletion> {
     const result = await client.chat.completions.create({
-      ...props,
+      ...props,      
+      messages: props.messages as OpenAI.Chat.Completions.ChatCompletionAssistantMessageParam[],
     });
     return result;
   };

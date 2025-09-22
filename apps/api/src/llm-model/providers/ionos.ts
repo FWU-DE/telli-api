@@ -32,7 +32,8 @@ export function constructIonosCompletionStreamFn(
   > {
     const stream = await client.chat.completions.create({
       model: llmModel.id,
-      messages: messages as OpenAI.Chat.Completions.ChatCompletionAssistantMessageParam[],
+      messages:
+        messages as OpenAI.Chat.Completions.ChatCompletionAssistantMessageParam[],
       stream: true,
       stream_options: { include_usage: true },
       ...props,
@@ -93,8 +94,9 @@ export function constructIonosCompletionFn(llmModel: LlmModel): CompletionFn {
     ...props
   }: Parameters<CompletionFn>[0]): Promise<OpenAI.Chat.Completions.ChatCompletion> {
     const result = await client.chat.completions.create({
-      ...props,      
-      messages: props.messages as OpenAI.Chat.Completions.ChatCompletionAssistantMessageParam[],
+      ...props,
+      messages:
+        props.messages as OpenAI.Chat.Completions.ChatCompletionAssistantMessageParam[],
     });
     return result;
   };

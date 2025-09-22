@@ -20,11 +20,12 @@
     "@fastify/multipart": "9.0.2",
     "@fastify/swagger": "9.4.2",
     "@fastify/swagger-ui": "5.2.1",
+    "@opentelemetry/instrumentation-pg": "0.51.0",
     "@sentry/node": "9.2.0",
     "@sentry/profiling-node": "9.2.0",
-    "@opentelemetry/instrumentation-pg": "0.51.0",
     "fastify": "5.2.1",
     "openai": "5.20.1",
+    "openaiv4": "npm:openai@4.80.1",
     "tiktoken": "1.0.20",
     "tsx": "4.19.2",
     "zod": "3.24.1"

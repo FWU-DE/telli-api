@@ -1,4 +1,4 @@
-import OpenAI from "openai";
+import OpenAI from "openaiv4";
 import { streamToController } from "../utils";
 import {
   CommonLlmProviderStreamParameter,
@@ -9,7 +9,7 @@ import {
 } from "../types";
 import { LlmModel } from "@dgpt/db";
 import { calculateCompletionUsage } from "../utils";
-import { CompletionUsage } from "openai/resources/completions.js";
+import { CompletionUsage } from "openai/resources/completions.mjs";
 
 export function constructIonosCompletionStreamFn(
   llmModel: LlmModel,

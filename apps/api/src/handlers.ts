@@ -13,7 +13,7 @@ import { imageGenerationRequestSwaggerSchema } from "./routes/(app)/v1/images/ge
 
 export type RouteHandlerDefinition = {
   path: string;
-  method: "GET" | "POST" | "PUT" | "DELETE";
+  method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
   schema?: object | { hide: true };
   handler: RouteHandlerMethod;
 };
@@ -92,6 +92,10 @@ export function constructHandlers(fastify: FastifyInstance) {
     }
     if (def.method === "POST") {
       fastify.post(def.path, { schema: def.schema }, def.handler);
+      continue;
+    }
+    if (def.method === "PATCH") {
+      fastify.patch(def.path, { schema: def.schema }, def.handler);
       continue;
     }
     if (def.method === "DELETE") {

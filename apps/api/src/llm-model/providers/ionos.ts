@@ -1,3 +1,4 @@
+import { OpenAI as OpenAIv4 } from "openaiv4";
 import OpenAI from "openai";
 import { streamToController } from "../utils";
 import {
@@ -104,7 +105,7 @@ export function constructIonosEmbeddingFn(llmModel: LlmModel) {
     throw new Error("Invalid model configuration for IONOS");
   }
 
-  const client = new OpenAI({
+  const client = new OpenAIv4({
     apiKey: llmModel.setting.apiKey,
     baseURL: llmModel.setting.baseUrl,
   });

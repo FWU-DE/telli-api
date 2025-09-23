@@ -45,6 +45,7 @@ export function constructAzureCompletionStreamFn(
           (msg) =>
             msg.role === "user" ||
             msg.role === "assistant" ||
+            msg.role === "developer" ||
             msg.role === "system",
         )
         .map((msg) => ({

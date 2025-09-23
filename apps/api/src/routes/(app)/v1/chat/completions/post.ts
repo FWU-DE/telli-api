@@ -4,6 +4,7 @@ import {
 } from "@/llm-model/providers";
 import {
   getContentFilterFailedChunk,
+  getErrorChunk,
   validateApiKeyWithResult,
 } from "@/routes/utils";
 import {
@@ -170,10 +171,13 @@ export async function handler(
 
       const contentFilterTriggered = errorCode === "content_filter";
 
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
+
       console.error("Error processing stream:", {
         errorCode,
         contentFilterTriggered,
-        message: error instanceof Error ? error.message : "Unknown error",
+        message: errorMessage,
       });
 
       stream = new ReadableStream({
@@ -181,18 +185,32 @@ export async function handler(
           if (contentFilterTriggered) {
             controller.enqueue(
               new TextEncoder().encode(
-                JSON.stringify(
+                `data: ${JSON.stringify(
                   getContentFilterFailedChunk({
                     id: crypto.randomUUID(),
                     created: Date.now(),
                     model: model.name,
                   }),
-                ) + "\n\n",
+                )}\n\n`,
+              ),
+            );
+          } else {
+            controller.enqueue(
+              new TextEncoder().encode(
+                `data: ${JSON.stringify(
+                  getErrorChunk({
+                    id: crypto.randomUUID(),
+                    created: Date.now(),
+                    model: model.name,
+                    errorMessage,
+                    errorCode,
+                  }),
+                )}\n\n`,
               ),
             );
           }
           // Always send [DONE] to close the stream properly
-          controller.enqueue(new TextEncoder().encode("[DONE]\n\n"));
+          controller.enqueue(new TextEncoder().encode("data: [DONE]\n\n"));
           controller.close();
         },
       });
@@ -229,17 +247,31 @@ export async function handler(
       return;
     }
 
-    const response = await completionFn({
-      messages: body.messages as ChatCompletionMessageParam[],
-      model: model.name,
-      temperature: body.temperature,
-      max_tokens: body.max_tokens,
-    });
+    try {
+      const response = await completionFn({
+        messages: body.messages as ChatCompletionMessageParam[],
+        model: model.name,
+        temperature: body.temperature,
+        max_tokens: body.max_tokens,
+      });
 
-    reply.status(200).send(response);
+      reply.status(200).send(response);
 
-    if (response.usage !== undefined) {
-      await onUsageCallback({ usage: response.usage, apiKey, model });
+      if (response.usage !== undefined) {
+        await onUsageCallback({ usage: response.usage, apiKey, model });
+      }
+    } catch (error) {
+      console.error("Error in non-streaming completion:", error);
+
+      let statusCode = 500;
+      if (error && error instanceof Error && "status" in error) {
+        statusCode = (error as any).status || 500;
+      }
+
+      reply.status(statusCode).send({
+        error: "Error in non-streaming completion",
+        details: error instanceof Error ? error.message : "Unknown error",
+      });
     }
 
     return;

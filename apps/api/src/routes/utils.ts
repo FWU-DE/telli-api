@@ -70,3 +70,38 @@ export function getContentFilterFailedChunk({
     object: "chat.completion.chunk",
   };
 }
+
+export function getErrorChunk({
+  id,
+  created,
+  model,
+  errorMessage,
+  errorCode,
+}: {
+  id: string;
+  created: number;
+  model: string;
+  errorMessage: string;
+  errorCode?: string;
+}): ChatCompletionChunk {
+  return {
+    choices: [
+      {
+        index: 0,
+        delta: {
+          content: `Error in Chat Stream: ${errorMessage}`,
+        },
+        finish_reason: "stop",
+      },
+    ],
+    id,
+    created,
+    model,
+    object: "chat.completion.chunk",
+    error: {
+      message: errorMessage,
+      code: errorCode || "unknown_error",
+      type: "error",
+    },
+  } as ChatCompletionChunk;
+}

@@ -110,7 +110,7 @@ export async function handler(
     console.error("Error generating image:", error);
 
     let statusCode = 500;
-    if (error && typeof error === "object" && "status" in error) {
+    if (error && error instanceof Error && "status" in error) {
       statusCode = (error as any).status || 500;
     }
 

@@ -166,7 +166,6 @@ export function constructAzureCompletionFn(model: LlmModel): CompletionFn {
         messages: props.messages,
         max_completion_tokens: props.max_tokens,
         model: deployment, // Use the deployment ID as the model
-        ...model.additionalParameters,
       },
       {
         path: `/openai/deployments/${deployment}/chat/completions`,

@@ -45,6 +45,7 @@ export function constructAzureCompletionStreamFn(
           (msg) =>
             msg.role === "user" ||
             msg.role === "assistant" ||
+            msg.role === "developer" ||
             msg.role === "system",
         )
         .map((msg) => ({
@@ -163,9 +164,9 @@ export function constructAzureCompletionFn(model: LlmModel): CompletionFn {
   }: Parameters<CompletionFn>[0]) {
     const result = await client.chat.completions.create(
       {
-        ...props,
+        messages: props.messages,
+        max_completion_tokens: props.max_tokens,
         model: deployment, // Use the deployment ID as the model
-        ...model.additionalParameters,
       },
       {
         path: `/openai/deployments/${deployment}/chat/completions`,

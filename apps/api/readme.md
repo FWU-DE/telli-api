@@ -12,7 +12,7 @@ pnpm dev:api
 
 The server listens on `http://127.0.0.1:3002` per default.
 
-Swagger docs will be served here: `http://127.0.0.1:3002`.
+Swagger docs will be served here: `http://127.0.0.1:3002/docs`.
 
 ## tooling
 

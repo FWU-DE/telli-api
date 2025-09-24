@@ -3,7 +3,13 @@ import { handler as v1_admin_apiKey_postHandler } from "./api-key/post";
 import { handler as v1_admin_organizations_$organizationId_$projectId_getHandler } from "./organizations/$organizationId/$projectId/get";
 import { handler as v1_admin_organizations_$organizationId_getHandler } from "./organizations/$organizationId/get";
 import { handler as v1_admin_organization_$organizationId_report_getHandler } from "./organizations/$organizationId/report/get";
-import { handler as v1_admin_model_postHandler } from "./model/post";
+import { handler as v1_admin_model_originalPostHandler } from "./model/post";
+import { handler as v1_admin_model_getAllHandler } from "./organizations/$organizationId/models/get";
+import { handler as v1_admin_model_postHandler } from "./organizations/$organizationId/models/post";
+import { handler as v1_admin_model_getByIdHandler } from "./organizations/$organizationId/models/$id/get";
+import { handler as v1_admin_model_patchByIdHandler } from "./organizations/$organizationId/models/$id/patch";
+import { handler as v1_admin_model_deleteByIdHandler } from "./organizations/$organizationId/models/$id/delete";
+
 import { RouteHandlerDefinition } from "@/handlers";
 
 export const adminRouteHandlerDefinitions: Array<RouteHandlerDefinition> = [
@@ -38,9 +44,39 @@ export const adminRouteHandlerDefinitions: Array<RouteHandlerDefinition> = [
     handler: v1_admin_organization_$organizationId_report_getHandler,
   },
   {
-    path: "/v1/admin/model",
+    path: "/v1/admin/models",
+    method: "POST",
+    schema: { hide: true },
+    handler: v1_admin_model_originalPostHandler,
+  },
+  {
+    path: "/v1/admin/organizations/:organizationId/models",
     method: "POST",
     schema: { hide: true },
     handler: v1_admin_model_postHandler,
+  },
+  {
+    path: "/v1/admin/organizations/:organizationId/models",
+    method: "GET",
+    schema: { hide: true },
+    handler: v1_admin_model_getAllHandler,
+  },
+  {
+    path: "/v1/admin/organizations/:organizationId/models/:id",
+    method: "GET",
+    schema: { hide: true },
+    handler: v1_admin_model_getByIdHandler,
+  },
+  {
+    path: "/v1/admin/organizations/:organizationId/models/:id",
+    method: "PATCH",
+    schema: { hide: true },
+    handler: v1_admin_model_patchByIdHandler,
+  },
+  {
+    path: "/v1/admin/organizations/:organizationId/models/:id",
+    method: "DELETE",
+    schema: { hide: true },
+    handler: v1_admin_model_deleteByIdHandler,
   },
 ];

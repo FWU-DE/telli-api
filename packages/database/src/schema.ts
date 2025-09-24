@@ -12,6 +12,7 @@ import { json } from "drizzle-orm/pg-core";
 import z from "zod";
 import { LlmModelProviderSettings } from "@dgpt/llm-model";
 import { boolean } from "drizzle-orm/pg-core";
+import { createInsertSchema, createUpdateSchema } from "drizzle-zod";
 
 export const organizationTable = pgTable("organization", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -61,6 +62,8 @@ export const llmModelTable = pgTable("llm_model", {
   isNew: boolean("is_new").notNull().default(false),
   isDeleted: boolean("is_deleted").notNull().default(false),
 });
+export const llmInsertModelSchema = createInsertSchema(llmModelTable);
+export const llmUpdateModelSchema = createUpdateSchema(llmModelTable);
 export type LlmInsertModel = typeof llmModelTable.$inferInsert;
 export type LlmModel = typeof llmModelTable.$inferSelect;
 

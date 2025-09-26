@@ -33,9 +33,7 @@ export async function handler(
     throw Error("Expected project to have an organization");
   }
 
-  const models = await dbGetAllModelsByOrganizationId({
-    organizationId: organization.id,
-  });
+  const models = await dbGetAllModelsByOrganizationId(organization.id);
 
   const apiKey = await dbCreateApiKey({
     organizationId: organization.id,

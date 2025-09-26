@@ -9,7 +9,9 @@
     "build": "node build.js",
     "lint": "tsc --noEmit && eslint \"src/**/*.ts*\" --max-warnings 0",
     "types": "tsc --noEmit",
-    "test": "node --test --watch"
+    "test": "dotenv -e .env.test -- vitest",
+    "test:watch": "dotenv -e .env.test -- vitest run --watch",
+    "test:coverage": "dotenv -e .env.test -- vitest run --coverage"
   },
   "packageManager": "pnpm@9.12.3",
   "dependencies": {
@@ -36,6 +38,7 @@
     "@types/node": "20.11.24",
     "dotenv-cli": "8.0.0",
     "eslint": "8.57.0",
-    "typescript": "5.7.2"
+    "typescript": "5.7.2",
+    "vitest": "3.2.4"
   }
 }

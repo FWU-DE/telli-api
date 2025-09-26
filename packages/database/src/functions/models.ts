@@ -19,11 +19,7 @@ export async function dbGetModelById(id: string) {
   )[0];
 }
 
-export async function dbGetAllModelsByOrganizationId({
-  organizationId,
-}: {
-  organizationId: string;
-}) {
+export async function dbGetAllModelsByOrganizationId(organizationId: string) {
   return await db
     .select()
     .from(llmModelTable)

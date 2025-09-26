@@ -8,6 +8,7 @@ import {
 } from "../types";
 import { LlmModel } from "@dgpt/db";
 import { CompletionUsage } from "openai/resources/completions.js";
+import { ChatCompletionContentPartText } from "openai/resources";
 
 function createAzureClient(model: LlmModel): {
   client: OpenAI;
@@ -40,18 +41,14 @@ export function constructAzureCompletionStreamFn(
       onUsageCallback,
       ...props
     }: CommonLlmProviderStreamParameter) {
-      const input: OpenAI.Responses.ResponseInputItem[] = props.messages
-        .filter(
-          (msg) =>
-            msg.role === "user" ||
-            msg.role === "assistant" ||
-            msg.role === "developer" ||
-            msg.role === "system",
-        )
-        .map((msg) => ({
+      const input: OpenAI.Responses.ResponseInputItem[] = props.messages.map(
+        (msg) => ({
           role: msg.role,
-          content: typeof msg.content === "string" ? msg.content : "",
-        }));
+          id: undefined!,
+          status: "completed",
+          content: msg.content ?? [],
+        }),
+      );
       const stream = await client.responses.create(
         {
           max_output_tokens: props.max_tokens,

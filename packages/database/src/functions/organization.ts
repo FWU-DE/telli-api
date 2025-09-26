@@ -1,5 +1,11 @@
 import { eq } from "drizzle-orm";
-import { db, llmModelTable, organizationTable, projectTable } from "..";
+import {
+  db,
+  llmModelTable,
+  OrganizationInsertModel,
+  organizationTable,
+  projectTable,
+} from "..";
 import { isNotNull } from "@dgpt/utils";
 
 export async function dbGetAllOrganizations() {
@@ -56,4 +62,20 @@ export async function dbGetOrganizationByProjectId({
   if (row === undefined) return undefined;
 
   return row.organization;
+}
+
+export async function dbCreateOrganization(
+  organization: OrganizationInsertModel,
+) {
+  const result = await db
+    .insert(organizationTable)
+    .values(organization)
+    .returning();
+  return result[0];
+}
+
+export async function dbDeleteOrganizationById(organizationId: string) {
+  await db
+    .delete(organizationTable)
+    .where(eq(organizationTable.id, organizationId));
 }

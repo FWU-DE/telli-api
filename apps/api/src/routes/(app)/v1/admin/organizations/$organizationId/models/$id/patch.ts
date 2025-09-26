@@ -20,7 +20,6 @@ export async function handler(
   const updateModel = parseResult.data;
 
   try {
-    console.warn("Robin");
     const dbResult = await dbUpdateLlmModel(id, updateModel);
 
     return reply.send(dbResult);

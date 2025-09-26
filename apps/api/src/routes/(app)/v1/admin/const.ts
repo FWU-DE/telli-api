@@ -3,7 +3,7 @@ import { handler as v1_admin_apiKey_postHandler } from "./api-key/post";
 import { handler as v1_admin_organizations_$organizationId_$projectId_getHandler } from "./organizations/$organizationId/$projectId/get";
 import { handler as v1_admin_organizations_$organizationId_getHandler } from "./organizations/$organizationId/get";
 import { handler as v1_admin_organization_$organizationId_report_getHandler } from "./organizations/$organizationId/report/get";
-import { handler as v1_admin_model_originalPostHandler } from "./model/post";
+import { handler as v1_admin_model_originalPostHandler } from "./models/post";
 import { handler as v1_admin_model_getAllHandler } from "./organizations/$organizationId/models/get";
 import { handler as v1_admin_model_postHandler } from "./organizations/$organizationId/models/post";
 import { handler as v1_admin_model_getByIdHandler } from "./organizations/$organizationId/models/$id/get";

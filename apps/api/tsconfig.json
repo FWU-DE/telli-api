@@ -9,6 +9,6 @@
     },
     "types": ["node"]
   },
-  "exclude": ["node_modules"],
-  "include": ["src", "tests", "vitest.config.ts"]
+  "exclude": ["node_modules", "tests"],
+  "include": ["src"]
 }

@@ -41,12 +41,22 @@ export function constructAzureCompletionStreamFn(
       ...props
     }: CommonLlmProviderStreamParameter) {
       const input: OpenAI.Responses.ResponseInputItem[] = props.messages.map(
-        (msg) => ({
-          role: msg.role,
-          id: undefined!,
-          status: "completed",
-          content: msg.content ?? [],
-        }),
+        (msg) => {
+          return {
+            role: msg.role,
+            id: undefined!,
+            status: "completed",
+            content: !Array.isArray(msg.content)
+              ? msg.content
+              : msg.content.map((part) => {
+                  if (part.type !== "image_url") return part;
+                  return {
+                    type: "image",
+                    image_url: part.image_url.url,
+                  };
+                }),
+          };
+        },
       );
       const stream = await client.responses.create(
         {

@@ -3,12 +3,12 @@
   "compilerOptions": {
     "lib": ["ES2015"],
     "outDir": "./dist",
-    "rootDir": "./src",
+    "rootDir": "./",
     "paths": {
       "@/*": ["./src/*"]
     },
     "types": ["node"]
   },
-  "exclude": ["node_modules", "tests"],
-  "include": ["src"]
+  "exclude": ["node_modules", "coverage"],
+  "include": ["src", "tests"]
 }

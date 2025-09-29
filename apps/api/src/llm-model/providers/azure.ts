@@ -8,7 +8,6 @@ import {
 } from "../types";
 import { LlmModel } from "@dgpt/db";
 import { CompletionUsage } from "openai/resources/completions.js";
-import { ChatCompletionContentPartText } from "openai/resources";
 
 function createAzureClient(model: LlmModel): {
   client: OpenAI;

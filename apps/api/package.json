@@ -9,9 +9,8 @@
     "build": "node build.js",
     "lint": "tsc --noEmit && eslint \"src/**/*.ts*\" --max-warnings 0",
     "types": "tsc --noEmit",
-    "test": "dotenv -e .env.test -- vitest",
-    "test:watch": "dotenv -e .env.test -- vitest run --watch",
-    "test:coverage": "dotenv -e .env.test -- vitest run --coverage"
+    "test": "dotenv -e .env.test -- vitest run --coverage",
+    "test:watch": "dotenv -e .env.test -- vitest run --watch"
   },
   "packageManager": "pnpm@9.12.3",
   "dependencies": {

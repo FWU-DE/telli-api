@@ -20,7 +20,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version-file: '.nvmrc'
+          node-version-file: ".nvmrc"
 
       - name: Install PNPM
         run: npm i -g pnpm@9.12.3
@@ -36,3 +36,10 @@ jobs:
 
       - name: Check linting
         run: pnpm lint
+
+      - name: Run unit tests
+        run: pnpm test
+      - name: Upload coverage results
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./apps/api/coverage/lcov.info

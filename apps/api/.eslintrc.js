@@ -1,6 +1,7 @@
 /** @type {import("eslint").Linter.Config} */
 module.exports = {
   root: true,
+  excludes: [".eslintrc.js"],
   extends: ["@dgpt/eslint-config/server.js"],
   parser: "@typescript-eslint/parser",
   parserOptions: {
@@ -10,4 +11,4 @@ module.exports = {
     "no-inner-declarations": "off",
     "no-constant-condition": "off",
   },
-}; 
+};

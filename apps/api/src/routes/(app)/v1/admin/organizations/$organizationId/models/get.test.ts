@@ -1,11 +1,17 @@
 import assert from "node:assert";
 import buildApp from "@/app";
 
-import { afterAll, afterEach, beforeAll, beforeEach, test } from "vitest";
+import {
+  afterAll,
+  afterEach,
+  beforeAll,
+  beforeEach,
+  describe,
+  test,
+} from "vitest";
 import { FastifyInstance } from "fastify";
 import { dbCreateOrganization, dbDeleteOrganizationById } from "@dgpt/db";
 import { env } from "@/env";
-import { describe } from "node:test";
 
 const ORGANIZATION_ID = "42804694-e1f6-45d7-b8aa-0e08c746a888";
 const NON_EXISTING_ORGANIZATION_ID = "11111111-2222-3333-4444-555555555555";

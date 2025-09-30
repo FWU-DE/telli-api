@@ -6,7 +6,7 @@
     "rootDir": "./",
     "paths": {
       "@/*": ["./src/*"],
-      "@tests/*": ["./tests/*"]
+      "@test/*": ["./src/test/*"]
     },
     "types": ["node"]
   },

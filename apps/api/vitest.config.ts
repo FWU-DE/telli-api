@@ -5,7 +5,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": "/src",
-      "@tests": "/tests",
+      "@test": "/src/test",
     },
   },
   test: {

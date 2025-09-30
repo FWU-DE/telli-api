@@ -23,7 +23,7 @@ import {
   ORGANIZATION_ID,
   testModel,
   testOrganziation,
-} from "@tests/data/testData";
+} from "@test/testData";
 
 let app: FastifyInstance;
 

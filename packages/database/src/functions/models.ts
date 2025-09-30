@@ -73,7 +73,7 @@ export async function dbUpdateLlmModel(
   return updatedModel;
 }
 
-export async function dbDeleteModelById(id: string) {
+export async function dbDeleteLlmModelById(id: string) {
   return (
     await db.delete(llmModelTable).where(eq(llmModelTable.id, id)).returning()
   )[0];

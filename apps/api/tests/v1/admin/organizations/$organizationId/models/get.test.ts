@@ -1,5 +1,5 @@
 import assert from "node:assert";
-import buildApp from "../../../../../../src/app";
+import buildApp from "@/app";
 
 import { afterAll, afterEach, beforeAll, beforeEach, test } from "vitest";
 import { FastifyInstance } from "fastify";

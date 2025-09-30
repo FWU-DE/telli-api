@@ -6,6 +6,7 @@ import {
   getContentFilterFailedChunk,
   getErrorChunk,
   validateApiKeyWithResult,
+  handleLlmModelError,
 } from "@/routes/utils";
 import {
   ApiKeyModel,
@@ -261,17 +262,7 @@ export async function handler(
         await onUsageCallback({ usage: response.usage, apiKey, model });
       }
     } catch (error) {
-      console.error("Error in non-streaming completion:", error);
-
-      let statusCode = 500;
-      if (error && error instanceof Error && "status" in error) {
-        statusCode = (error as any).status || 500;
-      }
-
-      reply.status(statusCode).send({
-        error: "Error in non-streaming completion",
-        details: error instanceof Error ? error.message : "Unknown error",
-      });
+      handleLlmModelError(reply, error, "Error in non-streaming completion");
     }
 
     return;

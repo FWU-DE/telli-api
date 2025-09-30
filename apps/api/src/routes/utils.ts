@@ -105,3 +105,38 @@ export function getErrorChunk({
     },
   } as ChatCompletionChunk;
 }
+
+export function handleLlmModelError(
+  reply: FastifyReply,
+  error: unknown,
+  errorContext: string,
+): void {
+  console.error(`${errorContext}:`, error);
+
+  let statusCode = 500;
+  let errorMessage = "An error occurred";
+
+  if (isErrorWithStatus(error)) {
+    statusCode = error.status;
+  }
+
+  if (error instanceof Error) {
+    errorMessage = error.message;
+  }
+
+  reply.status(statusCode).send({
+    error: errorContext,
+    details: errorMessage,
+  });
+}
+
+// Type guard to check if an error has a 'status' property
+export function isErrorWithStatus(
+  error: unknown,
+): error is Error & { status: number } {
+  return (
+    error instanceof Error &&
+    "status" in error &&
+    typeof (error as any).status === "number"
+  );
+}

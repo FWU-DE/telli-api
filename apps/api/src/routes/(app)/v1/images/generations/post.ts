@@ -1,5 +1,5 @@
 import { getImageGenerationFnByModel } from "@/llm-model/providers";
-import { validateApiKeyWithResult } from "@/routes/utils";
+import { handleLlmModelError, validateApiKeyWithResult } from "@/routes/utils";
 import {
   ApiKeyModel,
   checkLimitsByApiKeyIdWithResult,
@@ -103,20 +103,10 @@ export async function handler(
       model: model.name,
     });
 
-    reply.status(200).send(response);
-
     await onUsageCallback({ apiKey, model });
+
+    reply.status(200).send(response);
   } catch (error) {
-    console.error("Error generating image:", error);
-
-    let statusCode = 500;
-    if (error && error instanceof Error && "status" in error) {
-      statusCode = (error as any).status || 500;
-    }
-
-    reply.status(statusCode).send({
-      error: "Failed to generate image",
-      details: error instanceof Error ? error.message : "Unknown error",
-    });
+    handleLlmModelError(reply, error, "Error generating image");
   }
 }

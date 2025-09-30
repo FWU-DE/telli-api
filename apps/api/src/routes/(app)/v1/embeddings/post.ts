@@ -1,5 +1,5 @@
 import { getEmbeddingFnByModel } from "@/llm-model/providers";
-import { validateApiKeyWithResult } from "@/routes/utils";
+import { handleLlmModelError, validateApiKeyWithResult } from "@/routes/utils";
 import {
   checkLimitsByApiKeyIdWithResult,
   dbGetModelsByApiKeyId,
@@ -78,18 +78,24 @@ export async function handler(
     });
     return;
   }
-  const result = await embeddingFn({
-    input: body.input,
-    model: model.name,
-  });
 
-  await dbCreateCompletionUsage({
-    projectId: apiKey.projectId,
-    apiKeyId: apiKey.id,
-    modelId: model.id,
-    completionTokens: 0,
-    promptTokens: result.usage.prompt_tokens,
-    totalTokens: result.usage.total_tokens,
-  });
-  reply.status(200).send(result);
+  try {
+    const result = await embeddingFn({
+      input: body.input,
+      model: model.name,
+    });
+
+    await dbCreateCompletionUsage({
+      projectId: apiKey.projectId,
+      apiKeyId: apiKey.id,
+      modelId: model.id,
+      completionTokens: 0,
+      promptTokens: result.usage.prompt_tokens,
+      totalTokens: result.usage.total_tokens,
+    });
+
+    reply.status(200).send(result);
+  } catch (error) {
+    handleLlmModelError(reply, error, "Error generating embedding");
+  }
 }

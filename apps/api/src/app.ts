@@ -12,9 +12,7 @@ function buildApp(opts = {}) {
     },
   });
 
-  // eslint-disable-next-line no-empty-pattern
   app.setSerializerCompiler(({}) => {
-    // eslint-disable-next-line no-unused-vars
     return (data) => JSON.stringify(data);
   });
 

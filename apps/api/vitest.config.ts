@@ -16,6 +16,7 @@ export default defineConfig({
         "src/instrumentation.ts",
         "**/swagger-schemas.ts",
         "src/swagger/**",
+        "src/test/**",
         ...coverageConfigDefaults.exclude,
       ],
     },

@@ -17,13 +17,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
           node-version-file: ".nvmrc"
-
-      - name: Install PNPM
-        run: npm i -g pnpm@9.12.3
 
       - name: Install dependencies
         run: pnpm install
@@ -39,6 +39,7 @@ jobs:
 
       - name: Run unit tests
         run: pnpm test
+
       - name: Upload coverage results
         uses: codecov/codecov-action@v4
         with:

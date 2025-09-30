@@ -7,7 +7,7 @@
     "clean": "find . -type d \\( -name node_modules -o -name dist -o -name .next \\) -not -path \"./.vercel/*\" -prune -exec rm -rf {} \\;",
     "start": "NODE_ENV=production tsx src/index.ts",
     "build": "node build.js",
-    "lint": "tsc --noEmit && eslint \"src/**/*.ts*\" \"tests/**/*.ts*\" --max-warnings 0",
+    "lint": "tsc --noEmit && eslint --max-warnings 0",
     "types": "tsc --noEmit",
     "test": "dotenv -e .env.test -- vitest run --coverage",
     "test:watch": "dotenv -e .env.test -- vitest run --watch"

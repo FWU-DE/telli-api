@@ -3,6 +3,7 @@ import {
   db,
   dbGetAllApiKeysByProjectId,
   dbGetOrganizationAndProjectsByOrganizationId,
+  LlmInsertModel,
   LlmModel,
   llmModelApiKeyMappingTable,
   llmModelTable,
@@ -12,7 +13,7 @@ export async function dbGetAllModels() {
   return db.select().from(llmModelTable).orderBy(llmModelTable.createdAt);
 }
 
-export async function dbGetModelById({ id }: { id: string }) {
+export async function dbGetModelById(id: string) {
   return (
     await db.select().from(llmModelTable).where(eq(llmModelTable.id, id))
   )[0];
@@ -53,24 +54,32 @@ export async function dbGetModelsByApiKeyId({
   return rows.map((r) => r.llm_model);
 }
 
-export async function dbUpdateLlmModel(llmModel: LlmModel) {
-  const insertedLlmModel = (
+export async function dbCreateLlmModel(llmModel: LlmInsertModel) {
+  const modelCreated = await db
+    .insert(llmModelTable)
+    .values({ ...llmModel })
+    .returning();
+  return modelCreated[0];
+}
+
+export async function dbUpdateLlmModel(
+  id: string,
+  llmModel: Partial<LlmModel>,
+) {
+  const updatedModel = (
     await db
       .update(llmModelTable)
       .set({ ...llmModel })
-      .where(eq(llmModelTable.id, llmModel.id))
+      .where(eq(llmModelTable.id, id))
       .returning()
   )[0];
 
-  return insertedLlmModel;
+  return updatedModel;
 }
 
-export async function dbDeleteModelById({ modelId }: { modelId: string }) {
+export async function dbDeleteModelById(id: string) {
   return (
-    await db
-      .delete(llmModelTable)
-      .where(eq(llmModelTable.id, modelId))
-      .returning()
+    await db.delete(llmModelTable).where(eq(llmModelTable.id, id)).returning()
   )[0];
 }
 

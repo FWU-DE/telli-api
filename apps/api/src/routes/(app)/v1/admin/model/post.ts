@@ -22,6 +22,12 @@ const createModelRequestSchema = z.object({
 
 export type CreateModelRequest = z.infer<typeof createModelRequestSchema>;
 
+/**
+ * This endpoint creates a new model and creates a link to all API keys for
+ * the organization, or only the API keys specified in `apiKeyNames`.
+ * This endpoint can be removed as soon as we have fully working REST endpoints
+ * for handling organizations, projects and API keys.
+ */
 export async function handler(
   request: FastifyRequest,
   reply: FastifyReply,

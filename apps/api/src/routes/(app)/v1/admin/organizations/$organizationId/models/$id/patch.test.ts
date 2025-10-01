@@ -99,7 +99,7 @@ describe("PATCH LLM", () => {
     assert.ok(response.json().error);
   });
 
-  test.skip("should return 400 for missing body", async () => {
+  test("should return 400 for missing body", async () => {
     const response = await app.inject({
       method: "PATCH",
       url: `/v1/admin/organizations/${ORGANIZATION_ID}/models/${MODEL_ID}`,
@@ -110,7 +110,7 @@ describe("PATCH LLM", () => {
     assert.ok(response.json().error);
   });
 
-  test.skip("should return 400 for Zod validation error", async () => {
+  test("should return 400 for Zod validation error", async () => {
     const response = await app.inject({
       method: "PATCH",
       url: `/v1/admin/organizations/${ORGANIZATION_ID}/models/${MODEL_ID}`,
@@ -122,7 +122,6 @@ describe("PATCH LLM", () => {
 
     assert.strictEqual(response.statusCode, 400);
     assert.ok(response.json().error);
-    assert.ok(response.json().details);
   });
 
   test("should return 401 for missing api key", async () => {

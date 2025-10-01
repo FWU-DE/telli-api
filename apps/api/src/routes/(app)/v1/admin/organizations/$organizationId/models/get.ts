@@ -1,5 +1,8 @@
 import { handleApiError } from "@/errors";
-import { validateAdminApiKeyAndThrow } from "../../../utils";
+import {
+  validateAdminApiKeyAndThrow,
+  validateOrganizationId,
+} from "@/validation";
 import { dbGetAllModelsByOrganizationId } from "@dgpt/db";
 import { FastifyReply, FastifyRequest } from "fastify";
 import z from "zod";
@@ -15,6 +18,8 @@ export async function handler(
   try {
     validateAdminApiKeyAndThrow(request.headers.authorization);
     const { organizationId } = paramsSchema.parse(request.params);
+    validateOrganizationId(organizationId);
+
     const models = await dbGetAllModelsByOrganizationId(organizationId);
     reply.status(200).send(models);
   } catch (error) {

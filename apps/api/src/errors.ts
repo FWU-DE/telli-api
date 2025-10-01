@@ -22,7 +22,7 @@ export class InvalidRequestBodyError extends Error {
 }
 
 export function handleApiError(error: unknown) {
-  console.error("API ERROR:", error);
+  console.error("API ERROR:", JSON.stringify(error));
   if (error instanceof UnauthorizedError) {
     return { statusCode: 401, message: error.message };
   } else if (error instanceof NotFoundError) {
@@ -30,7 +30,7 @@ export function handleApiError(error: unknown) {
   } else if (isZodError(error)) {
     return {
       statusCode: 400,
-      message: error.errors.map((e) => e.message).join(", "),
+      message: error.issues.map((e) => e.message).join(", "),
     };
   } else if (error instanceof InvalidRequestBodyError) {
     return { statusCode: 400, message: error.message };
@@ -41,8 +41,13 @@ export function handleApiError(error: unknown) {
   }
 }
 
-export function isZodError(err: unknown): err is ZodError {
+/**
+ * Type guard to check if an error is a ZodError.
+ * The instanceof check might fail if multiple versions of Zod are installed.
+ */
+export function isZodError(error: unknown): error is ZodError {
   return Boolean(
-    err && (err instanceof ZodError || err.constructor.name === ZodError.name),
+    error &&
+      (error instanceof ZodError || error.constructor.name === ZodError.name),
   );
 }

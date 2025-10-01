@@ -23,22 +23,3 @@ export function validateAdminApiKey(
 
   return { isValid: true };
 }
-
-export function validateAdminApiKeyAndThrow(
-  authorizationHeader: string | undefined,
-) {
-  const token = getMaybeBearerToken(authorizationHeader);
-  if (!token) throw new UnauthorizedError("No Bearer token found.");
-  if (token !== env.apiKey) throw new UnauthorizedError("Api key is not valid");
-}
-
-export function validateRequestBody(body: unknown) {
-  if (
-    typeof body !== "object" ||
-    body === null ||
-    Array.isArray(body) ||
-    Object.keys(body).length === 0
-  ) {
-    throw new InvalidRequestBodyError();
-  }
-}

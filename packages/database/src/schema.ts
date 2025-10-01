@@ -65,6 +65,8 @@ export const llmModelTable = pgTable("llm_model", {
 export const llmInsertModelSchema = createInsertSchema(llmModelTable);
 export const llmUpdateModelSchema = createUpdateSchema(llmModelTable).omit({
   id: true,
+  organizationId: true,
+  createdAt: true,
 });
 export type LlmInsertModel = typeof llmModelTable.$inferInsert;
 export type LlmModel = typeof llmModelTable.$inferSelect;

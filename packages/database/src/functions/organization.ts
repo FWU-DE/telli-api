@@ -15,6 +15,14 @@ export async function dbGetAllOrganizations() {
     .orderBy(organizationTable.name, organizationTable.createdAt);
 }
 
+export async function dbGetOrganizationById(organizationId: string) {
+  const [organization] = await db
+    .select()
+    .from(organizationTable)
+    .where(eq(organizationTable.id, organizationId));
+  return organization;
+}
+
 export async function dbGetOrganizationAndProjectsByOrganizationId({
   organizationId,
 }: {

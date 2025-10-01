@@ -60,13 +60,19 @@ export async function dbCreateLlmModel(llmModel: LlmInsertModel) {
 
 export async function dbUpdateLlmModel(
   id: string,
+  organizationId: string,
   llmModel: Partial<LlmModel>,
 ) {
   const updatedModel = (
     await db
       .update(llmModelTable)
       .set({ ...llmModel })
-      .where(eq(llmModelTable.id, id))
+      .where(
+        and(
+          eq(llmModelTable.id, id),
+          eq(llmModelTable.organizationId, organizationId),
+        ),
+      )
       .returning()
   )[0];
 

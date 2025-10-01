@@ -251,10 +251,7 @@ function chatCompletionsToResponsesInputFormat(
       newInput.push({
         role: msg.role,
         content: msg.content
-          .filter(
-            (part) =>
-              (part.type === "text" || part.type === "image_url"),
-          )
+          .filter((part) => part.type === "text" || part.type === "image_url")
           .map((part) => {
             if (part.type === "text") {
               return {
@@ -268,7 +265,8 @@ function chatCompletionsToResponsesInputFormat(
                 detail: "auto",
               } as OpenAI.Responses.ResponseInputImage;
             }
-          }).filter((part) => part !== undefined && part !== null),
+          })
+          .filter((part) => part !== undefined && part !== null),
       });
     }
   }

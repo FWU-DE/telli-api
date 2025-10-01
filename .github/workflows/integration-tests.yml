@@ -41,6 +41,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Run database migrations
+        run: pnpm --filter @dgpt/db run db:migrate:pipeline
+
       - name: Run integration tests
         run: pnpm run test
 

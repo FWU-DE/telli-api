@@ -1,0 +1,50 @@
+name: Integration Tests
+
+on:
+  workflow_call:
+
+jobs:
+  integration-tests:
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgresql://test_user:test1234@localhost:5432/telli_api_db
+      API_KEY: random-key-for-testing-only
+      SENTRY_DSN: test-sentry-dsn
+
+    services:
+      postgres:
+        image: postgres:16
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test1234
+          POSTGRES_DB: telli_api_db
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run integration tests
+        run: pnpm run tests
+
+      - name: Upload coverage results
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./apps/api/coverage/lcov.info

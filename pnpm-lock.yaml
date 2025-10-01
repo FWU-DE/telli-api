@@ -83,7 +83,7 @@ importers:
         specifier: 3.2.4
         version: 3.2.4(vitest@3.2.4(@types/node@20.11.24)(tsx@4.19.2)(yaml@2.7.0))
       dotenv:
-        specifier: ^17.2.3
+        specifier: 17.2.3
         version: 17.2.3
       dotenv-cli:
         specifier: 8.0.0

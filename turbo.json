@@ -39,6 +39,10 @@
       "cache": false,
       "dependsOn": []
     },
+    "db:seed:from-stage": {
+      "cache": false,
+      "dependsOn": []
+    },
     "db:migrate": {
       "cache": false,
       "dependsOn": []

@@ -27,35 +27,23 @@ const pool = new Pool({
 const stageDb = drizzle({ client: pool });
 
 async function getOrganizations(): Promise<OrganizationModel[]> {
-  return await stageDb
-    .select()
-    .from(organizationTable);
+  return await stageDb.select().from(organizationTable);
 }
 
 async function getProjects(): Promise<ProjectModel[]> {
-  return await stageDb
-    .select()
-    .from(projectTable);
+  return await stageDb.select().from(projectTable);
 }
 
 async function getApiKeys(): Promise<ApiKeyModel[]> {
-  return await stageDb
-    .select()
-    .from(apiKeyTable);
+  return await stageDb.select().from(apiKeyTable);
 }
 
 async function getModels(): Promise<LlmModel[]> {
-  return await stageDb
-    .select()
-    .from(llmModelTable);
+  return await stageDb.select().from(llmModelTable);
 }
 
-async function getModelKeyMappings(): Promise<
-  LlmModelApiKeyMappingModel[]
-> {
-  return await stageDb
-    .select()
-    .from(llmModelApiKeyMappingTable);
+async function getModelKeyMappings(): Promise<LlmModelApiKeyMappingModel[]> {
+  return await stageDb.select().from(llmModelApiKeyMappingTable);
 }
 
 export async function seedDatabase() {

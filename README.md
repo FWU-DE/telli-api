@@ -72,7 +72,9 @@ docker compose -f docker-compose.db.yml up -d
 
 ## Database Setup
 
-After setting up the database, you'll need to run migrations and seed the database with test data:
+After setting up the database, you'll need to run migrations and seed the database with test data.
+
+Without access to the staging database, you can run:
 
 ```sh
 # Run database migrations
@@ -82,6 +84,14 @@ pnpm db:migrate
 pnpm db:seed
 ```
 
+If you have access to the staging database and want to copy data from there, you can set the `STAGE_DATABASE_URL` environment variable in your `.env` file to point to the staging database, then run:
+
+```sh
+pnpm db:migrate
+
+pnpm db:seed:from-stage
+```
+
 The seed command will create:
 
 - Test organization and project
@@ -89,6 +99,8 @@ The seed command will create:
 - Default LLM models with placeholder configurations
 
 **⚠️ Important: Model Configuration**
+
+Skip this if you ran `pnpm db:seed:from-stage`.
 
 After seeding, you'll need to update the model settings with real API keys and endpoints. The model settings can be retrieved from **1Password** under the item name **[telli-api model settings for local testing](https://start.1password.com/open/i?a=UWYBPUFO5NFK7AJEKCVW56JBOQ&v=ixer5vuqkawipava543m2wxks4&i=cixnv7jghs3fz56vmjk5f55kcq&h=fwuggmbh.1password.eu)**.
 

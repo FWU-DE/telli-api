@@ -6,7 +6,8 @@
     "SENTRY_DSN",
     "API_BASE_URL",
     "API_NAME",
-    "API_KEY"
+    "API_KEY",
+    "STAGE_DATABASE_URL"
   ],
   "tasks": {
     "build": {

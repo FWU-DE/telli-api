@@ -47,7 +47,8 @@ jobs:
       - name: Run integration tests
         run: pnpm run test
 
-      - name: Upload coverage results
-        uses: codecov/codecov-action@v4
+      - name: Upload coverage results to Codecov
+        uses: codecov/codecov-action@v5
         with:
+          token: ${{ secrets.CODECOV_TOKEN }}
           files: ./apps/api/coverage/lcov.info

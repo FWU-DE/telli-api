@@ -50,7 +50,7 @@ jobs:
         # secrets are not passed to workflows triggered by pull requests
         # so we only upload coverage for pushes to main branch
       - name: Upload coverage results to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           token: 6c2644a3-3c9d-4c37-bbc4-940aa9fe52c5
           files: ./apps/api/coverage/lcov.info

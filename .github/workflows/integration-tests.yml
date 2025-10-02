@@ -47,8 +47,12 @@ jobs:
       - name: Run integration tests
         run: pnpm run test
 
+        # secrets are not passed to workflows triggered by pull requests
+        # so we only upload coverage for pushes to main branch
       - name: Upload coverage results to Codecov
+        if: github.event_name == 'push'
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./apps/api/coverage/lcov.info
+          fail_ci_if_error: true

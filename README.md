@@ -1,7 +1,8 @@
-# telli api
+# Codecov
 
-[![codecov](https://codecov.io/gh/FWU-DE/telli-dialog/branch/main/graph/badge.svg)](https://codecov.io/gh/FWU-DE/telli-dialog)
-![CI](https://github.com/FWU-DE/telli-dialog/actions/workflows/checks.yml/badge.svg)
+[![codecov](https://codecov.io/github/FWU-DE/telli-api/graph/badge.svg?token=CHKGFGD0AF)](https://codecov.io/github/FWU-DE/telli-api)
+
+# telli api
 
 based on: https://github.com/deutschlandgpt/knotenpunkt
 

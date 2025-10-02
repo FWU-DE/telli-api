@@ -19,11 +19,7 @@ export async function dbGetModelById(id: string) {
   )[0];
 }
 
-export async function dbGetAllModelsByOrganizationId({
-  organizationId,
-}: {
-  organizationId: string;
-}) {
+export async function dbGetAllModelsByOrganizationId(organizationId: string) {
   return await db
     .select()
     .from(llmModelTable)
@@ -64,20 +60,26 @@ export async function dbCreateLlmModel(llmModel: LlmInsertModel) {
 
 export async function dbUpdateLlmModel(
   id: string,
+  organizationId: string,
   llmModel: Partial<LlmModel>,
 ) {
   const updatedModel = (
     await db
       .update(llmModelTable)
       .set({ ...llmModel })
-      .where(eq(llmModelTable.id, id))
+      .where(
+        and(
+          eq(llmModelTable.id, id),
+          eq(llmModelTable.organizationId, organizationId),
+        ),
+      )
       .returning()
   )[0];
 
   return updatedModel;
 }
 
-export async function dbDeleteModelById(id: string) {
+export async function dbDeleteLlmModelById(id: string) {
   return (
     await db.delete(llmModelTable).where(eq(llmModelTable.id, id)).returning()
   )[0];

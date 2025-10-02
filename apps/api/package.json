@@ -7,9 +7,11 @@
     "clean": "find . -type d \\( -name node_modules -o -name dist -o -name .next \\) -not -path \"./.vercel/*\" -prune -exec rm -rf {} \\;",
     "start": "NODE_ENV=production tsx src/index.ts",
     "build": "node build.js",
-    "lint": "tsc --noEmit && eslint \"src/**/*.ts*\" --max-warnings 0",
+    "lint": "tsc --noEmit && eslint --max-warnings 0",
     "types": "tsc --noEmit",
-    "test": "node --test --watch"
+    "test": "vitest run --coverage",
+    "test:watch": "dotenv -e .env.test -- vitest run --watch",
+    "test:coverage": "dotenv -e .env.test -- vitest run --coverage"
   },
   "packageManager": "pnpm@9.12.3",
   "dependencies": {
@@ -34,8 +36,11 @@
     "@dgpt/eslint-config": "workspace:*",
     "@dgpt/typescript-config": "workspace:*",
     "@types/node": "20.11.24",
+    "@vitest/coverage-v8": "3.2.4",
+    "dotenv": "17.2.3",
     "dotenv-cli": "8.0.0",
     "eslint": "8.57.0",
-    "typescript": "5.7.2"
+    "typescript": "5.7.2",
+    "vitest": "3.2.4"
   }
 }

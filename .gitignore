@@ -3,3 +3,5 @@
 .turbo/
 .env*
 !.env.example
+
+**/coverage/**

@@ -10,4 +10,4 @@ module.exports = {
     "no-inner-declarations": "off",
     "no-constant-condition": "off",
   },
-}; 
+};

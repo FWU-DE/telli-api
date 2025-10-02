@@ -1,5 +1,5 @@
 import { validateAdminApiKey } from "../../../../utils";
-import { dbDeleteModelById } from "@dgpt/db";
+import { dbDeleteLlmModelById } from "@dgpt/db";
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export async function handler(
@@ -12,7 +12,7 @@ export async function handler(
   const params = request.params as { id: string };
   const id = params.id;
 
-  await dbDeleteModelById(id);
+  await dbDeleteLlmModelById(id);
 
   reply.status(200).send();
 }

@@ -1,16 +1,30 @@
-import { validateAdminApiKey } from "../../../utils";
-import { dbGetAllModels } from "@dgpt/db";
+import { handleApiError } from "@/errors";
+import {
+  validateAdminApiKeyAndThrow,
+  validateOrganizationId,
+} from "@/validation";
+import { dbGetAllModelsByOrganizationId } from "@dgpt/db";
 import { FastifyReply, FastifyRequest } from "fastify";
+import z from "zod";
+
+const paramsSchema = z.object({
+  organizationId: z.string().uuid(),
+});
 
 export async function handler(
   request: FastifyRequest,
   reply: FastifyReply,
 ): Promise<void> {
-  const apiKey = await validateAdminApiKey(request, reply);
+  try {
+    validateAdminApiKeyAndThrow(request.headers.authorization);
+    const { organizationId } = paramsSchema.parse(request.params);
+    validateOrganizationId(organizationId);
 
-  if (!apiKey.isValid) return;
-
-  const models = await dbGetAllModels();
-
-  reply.status(200).send(models);
+    const models = await dbGetAllModelsByOrganizationId(organizationId);
+    reply.status(200).send(models);
+  } catch (error) {
+    const e = handleApiError(error);
+    reply.status(e.statusCode).send({ error: e.message });
+    return;
+  }
 }

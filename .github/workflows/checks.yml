@@ -40,3 +40,5 @@ jobs:
   integration-tests:
     name: Integration Tests
     uses: ./.github/workflows/integration-tests.yml
+    secrets:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

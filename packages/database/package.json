@@ -11,6 +11,7 @@
     "db:migrate": "dotenv -e ../../.env -- drizzle-kit migrate --config=./drizzle.config.ts",
     "db:migrate:pipeline": "drizzle-kit migrate --config=./drizzle.config.ts",
     "db:seed": "dotenv -e ../../.env -- tsx src/seed.ts",
+    "db:seed:from-stage": "dotenv -e ../../.env -- tsx src/seed-from-stage.ts",
     "db:calculate-costs": "dotenv -e ../../.env -- tsx src/scripts/calculate-existing-costs.ts",
     "types": "tsc --noEmit",
     "lint": "eslint \"**/*.ts*\" --max-warnings 0"

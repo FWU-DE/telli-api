@@ -6,7 +6,8 @@
     "SENTRY_DSN",
     "API_BASE_URL",
     "API_NAME",
-    "API_KEY"
+    "API_KEY",
+    "STAGE_DATABASE_URL"
   ],
   "tasks": {
     "build": {
@@ -36,6 +37,10 @@
       "cache": false
     },
     "db:seed": {
+      "cache": false,
+      "dependsOn": []
+    },
+    "db:seed:from-stage": {
       "cache": false,
       "dependsOn": []
     },

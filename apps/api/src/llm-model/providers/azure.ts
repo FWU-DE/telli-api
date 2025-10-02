@@ -40,18 +40,7 @@ export function constructAzureCompletionStreamFn(
       onUsageCallback,
       ...props
     }: CommonLlmProviderStreamParameter) {
-      const input: OpenAI.Responses.ResponseInputItem[] = props.messages
-        .filter(
-          (msg) =>
-            msg.role === "user" ||
-            msg.role === "assistant" ||
-            msg.role === "developer" ||
-            msg.role === "system",
-        )
-        .map((msg) => ({
-          role: msg.role,
-          content: typeof msg.content === "string" ? msg.content : "",
-        }));
+      const input = chatCompletionsToResponsesInputFormat(props.messages);
       const stream = await client.responses.create(
         {
           max_output_tokens: props.max_tokens,
@@ -238,4 +227,48 @@ function parseAzureOpenAIUrl({ baseUrl }: { baseUrl: string }): {
   const basePath = urlParts.slice(0, deploymentIndex - 1).join("/");
 
   return { basePath, deployment, searchParams };
+}
+
+function chatCompletionsToResponsesInputFormat(
+  input: CommonLlmProviderStreamParameter["messages"],
+): OpenAI.Responses.ResponseInputItem[] {
+  let newInput: OpenAI.Responses.ResponseInputItem[] = [];
+  for (let msg of input.filter(
+    (m) =>
+      m.role === "user" ||
+      m.role === "assistant" ||
+      m.role === "developer" ||
+      m.role === "system",
+  )) {
+    if (msg.content === undefined || msg.content === null) {
+      continue;
+    } else if (typeof msg.content === "string") {
+      newInput.push({
+        role: msg.role,
+        content: msg.content,
+      });
+    } else {
+      newInput.push({
+        role: msg.role,
+        content: msg.content
+          .filter((part) => part.type === "text" || part.type === "image_url")
+          .map((part) => {
+            if (part.type === "text") {
+              return {
+                type: "input_text",
+                text: part.text,
+              } as OpenAI.Responses.ResponseInputText;
+            } else if (part.type === "image_url") {
+              return {
+                type: "input_image",
+                image_url: part.image_url.url,
+                detail: "auto",
+              } as OpenAI.Responses.ResponseInputImage;
+            }
+          })
+          .filter((part) => part !== undefined && part !== null),
+      });
+    }
+  }
+  return newInput;
 }

@@ -1,9 +1,8 @@
 # telli api
 
-[![codecov](https://codecov.io/gh/FWU-DE/telli-dialog/branch/main/graph/badge.svg)](https://codecov.io/gh/FWU-DE/telli-dialog)
-![CI](https://github.com/FWU-DE/telli-dialog/actions/workflows/checks.yml/badge.svg)
-
-based on: https://github.com/deutschlandgpt/knotenpunkt
+[![ci staging](https://github.com/FWU-DE/telli-api/actions/workflows/docker-staging.yml/badge.svg)](https://github.com/FWU-DE/telli-api/actions/workflows/docker-staging.yml)
+[![ci production](https://github.com/FWU-DE/telli-api/actions/workflows/docker-production.yml/badge.svg)](https://github.com/FWU-DE/telli-api/actions/workflows/docker-production.yml)
+[![codecov](https://codecov.io/github/FWU-DE/telli-api/graph/badge.svg?token=CHKGFGD0AF)](https://codecov.io/github/FWU-DE/telli-api)
 
 ## Requirements
 

@@ -40,3 +40,4 @@ jobs:
   integration-tests:
     name: Integration Tests
     uses: ./.github/workflows/integration-tests.yml
+    secrets: inherit

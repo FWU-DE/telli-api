@@ -43,6 +43,13 @@
       "when": 1758614545477,
       "tag": "0005_skinny_the_executioner",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1759789241097,
+      "tag": "0006_majestic_the_phantom",
+      "breakpoints": true
     }
   ]
 }

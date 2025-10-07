@@ -5,7 +5,7 @@ import {
   text,
   timestamp,
   uuid,
-  real,
+  doublePrecision,
 } from "drizzle-orm/pg-core";
 import { Budget, LlmModelPriceMetadata } from "./types";
 import { json } from "drizzle-orm/pg-core";
@@ -117,7 +117,7 @@ export const completionUsageTrackingTable = pgTable(
     completionTokens: integer("completion_tokens").notNull(),
     promptTokens: integer("prompt_tokens").notNull(),
     totalTokens: integer("total_tokens").notNull(),
-    costsInCent: real("costs_in_cent").notNull().default(0),
+    costsInCent: doublePrecision("costs_in_cent").notNull().default(0),
     modelId: uuid("model_id")
       .references(() => llmModelTable.id)
       .notNull(),
@@ -143,7 +143,7 @@ export const imageGenerationUsageTrackingTable = pgTable(
   {
     id: uuid("id").primaryKey().defaultRandom(),
     numberOfImages: integer("number_of_images").notNull(),
-    costsInCent: real("costs_in_cent").notNull().default(0),
+    costsInCent: doublePrecision("costs_in_cent").notNull().default(0),
     modelId: uuid("model_id")
       .references(() => llmModelTable.id)
       .notNull(),

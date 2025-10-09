@@ -50,6 +50,13 @@
       "when": 1759789241097,
       "tag": "0006_majestic_the_phantom",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1760052584356,
+      "tag": "0007_lazy_barracuda",
+      "breakpoints": true
     }
   ]
 }

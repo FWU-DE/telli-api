@@ -30,7 +30,6 @@ async function onUsageCallback({
     projectId: apiKey.projectId,
     apiKeyId: apiKey.id,
     modelId: model.id,
-    numberOfImages: 1,
   });
 }
 

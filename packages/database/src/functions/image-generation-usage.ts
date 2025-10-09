@@ -5,7 +5,6 @@ import {
   llmModelTable,
 } from "../schema";
 import { eq } from "drizzle-orm";
-import { calculatePriceInCentByImageModelAndUsage } from "@dgpt/llm-model";
 
 export async function dbCreateImageGenerationUsage(
   imageGenerationUsage: ImageGenerationUsageInsertModel,
@@ -26,10 +25,7 @@ export async function dbCreateImageGenerationUsage(
 
   // Calculate costs based on model price metadata
   if (modelData.priceMetadata.type === "image") {
-    costsInCent = calculatePriceInCentByImageModelAndUsage({
-      priceMetadata: modelData.priceMetadata,
-      numberOfImages: imageGenerationUsage.numberOfImages,
-    });
+    costsInCent = modelData.priceMetadata.pricePerImageInCent;
   }
 
   const insertedImageGenerationUsage = (

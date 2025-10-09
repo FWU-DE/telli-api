@@ -33,15 +33,6 @@ export async function dbCreateApiKey({
     throw Error("Could not find project");
   }
 
-  // const apiKeys = await dbGetAllApiKeysByProjectId({ projectId });
-  // TODO: currently there is no check for project limit needed
-  // const currentAllocatedBudget = apiKeys
-  //   .map((apiKey) => apiKey.limitInCent)
-  //   .reduce((acc, curr) => acc + curr, 0);
-  // if (currentAllocatedBudget + budget > project.budget) {
-  //   throw Error("Budget exceeds the limit for the project");
-  // }
-
   const apiKeyRecord = await createApiKeyRecord();
 
   return await db.transaction(async (tx) => {

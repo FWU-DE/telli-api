@@ -94,7 +94,6 @@ export async function seedDatabase() {
       .values({
         id: PROJECT_ID,
         name: "Test Project",
-        limitInCent: 10000, // 100.00 € limit
         organizationId: ORGANIZATION_ID,
       } satisfies ProjectInsertModel)
       .onConflictDoNothing()

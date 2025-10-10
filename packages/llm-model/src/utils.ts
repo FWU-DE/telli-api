@@ -16,16 +16,6 @@ export function calculatePriceInCentByTextModelAndUsage({
   return (completionTokenPrice + promptTokenPrice) / PRICE_AND_CENT_MULTIPLIER;
 }
 
-export function calculatePriceInCentByImageModelAndUsage({
-  numberOfImages,
-  priceMetadata,
-}: {
-  priceMetadata: { pricePerImageInCent: number };
-  numberOfImages: number;
-}) {
-  return numberOfImages * priceMetadata.pricePerImageInCent;
-}
-
 export function calculatePriceInCentByEmbeddingModelAndUsage({
   promptTokens,
   priceMetadata,

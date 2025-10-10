@@ -16,9 +16,4 @@ export const llmModelPriceMetadataSchema = z.discriminatedUnion("type", [
   }),
 ]);
 
-export type Budget = {
-  createdAt: Date;
-  budget: number;
-};
-
 export type LlmModelPriceMetadata = z.infer<typeof llmModelPriceMetadataSchema>;

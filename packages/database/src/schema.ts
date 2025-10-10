@@ -7,7 +7,7 @@ import {
   uuid,
   doublePrecision,
 } from "drizzle-orm/pg-core";
-import { Budget, LlmModelPriceMetadata } from "./types";
+import { LlmModelPriceMetadata } from "./types";
 import { json } from "drizzle-orm/pg-core";
 import z from "zod";
 import { LlmModelProviderSettings } from "@dgpt/llm-model";
@@ -27,8 +27,6 @@ export type OrganizationModel = typeof organizationTable.$inferSelect;
 export const projectTable = pgTable("project", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
-  limitInCent: integer("limit_in_cent").notNull().default(0),
-  previousBudgets: json().$type<Budget[]>().notNull().default([]),
   organizationId: uuid("organization_id").notNull(),
   createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
     .defaultNow()
@@ -88,7 +86,6 @@ export const apiKeyTable = pgTable("api_key", {
     .references(() => projectTable.id),
   state: apiKeyStateEnum("state").notNull().default("active"),
   limitInCent: integer("limit_in_cent").notNull().default(0),
-  previousBudgets: json().$type<Budget[]>().notNull().default([]),
   createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
     .defaultNow()
     .notNull(),
@@ -145,7 +142,6 @@ export const imageGenerationUsageTrackingTable = pgTable(
   "image_generation_usage_tracking",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    numberOfImages: integer("number_of_images").notNull(),
     costsInCent: doublePrecision("costs_in_cent").notNull().default(0),
     modelId: uuid("model_id")
       .references(() => llmModelTable.id)

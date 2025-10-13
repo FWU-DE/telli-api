@@ -19,11 +19,11 @@
     "test": "turbo run test"
   },
   "dependencies": {
-    "dotenv-cli": "8.0.0"
+    "dotenv-cli": "10.0.0"
   },
   "devDependencies": {
-    "prettier": "3.2.5",
-    "turbo": "2.5.4"
+    "prettier": "3.6.2",
+    "turbo": "2.5.8"
   },
   "engines": {
     "node": ">=14.0.0",

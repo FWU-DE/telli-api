@@ -18,8 +18,13 @@ async function main() {
   await fastify.register(cors, {
     // TODO: uncomment if you want to enable cors
     // origin: "*",
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    methods: ["GET", "PATCH", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "sentry-trace",
+      "baggage",
+    ],
   });
 
   await initSwagger(fastify);

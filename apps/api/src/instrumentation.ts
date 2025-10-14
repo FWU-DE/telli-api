@@ -6,5 +6,9 @@ Sentry.init({
   integrations: [nodeProfilingIntegration(), Sentry.postgresIntegration()],
   tracesSampleRate: 1.0,
   profilesSampleRate: 1.0,
+  profileSessionSampleRate: 1.0,
+  profileLifecycle: "trace",
   environment: process.env.SENTRY_ENVIRONMENT ?? "development",
+  // Ensure that only traces from your own organization are continued
+  strictTraceContinuation: true,
 });

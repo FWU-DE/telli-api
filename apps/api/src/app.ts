@@ -1,8 +1,9 @@
 import fastify from "fastify";
 import { constructHandlers } from "./handlers";
 import fastifyMultipart from "@fastify/multipart";
+import { initSwagger } from "@/swagger";
 
-function buildApp(opts = {}) {
+async function buildApp(opts = {}) {
   const app = fastify(opts);
 
   app.register(fastifyMultipart, {
@@ -12,7 +13,7 @@ function buildApp(opts = {}) {
     },
   });
 
-  app.setSerializerCompiler(({}) => {
+  app.setSerializerCompiler(() => {
     return (data) => JSON.stringify(data);
   });
 
@@ -22,6 +23,9 @@ function buildApp(opts = {}) {
   app.setValidatorCompiler(() => {
     return () => true;
   });
+
+  // swagger needs to be initialized before route handlers are registered
+  await initSwagger(app);
 
   constructHandlers(app);
 

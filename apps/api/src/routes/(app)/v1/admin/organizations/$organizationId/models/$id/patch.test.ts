@@ -28,7 +28,7 @@ import {
 let app: FastifyInstance;
 
 beforeAll(async () => {
-  app = buildApp();
+  app = await buildApp();
   await dbCreateOrganization(testOrganziation);
 });
 

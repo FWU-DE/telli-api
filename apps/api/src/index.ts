@@ -1,6 +1,5 @@
 // this import has to be at the top of the file for fastify to be instrumented properly
 import "./instrumentation";
-import { initSwagger } from "./swagger";
 import cors from "@fastify/cors";
 
 import Sentry from "@sentry/node";
@@ -8,7 +7,7 @@ import buildApp from "./app";
 import { env } from "./env";
 
 async function main() {
-  const fastify = buildApp({
+  const fastify = await buildApp({
     logger: true,
     ajv: { customOptions: { strict: false } },
   });
@@ -26,8 +25,6 @@ async function main() {
       "baggage",
     ],
   });
-
-  await initSwagger(fastify);
 
   await fastify.ready();
   fastify.swagger();

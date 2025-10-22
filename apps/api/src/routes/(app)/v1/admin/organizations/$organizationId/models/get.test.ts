@@ -17,8 +17,8 @@ const ORGANIZATION_ID = "42804694-e1f6-45d7-b8aa-0e08c746a888";
 const NON_EXISTING_ORGANIZATION_ID = "11111111-2222-3333-4444-555555555555";
 let app: FastifyInstance;
 
-beforeAll(() => {
-  app = buildApp();
+beforeAll(async () => {
+  app = await buildApp();
 });
 
 afterAll(async () => {

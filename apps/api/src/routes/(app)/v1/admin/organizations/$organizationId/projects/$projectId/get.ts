@@ -1,24 +1,28 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { dbGetProjectById } from "@dgpt/db";
-import { validateAdminApiKey } from "@/routes/(app)/v1/admin/utils";
 import { projectParamsSchema } from "./projectParamsSchema";
+import { handleApiError } from "@/errors";
+import { validateAdminApiKeyAndThrow } from "@/validation";
 
 export async function handler(
   request: FastifyRequest,
   reply: FastifyReply,
 ): Promise<void> {
-  const validationResult = validateAdminApiKey(request, reply);
-  if (!validationResult.isValid) return;
+  try {
+    validateAdminApiKeyAndThrow(request.headers.authorization);
 
-  const { organizationId, projectId } = projectParamsSchema.parse(
-    request.params,
-  );
+    const { organizationId, projectId } = projectParamsSchema.parse(
+      request.params,
+    );
+    const project = await dbGetProjectById(organizationId, projectId);
 
-  const project = await dbGetProjectById(organizationId, projectId);
+    if (project === undefined) {
+      return reply.status(404).send({ error: "Project not found" });
+    }
 
-  if (project === undefined) {
-    return reply.status(404).send({ error: "Project not found" });
+    return reply.status(200).send(project);
+  } catch (error) {
+    const result = handleApiError(error);
+    return reply.status(result.statusCode).send({ error: result.message });
   }
-
-  return reply.status(200).send(project);
 }

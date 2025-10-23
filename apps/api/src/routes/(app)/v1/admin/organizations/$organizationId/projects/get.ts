@@ -6,7 +6,6 @@ import {
 } from "@/validation";
 import { dbGetAllProjectsByOrganizationId } from "@dgpt/db";
 import { FastifyReply, FastifyRequest } from "fastify";
-import z from "zod";
 
 export async function handler(
   request: FastifyRequest,
@@ -14,6 +13,7 @@ export async function handler(
 ): Promise<void> {
   try {
     validateAdminApiKeyAndThrow(request.headers.authorization);
+
     const { organizationId } = organizationParamsSchema.parse(request.params);
     validateOrganizationId(organizationId);
 

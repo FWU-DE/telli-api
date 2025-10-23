@@ -1,13 +1,18 @@
 import { handleApiError } from "@/errors";
 import { validateAdminApiKeyAndThrow } from "@/validation";
 import {
-  dbCreateProject,
   dbGetProjectById,
   dbUpdateProject,
   projectUpdateSchema,
 } from "@dgpt/db";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { projectParamsSchema } from "./projectParamsSchema";
+
+const bodySchema = projectUpdateSchema.omit({
+  id: true,
+  organizationId: true,
+  createdAt: true,
+});
 
 export async function handler(
   request: FastifyRequest,
@@ -19,7 +24,7 @@ export async function handler(
     const { organizationId, projectId } = projectParamsSchema.parse(
       request.params,
     );
-    const valuesToUpdate = projectUpdateSchema.parse(request.body);
+    const valuesToUpdate = bodySchema.parse(request.body);
 
     const project = await dbGetProjectById(organizationId, projectId);
     if (!project) {
@@ -27,9 +32,9 @@ export async function handler(
       return;
     }
 
-    const updatedProject = { ...project, ...valuesToUpdate };
+    const updatedValues = { ...project, ...valuesToUpdate };
 
-    const result = await dbUpdateProject(updatedProject);
+    const result = await dbUpdateProject(updatedValues);
 
     reply.status(200).send(result);
   } catch (error) {

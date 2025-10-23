@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import { cnanoid } from "../utils";
 import {
+  ApiKeyInsertModel,
   ApiKeyModel,
   apiKeyTable,
   llmModelApiKeyMappingTable,
@@ -10,6 +11,25 @@ import {
 import { db, dbGetProjectById } from "..";
 import { isDateBefore } from "../date";
 import { and, eq, inArray } from "drizzle-orm";
+
+export async function dbCreateJustTheApiKey(
+  apiKey: Omit<ApiKeyInsertModel, "secretHash" | "keyId">,
+) {
+  const apiKeyRecord = await createApiKeyRecord();
+  const apiKeyToInsert = {
+    ...apiKey,
+    secretHash: apiKeyRecord.secretHash,
+    keyId: apiKeyRecord.keyId,
+  };
+  const insertedApiKey = (
+    await db.insert(apiKeyTable).values(apiKeyToInsert).returning()
+  )[0];
+
+  if (insertedApiKey === undefined) {
+    throw Error("Could not create api key");
+  }
+  return { ...insertedApiKey, plainKey: apiKeyRecord.fullKey };
+}
 
 export async function dbCreateApiKey({
   projectId,

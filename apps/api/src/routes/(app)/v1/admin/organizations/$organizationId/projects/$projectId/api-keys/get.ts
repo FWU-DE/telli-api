@@ -15,11 +15,14 @@ export async function handler(
       request.params,
     );
 
-    const apiKeys = await dbGetAllApiKeysByProjectId(organizationId, projectId);
+    const rawApiKeys = await dbGetAllApiKeysByProjectId(
+      organizationId,
+      projectId,
+    );
 
-    if (!apiKeys) {
-      return reply.status(404).send({ error: "Project not found" });
-    }
+    // remove secretHash and keyId from each api key before returning
+    // eslint-disable-next-line no-unused-vars
+    const apiKeys = rawApiKeys.map(({ keyId, secretHash, ...rest }) => rest);
 
     reply.status(200).send(apiKeys);
   } catch (error) {

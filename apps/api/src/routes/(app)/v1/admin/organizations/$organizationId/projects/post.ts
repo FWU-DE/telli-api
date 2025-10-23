@@ -28,7 +28,7 @@ export async function handler(
       return reply.status(400).send({ error: "Could not create project." });
     }
 
-    return reply.status(200).send(createdProject);
+    return reply.status(201).send(createdProject);
   } catch (error) {
     const result = handleApiError(error);
     return reply.status(result.statusCode).send({ error: result.message });

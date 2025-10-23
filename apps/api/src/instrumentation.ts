@@ -1,3 +1,6 @@
+// OpenTelemetry must be initialized before Sentry
+import "./instrumentation.node";
+
 import Sentry from "@sentry/node";
 import { nodeProfilingIntegration } from "@sentry/profiling-node";
 

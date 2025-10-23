@@ -5,6 +5,7 @@ import {
   apiKeyTable,
   llmModelApiKeyMappingTable,
   llmModelTable,
+  projectTable,
 } from "../schema";
 import { db, dbGetProjectById } from "..";
 import { isDateBefore } from "../date";
@@ -27,7 +28,7 @@ export async function dbCreateApiKey({
     throw Error("Cannot create api key without assigned models.");
   }
 
-  const project = await dbGetProjectById({ projectId });
+  const project = await dbGetProjectById(organizationId, projectId);
 
   if (project === undefined) {
     throw Error("Could not find project");
@@ -81,11 +82,11 @@ export async function dbCreateApiKey({
   });
 }
 
-export async function dbGetAllApiKeysByProjectId({
-  projectId,
-}: {
-  projectId: string;
-}) {
+export async function dbGetAllApiKeysByProjectId(
+  organizationId: string,
+  projectId: string,
+) {
+  // Todo: verify that the project belongs to the organization
   return await db
     .select()
     .from(apiKeyTable)
@@ -187,4 +188,131 @@ export async function dbGetApiKeyById({ apiKeyId }: { apiKeyId: string }) {
   return (
     await db.select().from(apiKeyTable).where(eq(apiKeyTable.id, apiKeyId))
   )[0];
+}
+
+export async function dbGetApiKey(
+  organizationId: string,
+  projectId: string,
+  apiKeyId: string,
+) {
+  return (
+    await db
+      .select()
+      .from(apiKeyTable)
+      .innerJoin(projectTable, eq(apiKeyTable.projectId, projectTable.id))
+      .where(
+        and(
+          eq(apiKeyTable.id, apiKeyId),
+          eq(apiKeyTable.projectId, projectId),
+          eq(projectTable.organizationId, organizationId),
+        ),
+      )
+  )[0];
+}
+
+export async function dbDeleteApiKey(apiKeyId: string) {
+  return await db.transaction(async (tx) => {
+    // Delete with join is not supported in Drizzle atm.
+
+    // First, delete all llm_model_api_key_mappings associated with this API key
+    await tx
+      .delete(llmModelApiKeyMappingTable)
+      .where(eq(llmModelApiKeyMappingTable.apiKeyId, apiKeyId));
+
+    // Then delete the API key itself
+    await tx.delete(apiKeyTable).where(eq(apiKeyTable.id, apiKeyId));
+
+    return;
+  });
+}
+
+export async function dbGetAllModelMappingsForApiKey(
+  organizationId: string,
+  projectId: string,
+  apiKeyId: string,
+) {
+  return await db
+    .select()
+    .from(llmModelApiKeyMappingTable)
+    .innerJoin(
+      apiKeyTable,
+      eq(llmModelApiKeyMappingTable.apiKeyId, apiKeyTable.id),
+    )
+    .innerJoin(projectTable, eq(apiKeyTable.projectId, projectTable.id))
+    .where(
+      and(
+        eq(apiKeyTable.id, apiKeyId),
+        eq(apiKeyTable.projectId, projectId),
+        eq(projectTable.organizationId, organizationId),
+      ),
+    );
+}
+
+export async function dbUpdateModelMappingsForApiKey(
+  organizationId: string,
+  projectId: string,
+  apiKeyId: string,
+  modelIds: string[],
+) {
+  return await db.transaction(async (tx) => {
+    // First verify the API key exists and belongs to the organization/project
+    const apiKey = await tx
+      .select()
+      .from(apiKeyTable)
+      .innerJoin(projectTable, eq(apiKeyTable.projectId, projectTable.id))
+      .where(
+        and(
+          eq(apiKeyTable.id, apiKeyId),
+          eq(apiKeyTable.projectId, projectId),
+          eq(projectTable.organizationId, organizationId),
+        ),
+      )
+      .limit(1);
+
+    if (apiKey.length === 0) {
+      throw new Error("API key not found");
+    }
+
+    // Verify all model IDs exist and belong to the organization
+    const availableModels = await tx
+      .select()
+      .from(llmModelTable)
+      .where(
+        and(
+          eq(llmModelTable.organizationId, organizationId),
+          inArray(llmModelTable.id, modelIds),
+        ),
+      );
+
+    if (availableModels.length !== modelIds.length) {
+      throw new Error(
+        "Some model IDs are invalid or do not belong to the organization",
+      );
+    }
+
+    // Delete existing mappings for this API key
+    await tx
+      .delete(llmModelApiKeyMappingTable)
+      .where(eq(llmModelApiKeyMappingTable.apiKeyId, apiKeyId));
+
+    // Create new mappings
+    if (modelIds.length > 0) {
+      await tx.insert(llmModelApiKeyMappingTable).values(
+        modelIds.map((modelId) => ({
+          llmModelId: modelId,
+          apiKeyId: apiKeyId,
+        })),
+      );
+    }
+
+    // Return the updated mappings
+    return await tx
+      .select()
+      .from(llmModelApiKeyMappingTable)
+      .innerJoin(
+        llmModelTable,
+        eq(llmModelApiKeyMappingTable.llmModelId, llmModelTable.id),
+      )
+      .where(eq(llmModelApiKeyMappingTable.apiKeyId, apiKeyId));
+  });
 }

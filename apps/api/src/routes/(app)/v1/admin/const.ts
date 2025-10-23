@@ -8,6 +8,7 @@ import { handler as v1_admin_model_postHandler } from "./organizations/$organiza
 import { handler as v1_admin_model_getByIdHandler } from "./organizations/$organizationId/models/$id/get";
 import { handler as v1_admin_model_patchByIdHandler } from "./organizations/$organizationId/models/$id/patch";
 import { handler as v1_admin_model_deleteByIdHandler } from "./organizations/$organizationId/models/$id/delete";
+import { handler as v1_admin_organizations_$organizationId_projects_$projectId_apiKeys_postHandler } from "./organizations/$organizationId/projects/$projectId/api-keys/post";
 
 import { RouteHandlerDefinition } from "@/handlers";
 
@@ -71,5 +72,12 @@ export const adminRouteHandlerDefinitions: Array<RouteHandlerDefinition> = [
     method: "DELETE",
     schema: { hide: true },
     handler: v1_admin_model_deleteByIdHandler,
+  },
+  {
+    path: "/v1/admin/organizations/:organizationId/projects/:projectId/api-keys",
+    method: "POST",
+    schema: { hide: true },
+    handler:
+      v1_admin_organizations_$organizationId_projects_$projectId_apiKeys_postHandler,
   },
 ];

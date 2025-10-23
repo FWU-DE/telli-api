@@ -32,6 +32,7 @@ export const projectTable = pgTable("project", {
     .defaultNow()
     .notNull(),
 });
+export const projectInsertSchema = createInsertSchema(projectTable);
 export type ProjectInsertModel = typeof projectTable.$inferInsert;
 export type ProjectModel = typeof projectTable.$inferSelect;
 

@@ -1,8 +1,8 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { dbGetOrganizationAndProjectsByOrganizationId } from "@dgpt/db";
 import { validateAdminApiKey } from "../../utils";
-import z from "zod";
 import { obscureModels } from "../../../models/utils";
+import { organizationParamsSchema } from "./organizationParamsSchema";
 
 export async function handler(
   request: FastifyRequest,
@@ -11,9 +11,7 @@ export async function handler(
   const validationResult = validateAdminApiKey(request, reply);
   if (!validationResult.isValid) return;
 
-  const { organizationId } = z
-    .object({ organizationId: z.string() })
-    .parse(request.params);
+  const { organizationId } = organizationParamsSchema.parse(request.params);
 
   const organization = await dbGetOrganizationAndProjectsByOrganizationId({
     organizationId,

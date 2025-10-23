@@ -14,11 +14,15 @@ export async function handler(
     request.params,
   );
 
-  const apiKey = await dbGetApiKey(organizationId, projectId, apiKeyId);
+  const rawApiKey = await dbGetApiKey(organizationId, projectId, apiKeyId);
 
-  if (apiKey === undefined) {
+  if (rawApiKey === undefined) {
     return reply.status(404).send({ error: "API key not found" });
   }
+
+  // remove secretHash and keyId from each api key before returning
+  // eslint-disable-next-line no-unused-vars
+  const { keyId, secretHash, ...apiKey } = rawApiKey;
 
   return reply.status(200).send(apiKey);
 }

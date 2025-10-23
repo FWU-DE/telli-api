@@ -227,7 +227,7 @@ export async function dbGetApiKey(
           eq(projectTable.organizationId, organizationId),
         ),
       )
-  )[0];
+  )[0]?.api_key;
 }
 
 export async function dbDeleteApiKey(apiKeyId: string) {

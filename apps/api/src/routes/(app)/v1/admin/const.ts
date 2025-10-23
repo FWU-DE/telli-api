@@ -1,6 +1,6 @@
 import { handler as v1_admin_organizations_getHandler } from "./organizations/get";
 import { handler as v1_admin_apiKey_postHandler } from "./api-key/post";
-import { handler as v1_admin_organizations_$organizationId_$projectId_getHandler } from "./organizations/$organizationId/$projectId/get";
+import { handler as v1_admin_organizations_$organizationId_$projectId_getHandler } from "./organizations/$organizationId/projects/$projectId/get";
 import { handler as v1_admin_organizations_$organizationId_getHandler } from "./organizations/$organizationId/get";
 import { handler as v1_admin_model_originalPostHandler } from "./models/post";
 import { handler as v1_admin_model_getAllHandler } from "./organizations/$organizationId/models/get";

@@ -1,5 +1,12 @@
 import { and, eq } from "drizzle-orm";
-import { ApiKeyModel, apiKeyTable, db, ProjectModel, projectTable, ProjectInsertModel } from "..";
+import {
+  ApiKeyModel,
+  apiKeyTable,
+  db,
+  ProjectModel,
+  projectTable,
+  ProjectInsertModel,
+} from "..";
 
 export async function dbGetAllProjects() {
   return await db.select().from(projectTable).orderBy(projectTable.createdAt);
@@ -81,4 +88,20 @@ export async function dbCreateProject(project: ProjectInsertModel) {
     .values({ ...project })
     .returning();
   return projectCreated[0];
+}
+
+export async function dbUpdateProject(
+  project: Omit<ProjectModel, "createdAt">,
+) {
+  const projectUpdated = await db
+    .update(projectTable)
+    .set({ name: project.name })
+    .where(
+      and(
+        eq(projectTable.organizationId, project.organizationId),
+        eq(projectTable.id, project.id),
+      ),
+    )
+    .returning();
+  return projectUpdated[0];
 }

@@ -35,6 +35,11 @@ export const projectTable = pgTable("project", {
 export const projectInsertSchema = createInsertSchema(projectTable);
 export type ProjectInsertModel = typeof projectTable.$inferInsert;
 export type ProjectModel = typeof projectTable.$inferSelect;
+export const projectUpdateSchema = createUpdateSchema(projectTable).omit({
+  id: true,
+  organizationId: true,
+  createdAt: true,
+});
 
 export const llmModelTable = pgTable("llm_model", {
   id: uuid("id").primaryKey().defaultRandom(),

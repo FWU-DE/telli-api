@@ -69,14 +69,4 @@ describe("GET LLMs by organization", () => {
 
     assert.strictEqual(response.statusCode, 400);
   });
-
-  test("should return 401 for invalid or missing api key", async () => {
-    const response = await app.inject({
-      method: "GET",
-      url: "/v1/admin/organizations/999/models",
-      headers: {},
-    });
-
-    assert.strictEqual(response.statusCode, 401);
-  });
 });

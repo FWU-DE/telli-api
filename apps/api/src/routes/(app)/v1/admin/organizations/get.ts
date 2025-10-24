@@ -1,16 +1,20 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { validateAdminApiKey } from "../utils";
 import { dbGetAllOrganizations } from "@dgpt/db";
+import { handleApiError } from "@/errors";
+import { validateAdminApiKeyAndThrow } from "@/validation";
 
 export async function handler(
   request: FastifyRequest,
   reply: FastifyReply,
 ): Promise<void> {
-  const validationResult = validateAdminApiKey(request, reply);
+  try {
+    validateAdminApiKeyAndThrow(request.headers.authorization);
 
-  if (!validationResult.isValid) return;
+    const organizations = await dbGetAllOrganizations();
 
-  const organizations = await dbGetAllOrganizations();
-
-  return reply.status(200).send({ organizations });
+    return reply.status(200).send({ organizations });
+  } catch (error) {
+    const result = handleApiError(error);
+    return reply.status(result.statusCode).send({ error: result.message });
+  }
 }

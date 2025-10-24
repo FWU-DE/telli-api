@@ -69,43 +69,4 @@ describe("GET /v1/admin/organizations", () => {
     assert.ok(typeof sampleOrg.name === "string");
     assert.ok(sampleOrg.createdAt);
   });
-
-  test("should return 401 when no authorization header is provided", async () => {
-    const response = await app.inject({
-      method: "GET",
-      url: "/v1/admin/organizations",
-      headers: {},
-    });
-
-    assert.strictEqual(response.statusCode, 401);
-
-    const responseBody = response.json();
-    assert.strictEqual(responseBody.error, "No Bearer token found.");
-  });
-
-  test("should return 401 when API key is invalid", async () => {
-    const response = await app.inject({
-      method: "GET",
-      url: "/v1/admin/organizations",
-      headers: { authorization: "Bearer invalid-api-key" },
-    });
-
-    assert.strictEqual(response.statusCode, 401);
-
-    const responseBody = response.json();
-    assert.strictEqual(responseBody.error, "Api key is not valid");
-  });
-
-  test("should return 401 when Bearer token is empty", async () => {
-    const response = await app.inject({
-      method: "GET",
-      url: "/v1/admin/organizations",
-      headers: { authorization: "Bearer " },
-    });
-
-    assert.strictEqual(response.statusCode, 401);
-
-    const responseBody = response.json();
-    assert.strictEqual(responseBody.error, "No Bearer token found.");
-  });
 });

@@ -327,7 +327,7 @@ export async function dbUpdateModelMappingsForApiKey(
 
     // Return the updated mappings
     return await tx
-      .select()
+      .select({ llmModelApiKeyMappingTable })
       .from(llmModelApiKeyMappingTable)
       .innerJoin(
         llmModelTable,

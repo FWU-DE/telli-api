@@ -113,6 +113,9 @@ export const llmModelApiKeyMappingTable = pgTable("llm_model_api_key_mapping", {
 
 export type LlmModelApiKeyMappingModel =
   typeof llmModelApiKeyMappingTable.$inferSelect;
+export const llmModelApiKeyMappingInsertSchema = createInsertSchema(
+  llmModelApiKeyMappingTable,
+);
 
 export const completionUsageTrackingTable = pgTable(
   "completion_usage_tracking",

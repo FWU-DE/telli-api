@@ -106,11 +106,16 @@ export async function dbGetAllApiKeysByProjectId(
   organizationId: string,
   projectId: string,
 ) {
-  // Todo: verify that the project belongs to the organization
   return await db
     .select()
     .from(apiKeyTable)
-    .where(eq(apiKeyTable.projectId, projectId));
+    .innerJoin(projectTable, eq(apiKeyTable.projectId, projectTable.id))
+    .where(
+      and(
+        eq(apiKeyTable.projectId, projectId),
+        eq(projectTable.organizationId, organizationId),
+      ),
+    );
 }
 
 export async function dbGetApiKeysAndUsageByProjectId({

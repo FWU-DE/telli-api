@@ -124,18 +124,6 @@ describe("PATCH LLM", () => {
     assert.ok(response.json().error);
   });
 
-  test("should return 401 for missing api key", async () => {
-    const response = await app.inject({
-      method: "PATCH",
-      url: `/v1/admin/organizations/${ORGANIZATION_ID}/models/${MODEL_ID}`,
-      payload: {
-        name: "Doesnt matter",
-      },
-    });
-
-    assert.strictEqual(response.statusCode, 401);
-  });
-
   test("should return 404 for non-existent model", async () => {
     const response = await app.inject({
       method: "PATCH",

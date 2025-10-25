@@ -32,8 +32,10 @@ export const projectTable = pgTable("project", {
     .defaultNow()
     .notNull(),
 });
+export const projectInsertSchema = createInsertSchema(projectTable);
 export type ProjectInsertModel = typeof projectTable.$inferInsert;
 export type ProjectModel = typeof projectTable.$inferSelect;
+export const projectUpdateSchema = createUpdateSchema(projectTable);
 
 export const llmModelTable = pgTable("llm_model", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -93,6 +95,8 @@ export const apiKeyTable = pgTable("api_key", {
 });
 export type ApiKeyInsertModel = typeof apiKeyTable.$inferInsert;
 export type ApiKeyModel = typeof apiKeyTable.$inferSelect;
+export const apiKeyInsertSchema = createInsertSchema(apiKeyTable);
+export const apiKeyUpdateSchema = createUpdateSchema(apiKeyTable);
 
 export const llmModelApiKeyMappingTable = pgTable("llm_model_api_key_mapping", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -109,6 +113,9 @@ export const llmModelApiKeyMappingTable = pgTable("llm_model_api_key_mapping", {
 
 export type LlmModelApiKeyMappingModel =
   typeof llmModelApiKeyMappingTable.$inferSelect;
+export const llmModelApiKeyMappingInsertSchema = createInsertSchema(
+  llmModelApiKeyMappingTable,
+);
 
 export const completionUsageTrackingTable = pgTable(
   "completion_usage_tracking",

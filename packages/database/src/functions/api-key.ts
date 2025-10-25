@@ -10,7 +10,7 @@ import {
 } from "../schema";
 import { db, dbGetProjectById } from "..";
 import { isDateBefore } from "../date";
-import { and, eq, inArray } from "drizzle-orm";
+import { and, eq, getTableColumns, inArray } from "drizzle-orm";
 
 export async function dbCreateJustTheApiKey(
   apiKey: Omit<ApiKeyInsertModel, "secretHash" | "keyId">,
@@ -107,7 +107,7 @@ export async function dbGetAllApiKeysByProjectId(
   projectId: string,
 ) {
   return await db
-    .select()
+    .select({ ...getTableColumns(apiKeyTable) })
     .from(apiKeyTable)
     .innerJoin(projectTable, eq(apiKeyTable.projectId, projectTable.id))
     .where(
@@ -282,7 +282,7 @@ export async function dbUpdateModelMappingsForApiKey(
   return await db.transaction(async (tx) => {
     // First verify the API key exists and belongs to the organization/project
     const apiKey = await tx
-      .select()
+      .select({ id: apiKeyTable.id })
       .from(apiKeyTable)
       .innerJoin(projectTable, eq(apiKeyTable.projectId, projectTable.id))
       .where(
@@ -332,7 +332,7 @@ export async function dbUpdateModelMappingsForApiKey(
 
     // Return the updated mappings
     return await tx
-      .select({ llmModelApiKeyMappingTable })
+      .select({ ...getTableColumns(llmModelApiKeyMappingTable) })
       .from(llmModelApiKeyMappingTable)
       .innerJoin(
         llmModelTable,

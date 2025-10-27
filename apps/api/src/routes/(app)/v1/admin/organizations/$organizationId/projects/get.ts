@@ -1,7 +1,10 @@
 import { handleApiError } from "@/errors";
 import { organizationParamsSchema } from "../organizationParamsSchema";
-import { validateAdminApiKeyAndThrow } from "@/validation";
-import { dbGetAllModelsByOrganizationId } from "@dgpt/db";
+import {
+  validateAdminApiKeyAndThrow,
+  validateOrganizationId,
+} from "@/validation";
+import { dbGetAllProjectsByOrganizationId } from "@dgpt/db";
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export async function handler(
@@ -10,13 +13,15 @@ export async function handler(
 ): Promise<void> {
   try {
     validateAdminApiKeyAndThrow(request.headers.authorization);
-    const { organizationId } = organizationParamsSchema.parse(request.params);
 
-    const models = await dbGetAllModelsByOrganizationId(organizationId);
-    reply.status(200).send(models);
+    const { organizationId } = organizationParamsSchema.parse(request.params);
+    validateOrganizationId(organizationId);
+
+    const projects = await dbGetAllProjectsByOrganizationId(organizationId);
+    reply.status(200).send(projects);
   } catch (error) {
-    const result = handleApiError(error);
-    reply.status(result.statusCode).send({ error: result.message });
+    const e = handleApiError(error);
+    reply.status(e.statusCode).send({ error: e.message });
     return;
   }
 }

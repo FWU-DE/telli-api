@@ -1,4 +1,6 @@
-import { validateAdminApiKey } from "../../../../utils";
+import { handleApiError } from "@/errors";
+import { modelParamsSchema } from "./modelParamsSchema";
+import { validateAdminApiKeyAndThrow } from "@/validation";
 import { dbDeleteLlmModelById } from "@dgpt/db";
 import { FastifyReply, FastifyRequest } from "fastify";
 
@@ -6,13 +8,16 @@ export async function handler(
   request: FastifyRequest,
   reply: FastifyReply,
 ): Promise<void> {
-  const apiKey = await validateAdminApiKey(request, reply);
-  if (!apiKey.isValid) return;
+  try {
+    validateAdminApiKeyAndThrow(request.headers.authorization);
 
-  const params = request.params as { id: string };
-  const id = params.id;
+    const { id } = modelParamsSchema.parse(request.params);
 
-  await dbDeleteLlmModelById(id);
+    await dbDeleteLlmModelById(id);
 
-  reply.status(200).send();
+    reply.status(200).send();
+  } catch (error) {
+    const result = handleApiError(error);
+    return reply.status(result.statusCode).send({ error: result.message });
+  }
 }

@@ -104,7 +104,7 @@ export async function getAllApiKeys(
   if (!orgWithProjects) return [];
   const allApiKeys: { id: string; name: string }[] = [];
   for (const project of orgWithProjects.projects) {
-    const keys = await dbGetAllApiKeysByProjectId({ projectId: project.id });
+    const keys = await dbGetAllApiKeysByProjectId(organizationId, project.id);
     allApiKeys.push(...keys.map((k: any) => ({ id: k.id, name: k.name })));
   }
   return allApiKeys;

@@ -52,8 +52,8 @@ jobs:
         with:
           context: .
           file: apps/api/Dockerfile
-          tags: |
-            ${{ env.REGISTRY }}/fwu-de/telli-api:${{ env.COMMIT_HASH }}
+          build-args: APP_VERSION=${{ github.sha }}
+          tags: ${{ env.REGISTRY }}/fwu-de/telli-api:${{ env.COMMIT_HASH }}
           labels: ${{ steps.meta.outputs.labels }}
           push: true
 

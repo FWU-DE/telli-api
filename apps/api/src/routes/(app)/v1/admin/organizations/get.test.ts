@@ -55,16 +55,16 @@ describe("GET /v1/admin/organizations", () => {
     assert.strictEqual(response.statusCode, 200);
 
     const responseBody = response.json();
-    assert.ok(responseBody.organizations);
-    assert.ok(Array.isArray(responseBody.organizations));
+    assert.ok(responseBody);
+    assert.ok(Array.isArray(responseBody));
 
     // Should contain our test organizations
-    const orgNames = responseBody.organizations.map((org: any) => org.name);
+    const orgNames = responseBody.map((org: any) => org.name);
     assert.ok(orgNames.includes("Test Organization 1"));
     assert.ok(orgNames.includes("Test Organization 2"));
 
     // Check that the first organization has the correct structure
-    const sampleOrg = responseBody.organizations[0];
+    const sampleOrg = responseBody[0];
     assert.ok(typeof sampleOrg.id === "string");
     assert.ok(typeof sampleOrg.name === "string");
     assert.ok(sampleOrg.createdAt);

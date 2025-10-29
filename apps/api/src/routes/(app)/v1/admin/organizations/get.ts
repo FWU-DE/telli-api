@@ -12,7 +12,7 @@ export async function handler(
 
     const organizations = await dbGetAllOrganizations();
 
-    return reply.status(200).send({ organizations });
+    return reply.status(200).send(organizations);
   } catch (error) {
     const result = handleApiError(error);
     return reply.status(result.statusCode).send({ error: result.message });

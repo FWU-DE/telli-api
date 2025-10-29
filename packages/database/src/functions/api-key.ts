@@ -257,7 +257,7 @@ export async function dbGetAllModelMappingsForApiKey(
   apiKeyId: string,
 ) {
   return await db
-    .select()
+    .select({ ...getTableColumns(llmModelApiKeyMappingTable) })
     .from(llmModelApiKeyMappingTable)
     .innerJoin(
       apiKeyTable,

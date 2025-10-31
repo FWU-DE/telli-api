@@ -1,4 +1,3 @@
-// import { env } from "@dgpt/env";
 import { env } from "@/env";
 import swagger from "@fastify/swagger";
 import swaggerUI from "@fastify/swagger-ui";
@@ -41,14 +40,11 @@ export async function initSwagger(fastify: FastifyInstance) {
       // docExpansion: "none",
       deepLinking: false,
     },
-    staticCSP: {
-      "default-src": ["'none'"],
-      "connect-src": ["'self'", "127.0.0.1", "localhost"],
-      "style-src": ["'self'", "'unsafe-inline'", "https:"],
-      "script-src": ["'self'"],
-      "img-src": ["'self'", "data:", "https:"],
-      "font-src": ["'self'", "https:"],
+    staticCSP: true,
+    transformSpecification: (swaggerObject) => {
+      // load OpenApi document from relativ location to prevent CSP issues
+      swaggerObject.servers[0].url = "/";
+      return swaggerObject;
     },
-    transformSpecification: (swaggerObject) => swaggerObject,
   });
 }

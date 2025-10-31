@@ -1,4 +1,8 @@
-import { FastifyInstance, RouteHandlerMethod } from "fastify";
+import {
+  FastifyInstance,
+  RouteHandlerMethod,
+  RouteShorthandOptions,
+} from "fastify";
 import { handler as v1_chat_completions_postHandler } from "./routes/(app)/v1/chat/completions/post";
 import { handler as v1_models_getHandler } from "./routes/(app)/v1/models/get";
 import { handler as v1_usage_getHandler } from "./routes/(app)/v1/usage/get";
@@ -11,10 +15,12 @@ import { adminRouteHandlerDefinitions } from "./routes/(app)/v1/admin/const";
 import { embeddingRequestSwaggerSchema } from "./routes/(app)/v1/embeddings/swagger-schemas";
 import { imageGenerationRequestSwaggerSchema } from "./routes/(app)/v1/images/generations/swagger-schemas";
 
-export type RouteHandlerDefinition = {
+export type RouteHandlerDefinition = Pick<
+  RouteShorthandOptions,
+  "schema" | "bodyLimit"
+> & {
   path: string;
   method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
-  schema?: object | { hide: true };
   handler: RouteHandlerMethod;
 };
 
@@ -52,6 +58,7 @@ export const routeHandlerDefinitions: Array<RouteHandlerDefinition> = [
     path: "/v1/chat/completions",
     method: "POST",
     schema: completionRequestSchemaSwagger,
+    bodyLimit: 10_000_000,
     handler: v1_chat_completions_postHandler,
   },
   {
@@ -82,25 +89,20 @@ export const routeHandlerDefinitions: Array<RouteHandlerDefinition> = [
 
 export function constructHandlers(fastify: FastifyInstance) {
   for (const def of routeHandlerDefinitions) {
+    const opts: RouteShorthandOptions = {
+      schema: def.schema,
+      bodyLimit: def.bodyLimit,
+    };
     if (def.method === "GET") {
-      fastify.get(def.path, { schema: def.schema }, def.handler);
-      continue;
-    }
-    if (def.method === "PUT") {
-      fastify.put(def.path, { schema: def.schema }, def.handler);
-      continue;
-    }
-    if (def.method === "POST") {
-      fastify.post(def.path, { schema: def.schema }, def.handler);
-      continue;
-    }
-    if (def.method === "PATCH") {
-      fastify.patch(def.path, { schema: def.schema }, def.handler);
-      continue;
-    }
-    if (def.method === "DELETE") {
-      fastify.delete(def.path, { schema: def.schema }, def.handler);
-      continue;
+      fastify.get(def.path, opts, def.handler);
+    } else if (def.method === "PUT") {
+      fastify.put(def.path, opts, def.handler);
+    } else if (def.method === "POST") {
+      fastify.post(def.path, opts, def.handler);
+    } else if (def.method === "PATCH") {
+      fastify.patch(def.path, opts, def.handler);
+    } else if (def.method === "DELETE") {
+      fastify.delete(def.path, opts, def.handler);
     }
   }
 }

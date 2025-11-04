@@ -5,6 +5,7 @@ import { handler as v1_admin_model_postHandler } from "./organizations/$organiza
 import { handler as v1_admin_model_getByIdHandler } from "./organizations/$organizationId/models/$id/get";
 import { handler as v1_admin_model_patchByIdHandler } from "./organizations/$organizationId/models/$id/patch";
 import { handler as v1_admin_model_deleteByIdHandler } from "./organizations/$organizationId/models/$id/delete";
+import { handler as v1_admin_organizations_$organizationId_report_getHandler } from "./organizations/$organizationId/report/get";
 import { handler as v1_admin_organizations_getHandler } from "./organizations/get";
 import { handler as v1_admin_organizations_$organizationId_getHandler } from "./organizations/$organizationId/get";
 import { handler as v1_admin_organizations_$organizationId_projects_getHandler } from "./organizations/$organizationId/projects/get";
@@ -72,6 +73,12 @@ export const adminRouteHandlerDefinitions: Array<RouteHandlerDefinition> = [
     method: "POST",
     schema: { hide: true },
     handler: v1_admin_apiKey_postHandler,
+  },
+  {
+    path: "/v1/admin/organizations/:organizationId/report/:year",
+    method: "GET",
+    schema: { hide: true },
+    handler: v1_admin_organizations_$organizationId_report_getHandler,
   },
   {
     path: "/v1/admin/models",

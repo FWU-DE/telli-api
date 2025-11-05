@@ -1,4 +1,5 @@
 FROM node:22.11.0-alpine3.20 AS base
+ENV TURBO_TELEMETRY_DISABLED=1
 
 FROM base AS builder
 RUN apk update

@@ -57,6 +57,13 @@
       "when": 1760052584356,
       "tag": "0007_lazy_barracuda",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1762258617089,
+      "tag": "0008_flaky_bedlam",
+      "breakpoints": true
     }
   ]
 }

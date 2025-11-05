@@ -42,7 +42,7 @@ export async function initSwagger(fastify: FastifyInstance) {
     },
     staticCSP: true,
     transformSpecification: (swaggerObject) => {
-      // load OpenApi document from relativ location to prevent CSP issues
+      // load OpenApi document from relative location to prevent CSP issues
       swaggerObject.servers[0].url = "/";
       return swaggerObject;
     },

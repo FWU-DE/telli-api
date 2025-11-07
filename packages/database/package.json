@@ -16,24 +16,24 @@
     "lint": "eslint \"**/*.ts*\" --max-warnings 0"
   },
   "dependencies": {
-    "@types/bcryptjs": "2.4.6",
-    "bcryptjs": "2.4.3",
+    "@types/bcryptjs": "3.0.0",
+    "bcryptjs": "3.0.3",
     "drizzle-kit": "0.31.6",
     "drizzle-orm": "0.44.7",
     "drizzle-zod": "0.8.3",
     "nanoid": "5.1.6",
     "pg": "8.16.3",
-    "zod": "3.25.1"
+    "zod": "4.1.12"
   },
   "devDependencies": {
     "@dgpt/eslint-config": "workspace:*",
     "@dgpt/llm-model": "workspace:*",
     "@dgpt/typescript-config": "workspace:*",
     "@dgpt/utils": "workspace:*",
-    "@types/node": "22.13.14",
+    "@types/node": "24.10.0",
     "@types/pg": "8.15.6",
-    "dotenv-cli": "10.0.0",
-    "eslint": "8.57.0",
+    "dotenv-cli": "11.0.0",
+    "eslint": "9.39.1",
     "tsx": "4.20.6",
     "typescript": "5.9.3"
   }

@@ -9,14 +9,14 @@
     "types": "tsc --noEmit"
   },
   "devDependencies": {
-    "@types/react": "18.2.61",
-    "@types/react-dom": "18.2.19",
-    "eslint": "8.57.0",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
+    "eslint": "9.39.1",
     "@dgpt/eslint-config": "workspace:*",
     "@dgpt/typescript-config": "workspace:*",
     "typescript": "5.9.3"
   },
   "dependencies": {
-    "react": "18.2.0"
+    "react": "19.2.0"
   }
 }

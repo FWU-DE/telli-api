@@ -1,0 +1,42 @@
+version: 2
+
+multi-ecosystem-groups:
+  infrastructure:
+    labels: [ "dependencies", "infrastructure" ]
+    schedule:
+      interval: "weekly"
+
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    labels: [ "dependencies" ]
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "docker"
+    directory: "/"
+    patterns: [ "*" ]
+    multi-ecosystem-group: "infrastructure"
+
+  - package-ecosystem: "docker-compose"
+    directory: "/"
+    patterns: [ "*" ]
+    multi-ecosystem-group: "infrastructure"
+
+  - package-ecosystem: "npm"
+    directory: "/"
+    labels: [ "dependencies", "npm" ]
+    schedule:
+      interval: "daily"
+    groups:
+      # Group safe, non-breaking bumps to reduce PRs
+      minor-and-patch:
+        applies-to: version-updates
+        update-types:
+          - "minor"
+          - "patch"
+      # Keep major bumps isolated
+      major:
+        applies-to: version-updates
+        update-types:
+          - "major"

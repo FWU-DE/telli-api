@@ -32,8 +32,3 @@ updates:
         update-types:
           - "minor"
           - "patch"
-      # Keep major bumps isolated
-      major:
-        applies-to: version-updates
-        update-types:
-          - "major"

@@ -24,7 +24,7 @@ WORKDIR /app
 
 COPY --from=installer /app .
 
-RUN npm i -g pnpm@9.12.3
+RUN corepack enable && corepack prepare
 RUN pnpm i
 
 ARG APP_VERSION

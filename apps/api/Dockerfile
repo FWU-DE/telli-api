@@ -31,4 +31,4 @@ ARG APP_VERSION
 ENV APP_VERSION=${APP_VERSION}
 ENV NODE_ENV=production
 
-CMD pnpm db:migrate && pnpm start:api
+CMD ["sh", "-c", "pnpm db:migrate && pnpm start:api"]

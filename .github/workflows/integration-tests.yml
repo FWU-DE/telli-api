@@ -31,10 +31,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version-file: ".nvmrc"
 
@@ -50,8 +50,6 @@ jobs:
       - name: Run integration tests
         run: pnpm run test
 
-        # secrets are not passed to workflows triggered by pull requests
-        # so we only upload coverage for pushes to main branch
       - name: Upload coverage results to Codecov
         uses: codecov/codecov-action@v5
         with:

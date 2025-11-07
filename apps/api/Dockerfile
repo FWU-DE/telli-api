@@ -24,11 +24,11 @@ WORKDIR /app
 
 COPY --from=installer /app .
 
-RUN npm i -g pnpm@9.12.3
+RUN corepack enable && corepack prepare
 RUN pnpm i
 
 ARG APP_VERSION
 ENV APP_VERSION=${APP_VERSION}
 ENV NODE_ENV=production
 
-CMD pnpm db:migrate && pnpm start:api
+CMD ["sh", "-c", "pnpm db:migrate && pnpm start:api"]

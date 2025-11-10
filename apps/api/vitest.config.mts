@@ -11,8 +11,9 @@ export default defineConfig({
     },
   },
   test: {
-    //Configuration options: https://vitest.dev/config/#coverage
+    // Configuration options: https://vitest.dev/config/#coverage
     coverage: {
+      provider: "v8",
       reporter: ["text", "lcov", "json", "html"],
       exclude: [
         "src/instrumentation.ts",

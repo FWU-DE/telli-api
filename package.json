@@ -2,6 +2,7 @@
   "name": "dgpt",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "turbo run build",
     "start": "turbo run start",

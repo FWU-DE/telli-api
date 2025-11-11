@@ -2,6 +2,7 @@
   "name": "@dgpt/api",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "NODE_ENV=development dotenv -e ../../.env -- tsx src/index.ts",
     "clean": "find . -type d \\( -name node_modules -o -name dist -o -name .next \\) -not -path \"./.vercel/*\" -prune -exec rm -rf {} \\;",

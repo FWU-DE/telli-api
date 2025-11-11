@@ -1,26 +1,29 @@
-module.exports = {
-  extends: ["eslint:recommended"],
-  env: {
-    node: true,
-    es6: true,
-    es2017: true,
-    es2018: true,
-  },
-  globals: {
-    AsyncGenerator: "readonly",
-    AsyncIterable: "readonly",
-    AsyncIterator: "readonly",
-  },
-  parserOptions: {
-    ecmaVersion: "latest",
-    sourceType: "module",
-  },
-  overrides: [
-    {
-      files: ["**/__tests__/**/*"],
-      env: {
-        jest: true,
+import eslint from "@eslint/js";
+import tseslint from "typescript-eslint";
+
+export default tseslint.config(
+  {
+    extends: [
+      eslint.configs.recommended,
+      ...tseslint.configs.recommended,
+    ],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      parserOptions: {
+        projectService: true,
+      },
+      globals: {
+        AsyncGenerator: "readonly",
+        AsyncIterable: "readonly",
+        AsyncIterator: "readonly",
       },
     },
-  ],
-};
+    // Disable type-aware linting for config files
+    files: ["**/*.ts"],
+  },
+  {
+    files: ["**/*.js"],
+    ...tseslint.configs.disableTypeChecked,
+  },
+);

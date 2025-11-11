@@ -4,8 +4,6 @@
   "private": true,
   "files": [
     "library.js",
-    "next.js",
-    "react-internal.js",
     "server.js"
   ],
   "devDependencies": {
@@ -15,8 +13,6 @@
     "eslint-config-prettier": "10.1.8",
     "eslint-config-turbo": "2.6.1",
     "eslint-plugin-only-warn": "1.1.0",
-    "eslint-plugin-react": "7.37.5",
-    "eslint-plugin-react-hooks": "7.0.1",
     "typescript": "5.9.3"
   }
 }

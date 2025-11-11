@@ -47,11 +47,11 @@ describe.each([
   "testing $method $url",
   ({ method, url }: { method: HTTPMethods; url: string }) => {
     test("should return 401 when no authorization header is provided", async () => {
-      const response = await (app.inject({
+      const response = await app.inject({
         method: method as any,
         url,
         headers: {},
-      }) as Promise<any>);
+      });
 
       assert.strictEqual(response.statusCode, 401);
 
@@ -60,11 +60,11 @@ describe.each([
     });
 
     test("should return 401 when Bearer token is empty", async () => {
-      const response = await (app.inject({
+      const response = await app.inject({
         method: method as any,
         url,
         headers: { authorization: "Bearer " },
-      }) as Promise<any>);
+      });
 
       assert.strictEqual(response.statusCode, 401);
 
@@ -73,11 +73,11 @@ describe.each([
     });
 
     test("should return 401 when API key is invalid", async () => {
-      const response = await (app.inject({
+      const response = await app.inject({
         method: method as any,
         url,
         headers: { authorization: "Bearer invalid-api-key" },
-      }) as Promise<any>);
+      });
 
       assert.strictEqual(response.statusCode, 401);
 

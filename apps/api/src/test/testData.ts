@@ -1,8 +1,8 @@
 import { LlmInsertModel, OrganizationInsertModel } from "@dgpt/db";
 
-export const ORGANIZATION_ID = "12345678-1111-1111-b8aa-0e08c746a888";
-export const MODEL_ID = "12345678-1234-5678-1234-567812345678";
-export const NON_EXISTING_MODEL_ID = "99999999-9999-9999-9999-999999999999";
+export const ORGANIZATION_ID = "5dbd7831-fcd2-4db3-aa93-6142893c51c2";
+export const MODEL_ID = "1ead3e7f-8464-4b49-9e8b-da2aabcfe4bf";
+export const NON_EXISTING_MODEL_ID = "e88f53c4-1d88-452d-9f14-6a7d895da9f3";
 
 export const testOrganziation: OrganizationInsertModel = {
   id: ORGANIZATION_ID,

@@ -11,7 +11,6 @@ import {
   uuid,
 } from "drizzle-orm/pg-core";
 import { LlmModelPriceMetadata } from "./types";
-import z from "zod";
 import { LlmModelProviderSettings } from "@dgpt/llm-model";
 import { createInsertSchema, createUpdateSchema } from "drizzle-zod";
 
@@ -82,12 +81,11 @@ export const llmUpdateModelSchema = createUpdateSchema(llmModelTable).omit({
 export type LlmInsertModel = typeof llmModelTable.$inferInsert;
 export type LlmModel = typeof llmModelTable.$inferSelect;
 
-export const apiKeyStateSchema = z.enum(["active", "inactive", "deleted"]);
-export const apiKeyStateEnum = pgEnum(
-  "api_key_state",
-  apiKeyStateSchema.options,
-);
-export type ApiKeyState = z.infer<typeof apiKeyStateSchema>;
+export const apiKeyStateEnum = pgEnum("api_key_state", [
+  "active",
+  "inactive",
+  "deleted",
+]);
 
 export const apiKeyTable = pgTable(
   "api_key",

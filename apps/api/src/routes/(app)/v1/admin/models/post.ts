@@ -3,8 +3,10 @@ import { validateAdminApiKey } from "../utils";
 import { obscureModels } from "../../models/utils";
 import z from "zod";
 import { llmModelSettingsSchema } from "@dgpt/llm-model";
-import { llmModelPriceMetadataSchema } from "@dgpt/db";
-import { dbCreateModelWithApiKeyLinks } from "@dgpt/db";
+import {
+  dbCreateModelWithApiKeyLinks,
+  llmModelPriceMetadataSchema,
+} from "@dgpt/db";
 
 const createModelRequestSchema = z.object({
   provider: z.string(),
@@ -15,7 +17,7 @@ const createModelRequestSchema = z.object({
   priceMetadata: llmModelPriceMetadataSchema,
   organizationId: z.string(),
   apiKeyNames: z.array(z.string()).optional(), // If omitted, link to all API keys in org
-  additionalParameters: z.record(z.any()).optional(),
+  additionalParameters: z.record(z.string(), z.any()).optional(),
   isNew: z.boolean().optional(),
   isDeleted: z.boolean().optional(),
 });

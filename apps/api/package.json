@@ -39,7 +39,7 @@
     "openaiv4": "npm:openai@4.80.1",
     "tiktoken": "1.0.22",
     "tsx": "4.20.6",
-    "zod": "3.25.1"
+    "zod": "4.1.12"
   },
   "devDependencies": {
     "@dgpt/eslint-config": "workspace:*",

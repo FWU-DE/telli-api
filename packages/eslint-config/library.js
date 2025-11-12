@@ -1,12 +1,14 @@
 import eslint from "@eslint/js";
 import tseslint from "typescript-eslint";
 import onlyWarn from "eslint-plugin-only-warn";
+import turboConfig from "eslint-config-turbo/flat";
 
 export default tseslint.config(
   {
     extends: [
       eslint.configs.recommended,
       ...tseslint.configs.recommendedTypeChecked,
+      turboConfig,
     ],
     plugins: {
       "only-warn": onlyWarn,

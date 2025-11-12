@@ -1,4 +1,5 @@
-import Sentry, { SentryContextManager } from "@sentry/node";
+import * as Sentry from "@sentry/node";
+import { SentryContextManager } from "@sentry/node";
 import { nodeProfilingIntegration } from "@sentry/profiling-node";
 import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-http";
 import { PeriodicExportingMetricReader } from "@opentelemetry/sdk-metrics";

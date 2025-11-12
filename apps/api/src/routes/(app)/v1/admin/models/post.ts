@@ -49,7 +49,7 @@ export async function handler(
     name: result.name,
     displayName: result.displayName,
     description: result.description,
-    settings: result.settings,
+    setting: result.settings,
     priceMetadata: result.priceMetadata,
     organizationId: result.organizationId,
     apiKeyNames: result.apiKeyNames,
@@ -57,7 +57,7 @@ export async function handler(
     isDeleted: result.isDeleted,
   });
 
-  if (dbResult?.error !== undefined) {
+  if ("error" in dbResult) {
     return reply.status(400).send({ error: dbResult.error });
   }
 

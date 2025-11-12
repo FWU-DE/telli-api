@@ -42,7 +42,7 @@ export const routeHandlerDefinitions: Array<RouteHandlerDefinition> = [
     path: "/health",
     method: "GET",
     schema: healthSchema,
-    async handler() {
+    handler() {
       return { message: "Ok" };
     },
   },
@@ -50,7 +50,7 @@ export const routeHandlerDefinitions: Array<RouteHandlerDefinition> = [
     path: "/error",
     method: "GET",
     schema: { hide: true },
-    async handler() {
+    handler() {
       throw Error("Test Error");
     },
   },

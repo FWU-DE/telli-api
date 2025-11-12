@@ -4,8 +4,6 @@ import {
   CompletionUsage,
 } from "openai/resources/index.js";
 
-/* eslint-disable no-unused-vars */
-
 export type CommonLlmProviderStreamParameter = {
   messages: Array<ChatCompletionMessageParam>;
   model: string;
@@ -16,7 +14,7 @@ export type CommonLlmProviderStreamParameter = {
 
 export type CompletionStreamFn = (
   args: CommonLlmProviderStreamParameter,
-) => Promise<ReadableStream<any>>;
+) => Promise<ReadableStream>;
 
 export type CompletionFn = (args: {
   messages: ChatCompletionMessageParam[];

@@ -3,6 +3,7 @@ import {
   ChatCompletionMessageParam,
   CompletionUsage,
 } from "openai/resources/index.js";
+import { ChatCompletionContentPartText } from "openai/resources/chat/completions.js";
 
 const textEncoder = new TextEncoder();
 
@@ -38,8 +39,10 @@ function extractTextFromMessage(message: ChatCompletionMessageParam): string {
 
   if (Array.isArray(message.content)) {
     return message.content
-      .filter((part) => part.type === "text")
-      .map((part) => (part as any).text)
+      .filter(
+        (part): part is ChatCompletionContentPartText => part.type === "text",
+      )
+      .map((part) => part.text)
       .join(" ");
   }
 

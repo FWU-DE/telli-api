@@ -15,7 +15,7 @@ export async function handler(
     validateAdminApiKeyAndThrow(request.headers.authorization);
 
     const { organizationId } = organizationParamsSchema.parse(request.params);
-    validateOrganizationId(organizationId);
+    await validateOrganizationId(organizationId);
 
     const projects = await dbGetAllProjectsByOrganizationId(organizationId);
     reply.status(200).send(projects);

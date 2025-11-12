@@ -28,9 +28,10 @@ export function constructIonosCompletionStreamFn(
     onUsageCallback,
     messages,
     ...props
-  }: Omit<CommonLlmProviderStreamParameter, "model">): Promise<
-    ReadableStream<any>
-  > {
+  }: Omit<
+    CommonLlmProviderStreamParameter,
+    "model"
+  >): ReturnType<CompletionStreamFn> {
     const stream = await client.chat.completions.create({
       model: llmModel.id,
       messages,

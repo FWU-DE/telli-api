@@ -2,7 +2,7 @@
 import "./instrumentation";
 import cors from "@fastify/cors";
 
-import Sentry from "@sentry/node";
+import * as Sentry from "@sentry/node";
 import buildApp from "./app";
 import { env } from "./env";
 

@@ -2,21 +2,18 @@
   "name": "@dgpt/eslint-config",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "files": [
     "library.js",
-    "next.js",
-    "react-internal.js",
     "server.js"
   ],
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "8.46.4",
-    "@typescript-eslint/parser": "8.46.4",
-    "@vercel/style-guide": "6.0.0",
+    "@eslint/js": "9.39.1",
+    "eslint": "9.39.1",
     "eslint-config-prettier": "10.1.8",
     "eslint-config-turbo": "2.6.1",
     "eslint-plugin-only-warn": "1.1.0",
-    "eslint-plugin-react": "7.37.5",
-    "eslint-plugin-react-hooks": "7.0.1",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.46.4"
   }
 }

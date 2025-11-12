@@ -59,7 +59,7 @@ describe("GET /v1/admin/organizations", () => {
     assert.ok(Array.isArray(responseBody));
 
     // Should contain our test organizations
-    const orgNames = responseBody.map((org: any) => org.name);
+    const orgNames = responseBody.map((org) => org.name);
     assert.ok(orgNames.includes("Test Organization 1"));
     assert.ok(orgNames.includes("Test Organization 2"));
 

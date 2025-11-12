@@ -43,6 +43,7 @@ export async function initSwagger(fastify: FastifyInstance) {
     staticCSP: true,
     transformSpecification: (swaggerObject) => {
       // load OpenApi document from relative location to prevent CSP issues
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       swaggerObject.servers[0].url = "/";
       return swaggerObject;
     },

@@ -1,7 +1,7 @@
 import assert from "node:assert";
 import buildApp from "@/app";
 import { afterAll, beforeAll, describe, test } from "vitest";
-import { FastifyInstance, HTTPMethods } from "fastify";
+import { FastifyInstance } from "fastify";
 
 let app: FastifyInstance;
 
@@ -43,46 +43,43 @@ describe.each([
     method: "PUT",
     url: "/v1/admin/organizations/123/projects/123/api-keys/123/model-mappings",
   },
-])(
-  "testing $method $url",
-  ({ method, url }: { method: HTTPMethods; url: string }) => {
-    test("should return 401 when no authorization header is provided", async () => {
-      const response = await app.inject({
-        method: method as any,
-        url,
-        headers: {},
-      });
-
-      assert.strictEqual(response.statusCode, 401);
-
-      const responseBody = response.json();
-      assert.strictEqual(responseBody.error, "No Bearer token found.");
+] as const)("testing $method $url", ({ method, url }) => {
+  test("should return 401 when no authorization header is provided", async () => {
+    const response = await app.inject({
+      method,
+      url,
+      headers: {},
     });
 
-    test("should return 401 when Bearer token is empty", async () => {
-      const response = await app.inject({
-        method: method as any,
-        url,
-        headers: { authorization: "Bearer " },
-      });
+    assert.strictEqual(response.statusCode, 401);
 
-      assert.strictEqual(response.statusCode, 401);
+    const responseBody = response.json();
+    assert.strictEqual(responseBody.error, "No Bearer token found.");
+  });
 
-      const responseBody = response.json();
-      assert.strictEqual(responseBody.error, "No Bearer token found.");
+  test("should return 401 when Bearer token is empty", async () => {
+    const response = await app.inject({
+      method,
+      url,
+      headers: { authorization: "Bearer " },
     });
 
-    test("should return 401 when API key is invalid", async () => {
-      const response = await app.inject({
-        method: method as any,
-        url,
-        headers: { authorization: "Bearer invalid-api-key" },
-      });
+    assert.strictEqual(response.statusCode, 401);
 
-      assert.strictEqual(response.statusCode, 401);
+    const responseBody = response.json();
+    assert.strictEqual(responseBody.error, "No Bearer token found.");
+  });
 
-      const responseBody = response.json();
-      assert.strictEqual(responseBody.error, "Api key is not valid");
+  test("should return 401 when API key is invalid", async () => {
+    const response = await app.inject({
+      method,
+      url,
+      headers: { authorization: "Bearer invalid-api-key" },
     });
-  },
-);
+
+    assert.strictEqual(response.statusCode, 401);
+
+    const responseBody = response.json();
+    assert.strictEqual(responseBody.error, "Api key is not valid");
+  });
+});

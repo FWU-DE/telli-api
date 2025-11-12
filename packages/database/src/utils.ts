@@ -1,4 +1,3 @@
-// @ts-ignore some commonjs errors
 import { customAlphabet } from "nanoid";
 
 export function cnanoid(

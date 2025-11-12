@@ -12,8 +12,10 @@ import { dbGetOrganizationById } from "@dgpt/db";
  * Throws NotFoundError if the organization does not exist.
  * @param organizationId
  */
-export function validateOrganizationId(organizationId: string): void {
-  const organization = dbGetOrganizationById(organizationId);
+export async function validateOrganizationId(
+  organizationId: string,
+): Promise<void> {
+  const organization = await dbGetOrganizationById(organizationId);
   if (!organization) {
     throw new NotFoundError("Organization not found");
   }

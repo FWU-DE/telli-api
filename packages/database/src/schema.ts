@@ -64,7 +64,7 @@ export const llmModelTable = pgTable(
       .notNull()
       .default([]),
     additionalParameters: json("additional_parameters")
-      .$type<Record<string, any>>()
+      .$type<Record<string, unknown>>()
       .notNull()
       .default({}),
     isNew: boolean("is_new").notNull().default(false),

@@ -1,5 +1,4 @@
 import { env } from "@/env";
-import { InvalidRequestBodyError, UnauthorizedError } from "@/errors";
 import { getMaybeBearerToken } from "@/routes/utils";
 import { FastifyReply, FastifyRequest } from "fastify";
 

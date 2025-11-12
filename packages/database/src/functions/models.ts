@@ -105,7 +105,7 @@ export async function getAllApiKeys(
   const allApiKeys: { id: string; name: string }[] = [];
   for (const project of orgWithProjects.projects) {
     const keys = await dbGetAllApiKeysByProjectId(organizationId, project.id);
-    allApiKeys.push(...keys.map((k: any) => ({ id: k.id, name: k.name })));
+    allApiKeys.push(...keys.map((k) => ({ id: k.id, name: k.name })));
   }
   return allApiKeys;
 }
@@ -115,28 +115,21 @@ export async function dbCreateModelWithApiKeyLinks({
   name,
   displayName,
   description = "",
-  settings,
+  setting,
   priceMetadata,
   organizationId,
   apiKeyNames,
   isNew,
   isDeleted,
-}: {
-  provider: string;
-  name: string;
-  displayName: string;
-  description?: string;
-  settings: any;
-  priceMetadata: any;
-  organizationId: string;
-  apiKeyNames?: string[];
-  isNew?: boolean;
-  isDeleted?: boolean;
-}): Promise<{
-  error?: string;
-  model?: any;
-  linkedApiKeys?: { id: string; name: string }[];
-}> {
+}: LlmInsertModel & { apiKeyNames?: string[] }): Promise<
+  | {
+      error: string;
+    }
+  | {
+      model: LlmModel;
+      linkedApiKeys: { id: string; name: string }[];
+    }
+> {
   // Check for existing model with same name and provider in the organization
   const existingModel = await db
     .select()
@@ -163,7 +156,7 @@ export async function dbCreateModelWithApiKeyLinks({
       name,
       displayName,
       description: description ?? "",
-      setting: settings,
+      setting,
       priceMetadata,
       organizationId,
       isNew,

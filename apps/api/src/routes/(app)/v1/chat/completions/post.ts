@@ -167,7 +167,7 @@ export async function handler(
       // Check if error has a code field and evaluate its value not all providers have a code field
       const errorCode =
         error instanceof Error && "code" in error
-          ? (error as any).code
+          ? (error.code as string)
           : undefined;
 
       const contentFilterTriggered = errorCode === "content_filter";

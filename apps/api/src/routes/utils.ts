@@ -137,6 +137,6 @@ export function isErrorWithStatus(
   return (
     error instanceof Error &&
     "status" in error &&
-    typeof (error as any).status === "number"
+    typeof error.status === "number"
   );
 }

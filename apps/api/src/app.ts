@@ -19,7 +19,6 @@ async function buildApp(opts = {}) {
 
   // This disables fastify's implicit logic validating and coercing the request body, because this is very error prone on complex schemas
   // the validation is instead always done by the Zod schema
-  // eslint-disable-next-line no-empty-pattern
   app.setValidatorCompiler(() => {
     return () => true;
   });

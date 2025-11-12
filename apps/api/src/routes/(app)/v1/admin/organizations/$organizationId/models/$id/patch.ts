@@ -13,7 +13,7 @@ export async function handler(
     validateAdminApiKeyAndThrow(request.headers.authorization);
     const { id, organizationId } = modelParamsSchema.parse(request.params);
     const parseResult = llmUpdateModelSchema.parse(request.body);
-    validateOrganizationId(organizationId);
+    await validateOrganizationId(organizationId);
     validateRequestBody(parseResult);
 
     const dbResult = await dbUpdateLlmModel(id, organizationId, parseResult);

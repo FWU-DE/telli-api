@@ -3,11 +3,9 @@ import { getErrorMessage } from "./error-utils";
 export type Result<T> = [Error, null] | [null, T];
 export type AsyncResult<T> = Promise<Result<T>>;
 
-// eslint-disable-next-line no-unused-vars
-export function errorifyAsyncFn<F extends (...args: any[]) => Promise<any>>(
-  fn: F,
-  // eslint-disable-next-line no-unused-vars
-): (...args: Parameters<F>) => Promise<Result<Awaited<ReturnType<F>>>> {
+export function errorifyAsyncFn<
+  F extends (...args: Parameters<F>) => Promise<Awaited<ReturnType<F>>>,
+>(fn: F): (...args: Parameters<F>) => Promise<Result<Awaited<ReturnType<F>>>> {
   return async (...args: Parameters<F>) => {
     try {
       const value = await fn(...args);
@@ -21,10 +19,8 @@ export function errorifyAsyncFn<F extends (...args: any[]) => Promise<any>>(
   };
 }
 
-// eslint-disable-next-line no-unused-vars
-export function errorifyFn<F extends (...args: any[]) => any>(
+export function errorifyFn<F extends (...args: Parameters<F>) => ReturnType<F>>(
   fn: F,
-  // eslint-disable-next-line no-unused-vars
 ): (...args: Parameters<F>) => Result<ReturnType<F>> {
   return (...args: Parameters<F>) => {
     try {

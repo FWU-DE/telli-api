@@ -36,7 +36,9 @@ export function constructOpenAiCompletionStreamFn(
     async function* fetchChunks() {
       for await (const chunk of stream) {
         const maybeUsage = chunk.usage ?? undefined;
-        maybeUsage !== undefined && onUsageCallback(maybeUsage);
+        if (maybeUsage) {
+          onUsageCallback(maybeUsage);
+        }
         yield JSON.stringify(chunk);
       }
     }

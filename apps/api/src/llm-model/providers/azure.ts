@@ -60,7 +60,7 @@ export function constructAzureCompletionStreamFn(
         for await (const chunk of stream) {
           if (chunk.type === "response.output_text.delta") {
             // Typing is important here
-            let output: OpenAI.Chat.Completions.ChatCompletionChunk = {
+            const output: OpenAI.Chat.Completions.ChatCompletionChunk = {
               id: chunk.item_id,
               object: "chat.completion.chunk",
               model: model.name,
@@ -78,7 +78,7 @@ export function constructAzureCompletionStreamFn(
             continue;
           }
           if (chunk.type === "response.completed") {
-            let usage: CompletionUsage = {
+            const usage: CompletionUsage = {
               ...chunk.response.usage,
               prompt_tokens: chunk.response.usage?.input_tokens ?? 0,
               completion_tokens: chunk.response.usage?.output_tokens ?? 0,
@@ -87,7 +87,7 @@ export function constructAzureCompletionStreamFn(
 
             onUsageCallback(usage);
 
-            let output: OpenAI.Chat.Completions.ChatCompletionChunk = {
+            const output: OpenAI.Chat.Completions.ChatCompletionChunk = {
               id: chunk.response.id,
               object: "chat.completion.chunk",
               model: model.name,
@@ -232,8 +232,8 @@ function parseAzureOpenAIUrl({ baseUrl }: { baseUrl: string }): {
 function chatCompletionsToResponsesInputFormat(
   input: CommonLlmProviderStreamParameter["messages"],
 ): OpenAI.Responses.ResponseInputItem[] {
-  let newInput: OpenAI.Responses.ResponseInputItem[] = [];
-  for (let msg of input.filter(
+  const newInput: OpenAI.Responses.ResponseInputItem[] = [];
+  for (const msg of input.filter(
     (m) =>
       m.role === "user" ||
       m.role === "assistant" ||

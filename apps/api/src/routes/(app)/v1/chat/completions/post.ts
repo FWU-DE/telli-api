@@ -154,11 +154,13 @@ export async function handler(
     });
     let stream: ReadableStream<Uint8Array>;
     try {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       stream = await completionStreamFn({
         messages: body.messages as ChatCompletionMessageParam[],
         model: model.name,
         temperature: body.temperature,
         max_tokens: body.max_tokens,
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         async onUsageCallback(usage) {
           await onUsageCallback({ usage, apiKey, model });
         },

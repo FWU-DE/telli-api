@@ -5,7 +5,7 @@ export default tseslint.config(
   {
     extends: [
       eslint.configs.recommended,
-      ...tseslint.configs.recommended,
+      ...tseslint.configs.recommendedTypeChecked,
     ],
     languageOptions: {
       ecmaVersion: "latest",

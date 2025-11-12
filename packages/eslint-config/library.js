@@ -6,7 +6,7 @@ export default tseslint.config(
   {
     extends: [
       eslint.configs.recommended,
-      ...tseslint.configs.recommended,
+      ...tseslint.configs.recommendedTypeChecked,
     ],
     plugins: {
       "only-warn": onlyWarn,

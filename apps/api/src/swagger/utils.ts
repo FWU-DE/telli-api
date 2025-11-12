@@ -13,6 +13,7 @@ export function generateOpenApiPaths(
         paths[path] = {};
       }
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       paths[path][lowerMethod] = {
         ...schema,
       };

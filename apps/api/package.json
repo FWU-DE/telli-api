@@ -35,7 +35,7 @@
     "@sentry/opentelemetry": "10.25.0",
     "@sentry/profiling-node": "10.25.0",
     "fastify": "5.6.2",
-    "openai": "5.20.1",
+    "openai": "6.8.1",
     "openaiv4": "npm:openai@4.80.1",
     "tiktoken": "1.0.22",
     "tsx": "4.20.6",

@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "bcryptjs": "3.0.3",
-    "drizzle-kit": "0.31.6",
+    "drizzle-kit": "0.31.7",
     "drizzle-orm": "0.44.7",
     "drizzle-zod": "0.8.3",
     "nanoid": "5.1.6",

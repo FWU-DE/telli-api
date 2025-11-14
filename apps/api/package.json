@@ -37,7 +37,7 @@
     "@sentry/profiling-node": "10.25.0",
     "fastify": "5.6.2",
     "openai": "6.9.0",
-    "openaiv4": "npm:openai@4.80.1",
+    "openaiv4": "npm:openai@4.104.0",
     "tiktoken": "1.0.22",
     "tsx": "4.20.6",
     "zod": "4.1.12"

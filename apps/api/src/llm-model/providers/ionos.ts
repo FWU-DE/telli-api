@@ -130,7 +130,11 @@ export function constructIonosEmbeddingFn(llmModel: LlmModel) {
         model: llmModel.name,
       };
     }
-    const { data, usage } = await client.embeddings.create({ input, model });
+    const { data, usage } = await client.embeddings.create({
+      input,
+      model,
+      encoding_format: "base64",
+    });
     return {
       data,
       usage: { ...usage, completion_tokens: 0 },

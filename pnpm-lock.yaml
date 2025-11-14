@@ -88,8 +88,8 @@ importers:
         specifier: 6.9.0
         version: 6.9.0(zod@4.1.12)
       openaiv4:
-        specifier: npm:openai@4.80.1
-        version: openai@4.80.1(zod@4.1.12)
+        specifier: npm:openai@4.104.0
+        version: openai@4.104.0(zod@4.1.12)
       tiktoken:
         specifier: 1.0.22
         version: 1.0.22
@@ -2541,8 +2541,8 @@ packages:
     resolution: {integrity: sha512-0eJJY6hXLGf1udHwfNftBqH+g73EU4B504nZeKpz1sYRKafAghwxEJunB2O7rDZkL4PGfsMVnTXZ2EjibbqcsA==}
     engines: {node: '>=14.0.0'}
 
-  openai@4.80.1:
-    resolution: {integrity: sha512-+6+bbXFwbIE88foZsBEt36bPkgZPdyFN82clAXG61gnHb2gXdZApDyRrcAHqEtpYICywpqaNo57kOm9dtnb7Cw==}
+  openai@4.104.0:
+    resolution: {integrity: sha512-p99EFNsA/yX6UhVO93f5kJsDRLAg+CTA2RBqdHK4RtK8u5IJw32Hyb2dTGKbnnFmnuoBv5r7Z2CURI9sGZpSuA==}
     hasBin: true
     peerDependencies:
       ws: ^8.18.0
@@ -5585,7 +5585,7 @@ snapshots:
 
   on-exit-leak-free@2.1.2: {}
 
-  openai@4.80.1(zod@4.1.12):
+  openai@4.104.0(zod@4.1.12):
     dependencies:
       '@types/node': 18.19.130
       '@types/node-fetch': 2.6.13

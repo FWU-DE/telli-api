@@ -85,8 +85,8 @@ importers:
         specifier: 5.6.2
         version: 5.6.2
       openai:
-        specifier: 5.20.1
-        version: 5.20.1(zod@4.1.12)
+        specifier: 6.9.0
+        version: 6.9.0(zod@4.1.12)
       openaiv4:
         specifier: npm:openai@4.80.1
         version: openai@4.80.1(zod@4.1.12)
@@ -2553,12 +2553,12 @@ packages:
       zod:
         optional: true
 
-  openai@5.20.1:
-    resolution: {integrity: sha512-UndCB0R5V3iB9I98NyF69zNP6YfwU4+Fjk0eW4HhooTm+Awlpm/MGjJTwJsyNV/qkH1NJi0GG+9odwukGTqExQ==}
+  openai@6.9.0:
+    resolution: {integrity: sha512-n2sJRYmM+xfJ0l3OfH8eNnIyv3nQY7L08gZQu3dw6wSdfPtKAk92L83M2NIP5SS8Cl/bsBBG3yKzEOjkx0O+7A==}
     hasBin: true
     peerDependencies:
       ws: ^8.18.0
-      zod: ^3.23.8
+      zod: ^3.25 || ^4.0
     peerDependenciesMeta:
       ws:
         optional: true
@@ -5599,7 +5599,7 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  openai@5.20.1(zod@4.1.12):
+  openai@6.9.0(zod@4.1.12):
     optionalDependencies:
       zod: 4.1.12
 

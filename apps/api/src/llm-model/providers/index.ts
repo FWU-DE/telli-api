@@ -15,6 +15,7 @@ import {
   constructAzureCompletionStreamFn,
   constructAzureImageGenerationFn,
 } from "./azure";
+import { constructGoogleImageGenerationFn } from "./google";
 
 export function getEmbeddingFnByModel({ model }: { model: LlmModel }) {
   if (model.provider === "ionos") {
@@ -52,7 +53,6 @@ export function getCompletionFnByModel({
   if (model.provider === "openai") {
     return constructOpenAiCompletionFn(model);
   }
-
   if (model.provider === "azure") {
     return constructAzureCompletionFn(model);
   }
@@ -70,6 +70,9 @@ export function getImageGenerationFnByModel({
   }
   if (model.provider === "azure") {
     return constructAzureImageGenerationFn(model);
+  }
+  if (model.provider === "google") {
+    return constructGoogleImageGenerationFn(model);
   }
 
   return undefined;

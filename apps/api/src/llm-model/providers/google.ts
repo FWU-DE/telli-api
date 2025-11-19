@@ -24,9 +24,10 @@ interface GoogleProviderError extends Error {
   details: unknown;
 }
 
-// Cache Google clients per model to avoid recreating auth instances
+// Cache Google client to avoid recreating auth instances
 const googleClientCache = new Map<string, GoogleClientConfig>();
 
+// Create or retrieve a cached Google client configuration
 function createGoogleClient(model: LlmModel): GoogleClientConfig {
   if (model.setting.provider !== "google") {
     throw new Error("Invalid model configuration for Google");
@@ -35,7 +36,6 @@ function createGoogleClient(model: LlmModel): GoogleClientConfig {
   const { projectId, location } = model.setting;
   const cacheKey = `${projectId}-${location}` as const;
 
-  // Return cached client if available
   if (googleClientCache.has(cacheKey)) {
     return googleClientCache.get(cacheKey)!;
   }
@@ -52,12 +52,12 @@ function createGoogleClient(model: LlmModel): GoogleClientConfig {
     auth,
   };
 
-  // Cache the client for future requests
   googleClientCache.set(cacheKey, client);
 
   return client;
 }
 
+// Construct the Image Generation function for Google Vertex AI
 export function constructGoogleImageGenerationFn(
   model: LlmModel,
 ): ImageGenerationFn {

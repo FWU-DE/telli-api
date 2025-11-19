@@ -1,6 +1,5 @@
 import { GoogleAuth } from "google-auth-library";
 import OpenAI from "openai";
-import { VertexAI } from "@google-cloud/vertexai";
 
 import { LlmModel } from "@dgpt/db";
 import { ImageGenerationFn } from "../types";
@@ -9,7 +8,6 @@ interface GoogleClientConfig {
   projectId: string;
   location: string;
   auth: GoogleAuth;
-  vertexAI: VertexAI;
 }
 
 interface GoogleVertexPrediction {
@@ -18,6 +16,12 @@ interface GoogleVertexPrediction {
 
 interface GoogleVertexResponse {
   predictions?: GoogleVertexPrediction[];
+}
+
+interface GoogleProviderError extends Error {
+  statusCode: number;
+  statusText: string;
+  details: unknown;
 }
 
 // Cache Google clients per model to avoid recreating auth instances
@@ -37,21 +41,15 @@ function createGoogleClient(model: LlmModel): GoogleClientConfig {
   }
 
   // Initialize Google Auth with automatic credential detection
-  // The GOOGLE_APPLICATION_CREDENTIALS env var should point to the service account JSON
+  // The GOOGLE_APPLICATION_CREDENTIALS env var should point to the service account JSON file
   const auth = new GoogleAuth({
     scopes: ["https://www.googleapis.com/auth/cloud-platform"],
-  });
-
-  const vertexAI = new VertexAI({
-    project: projectId,
-    location: location,
   });
 
   const client = {
     projectId,
     location,
     auth,
-    vertexAI,
   };
 
   // Cache the client for future requests
@@ -68,88 +66,76 @@ export function constructGoogleImageGenerationFn(
   return async function getGoogleImageGeneration(
     params: Parameters<ImageGenerationFn>[0],
   ) {
-    const { prompt } = params;
     const { projectId, location, auth } = clientConfig;
 
-    try {
-      // Get access token - GoogleAuth handles caching and refresh automatically
-      const accessToken = await auth.getAccessToken();
+    // Get access token - GoogleAuth handles caching and refresh automatically
+    const accessToken = await auth.getAccessToken();
 
-      // Vertex AI Image Generation endpoint
-      const endpoint = `https://${location}-aiplatform.googleapis.com/v1/projects/${projectId}/locations/${location}/publishers/google/models/${model.name}:predict`;
+    const endpoint = `https://${location}-aiplatform.googleapis.com/v1/projects/${projectId}/locations/${location}/publishers/google/models/${model.name}:predict`;
 
-      // Prepare the request for Vertex AI Image Generation
-      const requestBody = {
-        instances: [
+    // Prepare the request for Vertex AI Image Generation
+    const requestBody = {
+      instances: [
+        {
+          prompt: params.prompt,
+        },
+      ],
+      parameters: {
+        sampleCount: 1,
+        aspectRatio: "1:1",
+        imageSize: "1K",
+        safetyFilterLevel: "block_only_high",
+        personGeneration: "allow_adult",
+      },
+    };
+
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    });
+
+    if (!response.ok) {
+      const error: GoogleProviderError = new Error(
+        `Google Vertex AI Image Generation failed: ${response.status} ${response.statusText}`,
+      ) as GoogleProviderError;
+
+      error.statusCode = response.status;
+      error.statusText = response.statusText;
+      error.details = await response.text();
+
+      throw error;
+    }
+
+    const result = (await response.json()) as GoogleVertexResponse;
+
+    // Convert Google's response to OpenAI format
+    if (result.predictions && result.predictions.length > 0) {
+      const prediction = result.predictions[0];
+
+      if (!prediction) {
+        throw new Error("Invalid prediction data from Google Vertex AI");
+      }
+
+      if (!prediction.bytesBase64Encoded) {
+        throw new Error("No image data received from Google Vertex AI");
+      }
+
+      const openAIResponse: OpenAI.Images.ImagesResponse = {
+        created: Math.floor(Date.now() / 1000),
+        data: [
           {
-            prompt: prompt,
+            b64_json: prediction.bytesBase64Encoded,
           },
         ],
-        parameters: {
-          sampleCount: 1,
-          aspectRatio: "1:1",
-          safetyFilterLevel: "block_some",
-          personGeneration: "allow_adult",
-        },
       };
 
-      const response = await fetch(endpoint, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestBody),
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-
-        // Handle token refresh issues specifically
-        if (response.status === 401) {
-          console.warn(
-            "Authentication failed, token may have expired. GoogleAuth will handle refresh on next request.",
-          );
-        }
-
-        throw new Error(
-          `Google Image Generation failed: ${response.status} ${errorText}`,
-        );
-      }
-
-      const result = (await response.json()) as GoogleVertexResponse;
-
-      // Convert Google's response to OpenAI format
-      if (result.predictions && result.predictions.length > 0) {
-        const prediction = result.predictions[0];
-
-        if (!prediction) {
-          throw new Error("Invalid prediction data from Google Vertex AI");
-        }
-
-        // Google returns images as base64 encoded data
-        const imageData = prediction.bytesBase64Encoded;
-
-        if (!imageData) {
-          throw new Error("No image data received from Google Vertex AI");
-        }
-
-        const openAIResponse: OpenAI.Images.ImagesResponse = {
-          created: Math.floor(Date.now() / 1000),
-          data: [
-            {
-              b64_json: imageData,
-            },
-          ],
-        };
-
-        return openAIResponse;
-      } else {
-        throw new Error("No image generated from Google Vertex AI");
-      }
-    } catch (error) {
-      console.error("Google image generation error:", error);
-      throw error;
+      return openAIResponse;
+    } else {
+      throw new Error("No image generated from Google Vertex AI");
     }
   };
 }

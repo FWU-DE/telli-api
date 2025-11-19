@@ -18,10 +18,23 @@ interface GoogleVertexResponse {
   predictions?: GoogleVertexPrediction[];
 }
 
-interface GoogleProviderError extends Error {
-  statusCode: number;
-  statusText: string;
-  details: unknown;
+export class GoogleProviderError extends Error {
+  public readonly status: number;
+  public readonly statusText: string;
+  public readonly details: unknown;
+
+  constructor(
+    message: string,
+    status: number,
+    statusText: string,
+    details: unknown,
+  ) {
+    super(message);
+    this.name = "GoogleProviderError";
+    this.status = status;
+    this.statusText = statusText;
+    this.details = details;
+  }
 }
 
 // Cache Google client to avoid recreating auth instances
@@ -83,9 +96,10 @@ export function constructGoogleImageGenerationFn(
       parameters: {
         sampleCount: 1,
         aspectRatio: "1:1",
-        imageSize: "1K",
-        safetyFilterLevel: "block_only_high",
+        sampleImageSize: "1K",
+        safetySetting: "block_only_high",
         personGeneration: "allow_adult",
+        language: "auto",
       },
     };
 
@@ -99,13 +113,13 @@ export function constructGoogleImageGenerationFn(
     });
 
     if (!response.ok) {
-      const error: GoogleProviderError = new Error(
+      const errorDetails = await response.text();
+      const error = new GoogleProviderError(
         `Google Vertex AI Image Generation failed: ${response.status} ${response.statusText}`,
-      ) as GoogleProviderError;
-
-      error.statusCode = response.status;
-      error.statusText = response.statusText;
-      error.details = await response.text();
+        response.status,
+        response.statusText,
+        errorDetails,
+      );
 
       throw error;
     }
@@ -114,11 +128,7 @@ export function constructGoogleImageGenerationFn(
 
     // Convert Google's response to OpenAI format
     if (result.predictions && result.predictions.length > 0) {
-      const prediction = result.predictions[0];
-
-      if (!prediction) {
-        throw new Error("Invalid prediction data from Google Vertex AI");
-      }
+      const prediction = result.predictions[0]!;
 
       if (!prediction.bytesBase64Encoded) {
         throw new Error("No image data received from Google Vertex AI");

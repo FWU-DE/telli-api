@@ -14,10 +14,10 @@ import {
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 
-// loads all required data from the staging database into the local database
-// including organizations, projects, api keys, llm models and mappings
-// does not copy over user data or usage data
-// useful for local development to have the same models and api keys as staging
+// Loads all required data from the staging database into the local database
+// including organizations, projects, api keys, llm models and mappings.
+// Does not copy over user data or usage data.
+// Useful for local development to have the same models and api keys as staging.
 
 const connectionString = process.env.STAGE_DATABASE_URL;
 const pool = new Pool({
@@ -93,15 +93,11 @@ export async function seedDatabase() {
   }
 }
 
-// Run seed if called directly
-if (require.main === module) {
-  seedDatabase()
-    .then(() => {
-      console.log("Seeding completed");
-      process.exit(0);
-    })
-    .catch((error) => {
-      console.error("Seeding failed:", error);
-      process.exit(1);
-    });
+try {
+  await seedDatabase();
+  console.log("Seeding completed");
+  process.exit(0);
+} catch (error) {
+  console.error("Seeding failed:", error);
+  process.exit(1);
 }

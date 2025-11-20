@@ -373,15 +373,18 @@ export async function dbUpdateApiKey(
     }
 
     // Update the API key with provided values
-    const updatedApiKey = await tx
+    const [updatedApiKey] = await tx
       .update(apiKeyTable)
       .set(updates)
       .where(eq(apiKeyTable.id, apiKeyId))
       .returning();
 
+    if (updatedApiKey === undefined) {
+      throw new Error("Failed to update API key");
+    }
+
     // Return the updated API key without sensitive fields
-    const result = updatedApiKey[0]!;
-    const { keyId: _keyId, secretHash: _secretHash, ...apiKey } = result;
+    const { keyId: _keyId, secretHash: _secretHash, ...apiKey } = updatedApiKey;
     return apiKey;
   });
 }

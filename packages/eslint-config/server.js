@@ -23,6 +23,15 @@ export default tseslint.config(
     },
     // Disable type-aware linting for config files
     files: ["**/*.ts"],
+    rules: {
+      "no-unused-vars": [
+        "error",
+        {
+          varsIgnorePattern: "^_",
+          argsIgnorePattern: "^_",
+        },
+      ],
+    },
   },
   {
     files: ["**/*.js"],

@@ -341,3 +341,51 @@ export async function dbUpdateModelMappingsForApiKey(
       .where(eq(llmModelApiKeyMappingTable.apiKeyId, apiKeyId));
   });
 }
+
+export async function dbUpdateApiKey(
+  organizationId: string,
+  projectId: string,
+  apiKeyId: string,
+  updates: {
+    name?: string;
+    state?: "active" | "inactive" | "deleted";
+    limitInCent?: number;
+    expiresAt?: Date | null;
+  },
+) {
+  return await db.transaction(async (tx) => {
+    // First verify the API key exists and belongs to the organization/project
+    const existingApiKey = await tx
+      .select({ id: apiKeyTable.id })
+      .from(apiKeyTable)
+      .innerJoin(projectTable, eq(apiKeyTable.projectId, projectTable.id))
+      .where(
+        and(
+          eq(apiKeyTable.id, apiKeyId),
+          eq(apiKeyTable.projectId, projectId),
+          eq(projectTable.organizationId, organizationId),
+        ),
+      )
+      .limit(1);
+
+    if (existingApiKey.length === 0) {
+      throw new Error("API key not found");
+    }
+
+    // Update the API key with provided values
+    const updatedApiKey = await tx
+      .update(apiKeyTable)
+      .set(updates)
+      .where(eq(apiKeyTable.id, apiKeyId))
+      .returning();
+
+    if (updatedApiKey.length === 0) {
+      throw new Error("Failed to update API key, database error");
+    }
+
+    // Return the updated API key without sensitive fields
+    const result = updatedApiKey[0]!;
+    const { keyId, secretHash, ...apiKey } = result;
+    return apiKey;
+  });
+}

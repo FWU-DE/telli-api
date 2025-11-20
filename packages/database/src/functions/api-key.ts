@@ -381,7 +381,7 @@ export async function dbUpdateApiKey(
 
     // Return the updated API key without sensitive fields
     const result = updatedApiKey[0]!;
-    const { keyId, secretHash, ...apiKey } = result;
+    const { keyId: _keyId, secretHash: _secretHash, ...apiKey } = result;
     return apiKey;
   });
 }

@@ -384,7 +384,8 @@ export async function dbUpdateApiKey(
     }
 
     // Return the updated API key without sensitive fields
-    const { keyId: _keyId, secretHash: _secretHash, ...apiKey } = updatedApiKey;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { keyId, secretHash, ...apiKey } = updatedApiKey;
     return apiKey;
   });
 }

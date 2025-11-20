@@ -379,10 +379,6 @@ export async function dbUpdateApiKey(
       .where(eq(apiKeyTable.id, apiKeyId))
       .returning();
 
-    if (updatedApiKey.length === 0) {
-      throw new Error("Failed to update API key, database error");
-    }
-
     // Return the updated API key without sensitive fields
     const result = updatedApiKey[0]!;
     const { keyId, secretHash, ...apiKey } = result;

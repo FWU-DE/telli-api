@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { dbUpdateApiKey, apiKeyUpdateSchema } from "@dgpt/db";
 import { apiKeyParamsSchema } from "./apiKeyParamsSchema";
-import { handleApiError, NotFoundError } from "@/errors";
+import { handleApiError } from "@/errors";
 import {
   validateAdminApiKeyAndThrow,
   validateRequestBody,
@@ -29,6 +29,7 @@ export async function handler(
     );
 
     const updates = bodySchema.parse(request.body);
+    validateRequestBody(updates);
     await validateOrganizationId(organizationId);
 
     const updatedApiKey = await dbUpdateApiKey(

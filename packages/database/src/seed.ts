@@ -1,14 +1,14 @@
 import { createApiKeyRecord, db } from "./index";
 import {
-  organizationTable,
-  projectTable,
-  apiKeyTable,
-  llmModelTable,
-  llmModelApiKeyMappingTable,
-  type OrganizationInsertModel,
-  type ProjectInsertModel,
   type ApiKeyInsertModel,
+  apiKeyTable,
   type LlmInsertModel,
+  llmModelApiKeyMappingTable,
+  llmModelTable,
+  type OrganizationInsertModel,
+  organizationTable,
+  type ProjectInsertModel,
+  projectTable,
 } from "./schema";
 import { eq } from "drizzle-orm";
 
@@ -193,15 +193,11 @@ export async function seedDatabase() {
   }
 }
 
-// Run seed if called directly
-if (require.main === module) {
-  seedDatabase()
-    .then(() => {
-      console.log("Seeding completed");
-      process.exit(0);
-    })
-    .catch((error) => {
-      console.error("Seeding failed:", error);
-      process.exit(1);
-    });
+try {
+  await seedDatabase();
+  console.log("Seeding completed");
+  process.exit(0);
+} catch (error) {
+  console.error("Seeding failed:", error);
+  process.exit(1);
 }

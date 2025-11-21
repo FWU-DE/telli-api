@@ -15,7 +15,6 @@ import {
   dbCreateProject,
   dbCreateJustTheApiKey,
   dbDeleteApiKey,
-  dbGetOrganizationById,
 } from "@dgpt/db";
 import { env } from "@/env";
 import { API_KEY_ID } from "@test/testData";

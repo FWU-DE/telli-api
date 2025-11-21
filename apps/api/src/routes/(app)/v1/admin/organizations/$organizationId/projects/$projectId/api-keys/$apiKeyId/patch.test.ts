@@ -18,9 +18,10 @@ import {
   dbGetOrganizationById,
 } from "@dgpt/db";
 import { env } from "@/env";
-import { ORGANIZATION_ID, API_KEY_ID, testOrganziation } from "@test/testData";
+import { API_KEY_ID, testOrganziation } from "@test/testData";
 
-// Use a unique project ID to avoid conflicts
+// Use unique IDs to avoid conflicts with other tests
+const TEST_ORGANIZATION_ID = "a1b2c3d4-5678-90ef-ab12-cd34ef567890";
 const TEST_PROJECT_ID = "f47ac10b-58cc-4372-a567-0e02b2c3d479";
 
 let app: FastifyInstance;
@@ -29,34 +30,38 @@ beforeAll(async () => {
   console.log("=== SETUP: Building app ===");
   app = await buildApp();
   
-  console.log("=== SETUP: Creating organization ===", ORGANIZATION_ID);
-  console.log("Organization data:", JSON.stringify(testOrganziation));
-  const existing = await dbGetOrganizationById(ORGANIZATION_ID);
+  console.log("=== SETUP: Creating organization ===", TEST_ORGANIZATION_ID);
+  const testOrganization = {
+    id: TEST_ORGANIZATION_ID,
+    name: "Test Organization for API Key Patch",
+  };
+  console.log("Organization data:", JSON.stringify(testOrganization));
+  const existing = await dbGetOrganizationById(TEST_ORGANIZATION_ID);
     if (existing) {
         console.log("Organization already exists, skipping creation");
-        return;
-    }
-  try {
-    const org = await dbCreateOrganization(testOrganziation);
-    console.log("Organization created:", org?.id || "success");
-  } catch (e) {
-    const error = e as Error;
-    console.log("Organization creation failed:", error.message);
-    
-    // Check if it's a duplicate key error (organization already exists)
-    if (error.message.includes('duplicate key') || error.message.includes('already exists')) {
-      console.log("Organization already exists, continuing...");
     } else {
-      console.log("Unknown organization error, this might cause test failure");
-      console.log("Full error:", String(e));
+      try {
+        const org = await dbCreateOrganization(testOrganization);
+        console.log("Organization created:", org?.id || "success");
+      } catch (e) {
+        const error = e as Error;
+        console.log("Organization creation failed:", error.message);
+        
+        // Check if it's a duplicate key error (organization already exists)
+        if (error.message.includes('duplicate key') || error.message.includes('already exists')) {
+          console.log("Organization already exists, continuing...");
+        } else {
+          console.log("Unknown organization error, this might cause test failure");
+          console.log("Full error:", String(e));
+        }
+      }
     }
-  }
   
   console.log("=== SETUP: Creating project ===", TEST_PROJECT_ID);
   try {
     const project = await dbCreateProject({
       id: TEST_PROJECT_ID,
-      organizationId: ORGANIZATION_ID,
+      organizationId: TEST_ORGANIZATION_ID,
       name: "Test Project for API Key Patch",
     });
     console.log("Project created:", project?.id || "success");
@@ -80,7 +85,7 @@ beforeAll(async () => {
   try {
     const orgCheckResponse = await app.inject({
       method: "GET",
-      url: `/v1/admin/organizations/${ORGANIZATION_ID}`,
+      url: `/v1/admin/organizations/${TEST_ORGANIZATION_ID}`,
       headers: { authorization: "Bearer " + env.apiKey },
     });
     console.log("Organization check status:", orgCheckResponse.statusCode);
@@ -96,7 +101,7 @@ beforeAll(async () => {
 afterAll(async () => {
   console.log("=== TEARDOWN: Cleaning up ===");
   try {
-    await dbDeleteOrganizationById(ORGANIZATION_ID);
+    await dbDeleteOrganizationById(TEST_ORGANIZATION_ID);
     console.log("Organization deleted");
   } catch (e) {
     console.log("Organization deletion failed:", String(e));
@@ -136,7 +141,7 @@ describe("PATCH API Key", () => {
   test("should update multiple API key fields and return 200", async () => {
     // First, let's verify our test data exists by making a GET request
     console.log("=== DEBUG: Checking if data exists ===");
-    console.log("Organization ID:", ORGANIZATION_ID);
+    console.log("Organization ID:", TEST_ORGANIZATION_ID);
     console.log("Project ID:", TEST_PROJECT_ID);  
     console.log("API Key ID:", API_KEY_ID);
     console.log("Auth token:", env.apiKey ? "Present" : "Missing");
@@ -144,7 +149,7 @@ describe("PATCH API Key", () => {
     // Try to get the API key first to see if it exists
     const getResponse = await app.inject({
       method: "GET",
-      url: `/v1/admin/organizations/${ORGANIZATION_ID}/projects/${TEST_PROJECT_ID}/api-keys/${API_KEY_ID}`,
+      url: `/v1/admin/organizations/${TEST_ORGANIZATION_ID}/projects/${TEST_PROJECT_ID}/api-keys/${API_KEY_ID}`,
       headers: { authorization: "Bearer " + env.apiKey },
     });
     
@@ -154,7 +159,7 @@ describe("PATCH API Key", () => {
     // Now try the PATCH request
     const response = await app.inject({
       method: "PATCH",
-      url: `/v1/admin/organizations/${ORGANIZATION_ID}/projects/${TEST_PROJECT_ID}/api-keys/${API_KEY_ID}`,
+      url: `/v1/admin/organizations/${TEST_ORGANIZATION_ID}/projects/${TEST_PROJECT_ID}/api-keys/${API_KEY_ID}`,
       headers: { authorization: "Bearer " + env.apiKey },
       payload: {
         name: "Updated API Key Name",
@@ -181,7 +186,7 @@ describe("PATCH API Key", () => {
       // Let's also check if the organization exists
       const orgResponse = await app.inject({
         method: "GET", 
-        url: `/v1/admin/organizations/${ORGANIZATION_ID}`,
+        url: `/v1/admin/organizations/${TEST_ORGANIZATION_ID}`,
         headers: { authorization: "Bearer " + env.apiKey },
       });
       console.log("Organization check status:", orgResponse.statusCode);
@@ -189,7 +194,7 @@ describe("PATCH API Key", () => {
       // Check if project exists
       const projectResponse = await app.inject({
         method: "GET",
-        url: `/v1/admin/organizations/${ORGANIZATION_ID}/projects/${TEST_PROJECT_ID}`,
+        url: `/v1/admin/organizations/${TEST_ORGANIZATION_ID}/projects/${TEST_PROJECT_ID}`,
         headers: { authorization: "Bearer " + env.apiKey },
       });
       console.log("Project check status:", projectResponse.statusCode);

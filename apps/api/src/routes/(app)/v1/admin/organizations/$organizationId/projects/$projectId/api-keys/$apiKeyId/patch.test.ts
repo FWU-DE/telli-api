@@ -17,11 +17,7 @@ import {
   dbDeleteApiKey,
 } from "@dgpt/db";
 import { env } from "@/env";
-import {
-  ORGANIZATION_ID,
-  API_KEY_ID,
-  testOrganziation,
-} from "@test/testData";
+import { ORGANIZATION_ID, API_KEY_ID, testOrganziation } from "@test/testData";
 
 // Use a unique project ID to avoid conflicts
 const TEST_PROJECT_ID = "f47ac10b-58cc-4372-a567-0e02b2c3d479";
@@ -72,14 +68,14 @@ describe("PATCH API Key", () => {
     });
 
     assert.strictEqual(response.statusCode, 200);
-    
+
     const body = response.json();
     assert.strictEqual(body.name, "Updated API Key Name");
     assert.strictEqual(body.state, "inactive");
     assert.strictEqual(body.limitInCent, 2500);
     assert.strictEqual(body.id, API_KEY_ID);
     assert.strictEqual(body.projectId, TEST_PROJECT_ID);
-    
+
     // Verify sensitive fields are not returned
     assert.strictEqual(body.keyId, undefined);
     assert.strictEqual(body.secretHash, undefined);

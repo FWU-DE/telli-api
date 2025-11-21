@@ -18,11 +18,11 @@ import {
   dbGetOrganizationById,
 } from "@dgpt/db";
 import { env } from "@/env";
-import { API_KEY_ID, testOrganziation } from "@test/testData";
+import { API_KEY_ID } from "@test/testData";
 
-// Use unique IDs to avoid conflicts with other tests
-const TEST_ORGANIZATION_ID = "a1b2c3d4-5678-90ef-ab12-cd34ef567890";
-const TEST_PROJECT_ID = "f47ac10b-58cc-4372-a567-0e02b2c3d479";
+// Use unique IDs to avoid conflicts with other tests - exact same pattern as working tests
+const TEST_ORGANIZATION_ID = "5dbd7831-fcd2-4db3-aa93-6142893c51c3";
+const TEST_PROJECT_ID = "5dbd7831-fcd2-4db3-aa93-6142893c51c4";
 
 let app: FastifyInstance;
 

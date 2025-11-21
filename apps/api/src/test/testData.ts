@@ -1,4 +1,4 @@
-import { LlmInsertModel, OrganizationInsertModel, ProjectInsertModel } from "@dgpt/db";
+import { LlmInsertModel, OrganizationInsertModel } from "@dgpt/db";
 
 export const ORGANIZATION_ID = "5dbd7831-fcd2-4db3-aa93-6142893c51c2";
 export const MODEL_ID = "1ead3e7f-8464-4b49-9e8b-da2aabcfe4bf";

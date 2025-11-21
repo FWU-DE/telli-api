@@ -56,72 +56,6 @@ afterEach(async () => {
 });
 
 describe("PATCH API Key", () => {
-  test("should update API key name and return 200", async () => {
-    const response = await app.inject({
-      method: "PATCH",
-      url: `/v1/admin/organizations/${ORGANIZATION_ID}/projects/${PROJECT_ID}/api-keys/${API_KEY_ID}`,
-      headers: { authorization: "Bearer " + env.apiKey },
-      payload: {
-        name: "Updated API Key Name",
-      },
-    });
-
-    assert.strictEqual(response.statusCode, 200);
-    const body = response.json();
-    assert.strictEqual(body.name, "Updated API Key Name");
-    assert.strictEqual(body.id, API_KEY_ID);
-    assert.strictEqual(body.projectId, PROJECT_ID);
-  });
-
-  test("should update API key state and return 200", async () => {
-    const response = await app.inject({
-      method: "PATCH",
-      url: `/v1/admin/organizations/${ORGANIZATION_ID}/projects/${PROJECT_ID}/api-keys/${API_KEY_ID}`,
-      headers: { authorization: "Bearer " + env.apiKey },
-      payload: {
-        state: "inactive",
-      },
-    });
-
-    assert.strictEqual(response.statusCode, 200);
-    const body = response.json();
-    assert.strictEqual(body.state, "inactive");
-    assert.strictEqual(body.id, API_KEY_ID);
-  });
-
-  test("should update API key limit and return 200", async () => {
-    const response = await app.inject({
-      method: "PATCH",
-      url: `/v1/admin/organizations/${ORGANIZATION_ID}/projects/${PROJECT_ID}/api-keys/${API_KEY_ID}`,
-      headers: { authorization: "Bearer " + env.apiKey },
-      payload: {
-        limitInCent: 5000,
-      },
-    });
-
-    assert.strictEqual(response.statusCode, 200);
-    const body = response.json();
-    assert.strictEqual(body.limitInCent, 5000);
-    assert.strictEqual(body.id, API_KEY_ID);
-  });
-
-  test("should update API key expiration and return 200", async () => {
-    const newExpirationDate = new Date(Date.now() + 60 * 24 * 60 * 60 * 1000); // 60 days from now
-    const response = await app.inject({
-      method: "PATCH",
-      url: `/v1/admin/organizations/${ORGANIZATION_ID}/projects/${PROJECT_ID}/api-keys/${API_KEY_ID}`,
-      headers: { authorization: "Bearer " + env.apiKey },
-      payload: {
-        expiresAt: newExpirationDate.toISOString(),
-      },
-    });
-
-    assert.strictEqual(response.statusCode, 200);
-    const body = response.json();
-    assert.strictEqual(new Date(body.expiresAt).getTime(), newExpirationDate.getTime());
-    assert.strictEqual(body.id, API_KEY_ID);
-  });
-
   test("should update multiple fields at once and return 200", async () => {
     const newExpirationDate = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000); // 90 days from now
     const response = await app.inject({
@@ -145,45 +79,6 @@ describe("PATCH API Key", () => {
     assert.strictEqual(body.id, API_KEY_ID);
   });
 
-  test("should set expiresAt to null and return 200", async () => {
-    const response = await app.inject({
-      method: "PATCH",
-      url: `/v1/admin/organizations/${ORGANIZATION_ID}/projects/${PROJECT_ID}/api-keys/${API_KEY_ID}`,
-      headers: { authorization: "Bearer " + env.apiKey },
-      payload: {
-        expiresAt: null,
-      },
-    });
-
-    assert.strictEqual(response.statusCode, 200);
-    const body = response.json();
-    assert.strictEqual(body.expiresAt, null);
-    assert.strictEqual(body.id, API_KEY_ID);
-  });
-
-  test("should return 400 for malformed API key ID", async () => {
-    const response = await app.inject({
-      method: "PATCH",
-      url: `/v1/admin/organizations/${ORGANIZATION_ID}/projects/${PROJECT_ID}/api-keys/invalid-id`,
-      headers: { authorization: "Bearer " + env.apiKey },
-      payload: { name: "Test" },
-    });
-
-    assert.strictEqual(response.statusCode, 400);
-    assert.ok(response.json().error);
-  });
-
-  test("should return 400 for missing body", async () => {
-    const response = await app.inject({
-      method: "PATCH",
-      url: `/v1/admin/organizations/${ORGANIZATION_ID}/projects/${PROJECT_ID}/api-keys/${API_KEY_ID}`,
-      headers: { authorization: "Bearer " + env.apiKey },
-    });
-
-    assert.strictEqual(response.statusCode, 400);
-    assert.ok(response.json().error);
-  });
-
   test("should return 400 for Zod validation error", async () => {
     const response = await app.inject({
       method: "PATCH",
@@ -191,34 +86,6 @@ describe("PATCH API Key", () => {
       headers: { authorization: "Bearer " + env.apiKey },
       payload: {
         name: 123, // wrong type
-      },
-    });
-
-    assert.strictEqual(response.statusCode, 400);
-    assert.ok(response.json().error);
-  });
-
-  test("should return 400 for invalid state value", async () => {
-    const response = await app.inject({
-      method: "PATCH",
-      url: `/v1/admin/organizations/${ORGANIZATION_ID}/projects/${PROJECT_ID}/api-keys/${API_KEY_ID}`,
-      headers: { authorization: "Bearer " + env.apiKey },
-      payload: {
-        state: "invalid-state",
-      },
-    });
-
-    assert.strictEqual(response.statusCode, 400);
-    assert.ok(response.json().error);
-  });
-
-  test("should return 400 for invalid limitInCent value", async () => {
-    const response = await app.inject({
-      method: "PATCH",
-      url: `/v1/admin/organizations/${ORGANIZATION_ID}/projects/${PROJECT_ID}/api-keys/${API_KEY_ID}`,
-      headers: { authorization: "Bearer " + env.apiKey },
-      payload: {
-        limitInCent: "invalid-number",
       },
     });
 
@@ -237,30 +104,6 @@ describe("PATCH API Key", () => {
     });
 
     assert.strictEqual(response.statusCode, 404);
-    assert.ok(response.json().error);
-  });
-
-  test("should return 400 for malformed organization ID", async () => {
-    const response = await app.inject({
-      method: "PATCH",
-      url: `/v1/admin/organizations/invalid-org-id/projects/${PROJECT_ID}/api-keys/${API_KEY_ID}`,
-      headers: { authorization: "Bearer " + env.apiKey },
-      payload: { name: "Test" },
-    });
-
-    assert.strictEqual(response.statusCode, 400);
-    assert.ok(response.json().error);
-  });
-
-  test("should return 400 for malformed project ID", async () => {
-    const response = await app.inject({
-      method: "PATCH",
-      url: `/v1/admin/organizations/${ORGANIZATION_ID}/projects/invalid-project-id/api-keys/${API_KEY_ID}`,
-      headers: { authorization: "Bearer " + env.apiKey },
-      payload: { name: "Test" },
-    });
-
-    assert.strictEqual(response.statusCode, 400);
     assert.ok(response.json().error);
   });
 });

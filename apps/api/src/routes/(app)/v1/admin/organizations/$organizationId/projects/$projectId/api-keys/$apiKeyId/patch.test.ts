@@ -15,6 +15,7 @@ import {
   dbCreateProject,
   dbCreateJustTheApiKey,
   dbDeleteApiKey,
+  dbGetOrganizationById,
 } from "@dgpt/db";
 import { env } from "@/env";
 import { ORGANIZATION_ID, API_KEY_ID, testOrganziation } from "@test/testData";
@@ -30,6 +31,11 @@ beforeAll(async () => {
   
   console.log("=== SETUP: Creating organization ===", ORGANIZATION_ID);
   console.log("Organization data:", JSON.stringify(testOrganziation));
+  const existing = await dbGetOrganizationById(ORGANIZATION_ID);
+    if (existing) {
+        console.log("Organization already exists, skipping creation");
+        return;
+    }
   try {
     const org = await dbCreateOrganization(testOrganziation);
     console.log("Organization created:", org?.id || "success");

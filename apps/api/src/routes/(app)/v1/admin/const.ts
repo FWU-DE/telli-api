@@ -15,6 +15,7 @@ import { handler as v1_admin_organizations_$organizationId_projects_$projectId_p
 import { handler as v1_admin_organizations_$organizationId_projects_$projectId_apiKeys_getHandler } from "./organizations/$organizationId/projects/$projectId/api-keys/get";
 import { handler as v1_admin_organizations_$organizationId_projects_$projectId_apiKeys_postHandler } from "./organizations/$organizationId/projects/$projectId/api-keys/post";
 import { handler as v1_admin_organizations_$organizationId_projects_$projectId_apiKeys_$apiKeyId_getHandler } from "./organizations/$organizationId/projects/$projectId/api-keys/$apiKeyId/get";
+import { handler as v1_admin_organizations_$organizationId_projects_$projectId_apiKeys_$apiKeyId_patchHandler } from "./organizations/$organizationId/projects/$projectId/api-keys/$apiKeyId/patch";
 import { handler as v1_admin_organizations_$organizationId_projects_$projectId_apiKeys_$apiKeyId_deleteHandler } from "./organizations/$organizationId/projects/$projectId/api-keys/$apiKeyId/delete";
 import { handler as v1_admin_organizations_$organizationId_projects_$projectId_apiKeys_$apiKeyId_model_mappings_getHandler } from "./organizations/$organizationId/projects/$projectId/api-keys/$apiKeyId/model-mappings/get";
 import { handler as v1_admin_organizations_$organizationId_projects_$projectId_apiKeys_$apiKeyId_model_mappings_putHandler } from "./organizations/$organizationId/projects/$projectId/api-keys/$apiKeyId/model-mappings/put";
@@ -129,6 +130,13 @@ export const adminRouteHandlerDefinitions: Array<RouteHandlerDefinition> = [
     schema: { hide: true },
     handler:
       v1_admin_organizations_$organizationId_projects_$projectId_apiKeys_$apiKeyId_getHandler,
+  },
+  {
+    path: "/v1/admin/organizations/:organizationId/projects/:projectId/api-keys/:apiKeyId",
+    method: "PATCH",
+    schema: { hide: true },
+    handler:
+      v1_admin_organizations_$organizationId_projects_$projectId_apiKeys_$apiKeyId_patchHandler,
   },
   {
     path: "/v1/admin/organizations/:organizationId/projects/:projectId/api-keys/:apiKeyId",

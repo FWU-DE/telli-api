@@ -17,7 +17,7 @@ export async function validateOrganizationId(
 ): Promise<void> {
   const organization = await dbGetOrganizationById(organizationId);
   if (!organization) {
-    throw new NotFoundError("Organization not found");
+    throw new NotFoundError(`Organization ${organizationId} not found`);
   }
 }
 

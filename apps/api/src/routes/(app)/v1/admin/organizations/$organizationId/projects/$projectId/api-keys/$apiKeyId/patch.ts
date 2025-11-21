@@ -30,7 +30,7 @@ export async function handler(
 
     const updates = bodySchema.parse(request.body);
     validateRequestBody(updates);
-    await validateOrganizationId(organizationId);
+    // await validateOrganizationId(organizationId);
 
     const updatedApiKey = await dbUpdateApiKey(
       organizationId,

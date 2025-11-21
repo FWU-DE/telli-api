@@ -29,12 +29,21 @@ beforeAll(async () => {
   app = await buildApp();
   
   console.log("=== SETUP: Creating organization ===", ORGANIZATION_ID);
+  console.log("Organization data:", JSON.stringify(testOrganziation));
   try {
     const org = await dbCreateOrganization(testOrganziation);
     console.log("Organization created:", org?.id || "success");
   } catch (e) {
-    console.log("Organization creation failed:", String(e));
-    // Ignore if organization already exists
+    const error = e as Error;
+    console.log("Organization creation failed:", error.message);
+    
+    // Check if it's a duplicate key error (organization already exists)
+    if (error.message.includes('duplicate key') || error.message.includes('already exists')) {
+      console.log("Organization already exists, continuing...");
+    } else {
+      console.log("Unknown organization error, this might cause test failure");
+      console.log("Full error:", String(e));
+    }
   }
   
   console.log("=== SETUP: Creating project ===", TEST_PROJECT_ID);
@@ -46,8 +55,35 @@ beforeAll(async () => {
     });
     console.log("Project created:", project?.id || "success");
   } catch (e) {
-    console.log("Project creation failed:", String(e));
-    // Ignore if project already exists
+    const error = e as Error;
+    console.log("Project creation failed:", error.message);
+    
+    if (error.message.includes('duplicate key') || error.message.includes('already exists')) {
+      console.log("Project already exists, continuing...");
+    } else if (error.message.includes('foreign key') || error.message.includes('organization')) {
+      console.log("ERROR: Project creation failed due to missing organization!");
+      console.log("This will cause test failure. Organization must exist first.");
+      throw e; // Re-throw since this is critical
+    } else {
+      console.log("Unknown project error:", String(e));
+    }
+  }
+  
+  // Verify organization exists before proceeding
+  console.log("=== VERIFICATION: Checking organization exists ===");
+  try {
+    const orgCheckResponse = await app.inject({
+      method: "GET",
+      url: `/v1/admin/organizations/${ORGANIZATION_ID}`,
+      headers: { authorization: "Bearer " + env.apiKey },
+    });
+    console.log("Organization check status:", orgCheckResponse.statusCode);
+    if (orgCheckResponse.statusCode !== 200) {
+      console.log("CRITICAL: Organization does not exist, test will fail");
+      console.log("Organization check response:", orgCheckResponse.body);
+    }
+  } catch (e) {
+    console.log("Could not verify organization:", String(e));
   }
 });
 

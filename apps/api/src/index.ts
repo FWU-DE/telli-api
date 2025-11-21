@@ -9,7 +9,12 @@ import { env } from "./env";
 async function main() {
   const fastify = await buildApp({
     logger: true,
-    ajv: { customOptions: { strict: false } },
+    ajv: {
+      customOptions: {
+        keywords: ["x-examples"],
+        strict: false,
+      },
+    },
   });
 
   Sentry.setupFastifyErrorHandler(fastify);

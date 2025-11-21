@@ -1,9 +1,10 @@
-import fastify from "fastify";
+import fastify, { FastifyHttpOptions } from "fastify";
 import { constructHandlers } from "./handlers";
 import fastifyMultipart from "@fastify/multipart";
 import { initSwagger } from "@/swagger";
+import * as http from "node:http";
 
-async function buildApp(opts = {}) {
+async function buildApp(opts?: FastifyHttpOptions<http.Server>) {
   const app = fastify(opts);
 
   app.register(fastifyMultipart, {

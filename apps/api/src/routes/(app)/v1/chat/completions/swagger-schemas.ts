@@ -121,45 +121,52 @@ export const completionRequestSchemaSwagger = {
       stream: { type: "boolean" },
     },
     required: ["model", "messages"],
-    examples: [
-      {
-        model: "gpt-4o-mini",
-        messages: [
-          {
-            role: "user",
-            content: "What is the capital of France?",
-          },
-        ],
-        max_tokens: 150,
-        temperature: 0.7,
-        stream: false,
+    "x-examples": {
+      text: {
+        summary: "Text",
+        description: "Chat completion containing only text",
+        value: {
+          model: "gpt-4o-mini",
+          messages: [
+            {
+              role: "user",
+              content: "What is the capital of France?",
+            },
+          ],
+          max_tokens: 150,
+          temperature: 0.7,
+          stream: false,
+        },
       },
-      {
-        model: "gpt-4o-mini",
-        messages: [
-          {
-            role: "user",
-            content: [
-              {
-                type: "text",
-                text: "What do you see in this image?",
-              },
-              {
-                type: "image_url",
-                image_url: {
-                  url: "https://fastly.picsum.photos/id/689/200/300.jpg?hmac=vg64_CHvD_VwWyxzKJAAAZswOJG8_8xEdMcP9BHgLJM",
-                  detail: "low",
+      imageUrl: {
+        summary: "Image analysis with URL",
+        description: "Chat completion with image URL",
+        value: {
+          model: "gpt-4o-mini",
+          messages: [
+            {
+              role: "user",
+              content: [
+                {
+                  type: "text",
+                  text: "What do you see in this image?",
                 },
-              },
-            ],
-          },
-        ],
-        max_tokens: 300,
-        temperature: 0.7,
-        stream: false,
+                {
+                  type: "image_url",
+                  image_url: {
+                    url: "https://fastly.picsum.photos/id/689/200/300.jpg?hmac=vg64_CHvD_VwWyxzKJAAAZswOJG8_8xEdMcP9BHgLJM",
+                    detail: "low",
+                  },
+                },
+              ],
+            },
+          ],
+          max_tokens: 300,
+          temperature: 0.7,
+          stream: false,
+        },
       },
-      {
-        name: "Image analysis with base64",
+      imageBase64: {
         summary: "Image analysis with base64",
         description: "Chat completion with base64 encoded image",
         value: {
@@ -187,38 +194,42 @@ export const completionRequestSchemaSwagger = {
           stream: false,
         },
       },
-      {
-        model: "gpt-4o-mini",
-        messages: [
-          {
-            role: "user",
-            content: [
-              {
-                type: "text",
-                text: "Compare these two images and tell me the differences.",
-              },
-              {
-                type: "image_url",
-                image_url: {
-                  url: "https://example.com/image1.jpg",
-                  detail: "high",
+      multipleImages: {
+        summary: "Multiple images",
+        description: "Chat completion with multiple images",
+        value: {
+          model: "gpt-4o-mini",
+          messages: [
+            {
+              role: "user",
+              content: [
+                {
+                  type: "text",
+                  text: "Compare these two images and tell me the differences.",
                 },
-              },
-              {
-                type: "image_url",
-                image_url: {
-                  url: "https://example.com/image2.jpg",
-                  detail: "high",
+                {
+                  type: "image_url",
+                  image_url: {
+                    url: "https://example.com/image1.jpg",
+                    detail: "high",
+                  },
                 },
-              },
-            ],
-          },
-        ],
-        max_tokens: 400,
-        temperature: 0.5,
-        stream: false,
+                {
+                  type: "image_url",
+                  image_url: {
+                    url: "https://example.com/image2.jpg",
+                    detail: "high",
+                  },
+                },
+              ],
+            },
+          ],
+          max_tokens: 400,
+          temperature: 0.5,
+          stream: false,
+        },
       },
-    ],
+    },
   },
   summary: "Chat completion",
   description:

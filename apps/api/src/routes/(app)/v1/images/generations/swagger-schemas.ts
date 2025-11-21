@@ -6,7 +6,8 @@ export const imageGenerationRequestSwaggerSchema = {
     properties: {
       model: {
         type: "string",
-        description: "The model to use for image generation",
+        description:
+          "The model to use for image generation. Supported models can be retrieved from the /v1/models endpoint.",
         example: "dall-e-3",
       },
       prompt: {
@@ -16,6 +17,24 @@ export const imageGenerationRequestSwaggerSchema = {
       },
     },
     required: ["model", "prompt"],
+    "x-examples": {
+      openai: {
+        summary: "DALL-E",
+        description: "Image generation using DALL-E",
+        value: {
+          model: "dall-e-3",
+          prompt: "A beautiful sunset over a mountain range",
+        },
+      },
+      google: {
+        summary: "Google",
+        description: "Image generation using Google",
+        value: {
+          model: "imagen-4.0-generate-001",
+          prompt: "A beautiful sunset over the ocean",
+        },
+      },
+    },
   },
   response: {
     200: {

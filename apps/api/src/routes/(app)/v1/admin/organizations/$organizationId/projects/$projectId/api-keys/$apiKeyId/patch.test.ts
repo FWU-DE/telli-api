@@ -26,11 +26,20 @@ let app: FastifyInstance;
 
 beforeAll(async () => {
   app = await buildApp();
-  await dbCreateProject({
-    id: TEST_PROJECT_ID,
-    organizationId: ORGANIZATION_ID,
-    name: "Test Project for API Key Patch",
-  });
+  try {
+    await dbCreateOrganization(testOrganziation);
+  } catch (e) {
+    // Ignore if organization already exists
+  }
+  try {
+    await dbCreateProject({
+      id: TEST_PROJECT_ID,
+      organizationId: ORGANIZATION_ID,
+      name: "Test Project for API Key Patch",
+    });
+  } catch (e) {
+    // Ignore if project already exists
+  }
 });
 
 afterAll(async () => {

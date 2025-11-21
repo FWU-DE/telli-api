@@ -26,7 +26,6 @@ let app: FastifyInstance;
 
 beforeAll(async () => {
   app = await buildApp();
-  await dbCreateOrganization(testOrganziation);
   await dbCreateProject({
     id: TEST_PROJECT_ID,
     organizationId: ORGANIZATION_ID,

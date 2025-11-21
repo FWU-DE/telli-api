@@ -20,19 +20,23 @@ import {
 import { env } from "@/env";
 import {
   ORGANIZATION_ID,
-  PROJECT_ID,
   API_KEY_ID,
   NON_EXISTING_API_KEY_ID,
   testOrganziation,
-  testProject,
 } from "@test/testData";
+
+const TEST_PROJECT_ID = "test-patch-project-id-123";
 
 let app: FastifyInstance;
 
 beforeAll(async () => {
   app = await buildApp();
   await dbCreateOrganization(testOrganziation);
-  await dbCreateProject(testProject);
+  await dbCreateProject({
+    id: TEST_PROJECT_ID,
+    organizationId: ORGANIZATION_ID,
+    name: "Test Project for PATCH API Key",
+  });
 });
 
 afterAll(async () => {
@@ -44,7 +48,7 @@ beforeEach(async () => {
   await dbCreateJustTheApiKey({
     id: API_KEY_ID,
     name: "Test API Key",
-    projectId: PROJECT_ID,
+    projectId: TEST_PROJECT_ID,
     state: "active",
     limitInCent: 1000,
     expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
@@ -60,7 +64,7 @@ describe("PATCH API Key", () => {
     const newExpirationDate = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000); // 90 days from now
     const response = await app.inject({
       method: "PATCH",
-      url: `/v1/admin/organizations/${ORGANIZATION_ID}/projects/${PROJECT_ID}/api-keys/${API_KEY_ID}`,
+      url: `/v1/admin/organizations/${ORGANIZATION_ID}/projects/${TEST_PROJECT_ID}/api-keys/${API_KEY_ID}`,
       headers: { authorization: "Bearer " + env.apiKey },
       payload: {
         name: "Updated Multi-Field API Key",
@@ -82,7 +86,7 @@ describe("PATCH API Key", () => {
   test("should return 400 for Zod validation error", async () => {
     const response = await app.inject({
       method: "PATCH",
-      url: `/v1/admin/organizations/${ORGANIZATION_ID}/projects/${PROJECT_ID}/api-keys/${API_KEY_ID}`,
+      url: `/v1/admin/organizations/${ORGANIZATION_ID}/projects/${TEST_PROJECT_ID}/api-keys/${API_KEY_ID}`,
       headers: { authorization: "Bearer " + env.apiKey },
       payload: {
         name: 123, // wrong type
@@ -96,7 +100,7 @@ describe("PATCH API Key", () => {
   test("should return 404 for non-existent API key", async () => {
     const response = await app.inject({
       method: "PATCH",
-      url: `/v1/admin/organizations/${ORGANIZATION_ID}/projects/${PROJECT_ID}/api-keys/${NON_EXISTING_API_KEY_ID}`,
+      url: `/v1/admin/organizations/${ORGANIZATION_ID}/projects/${TEST_PROJECT_ID}/api-keys/${NON_EXISTING_API_KEY_ID}`,
       headers: { authorization: "Bearer " + env.apiKey },
       payload: {
         name: "Doesn't matter",

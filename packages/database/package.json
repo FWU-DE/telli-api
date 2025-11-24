@@ -24,7 +24,7 @@
     "drizzle-zod": "0.8.3",
     "nanoid": "5.1.6",
     "pg": "8.16.3",
-    "zod": "4.1.12"
+    "zod": "4.1.13"
   },
   "devDependencies": {
     "@dgpt/eslint-config": "workspace:*",

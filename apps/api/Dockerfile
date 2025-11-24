@@ -1,4 +1,4 @@
-FROM node:24.11.0-alpine AS base
+FROM node:25.2.1-alpine AS base
 ENV TURBO_TELEMETRY_DISABLED=1
 
 FROM base AS builder

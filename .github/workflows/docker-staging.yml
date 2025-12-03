@@ -12,8 +12,6 @@ on:
         type: string
 
 env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
   COMMIT_HASH: ${{ github.sha }}
 
 jobs:
@@ -40,22 +38,25 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-
       - name: Build and push
-        id: build
+        id: docker-build
         uses: docker/build-push-action@v6
         with:
           context: .
           file: apps/api/Dockerfile
           build-args: APP_VERSION=${{ github.sha }}
-          tags: ${{ env.REGISTRY }}/fwu-de/telli-api:${{ env.COMMIT_HASH }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: |
+            ghcr.io/fwu-de/telli-api:latest
+            ghcr.io/fwu-de/telli-api:${{ env.COMMIT_HASH }}
           push: true
+          provenance: mode=max
+
+      - name: Generate artifact attestation
+        uses: actions/attest-build-provenance@v3
+        with:
+          subject-name: ghcr.io/fwu-de/telli-api
+          subject-digest: ${{ steps.docker-build.outputs.digest }}
+          push-to-registry: true
 
   deploy-staging:
     name: Rollout to Staging

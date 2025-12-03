@@ -4,16 +4,6 @@ on:
   push:
     branches: [main]
 
-  workflow_dispatch:
-    inputs:
-      commit_hash:
-        description: "Commit hash to build & deploy"
-        required: true
-        type: string
-
-env:
-  COMMIT_HASH: ${{ github.sha }}
-
 jobs:
   dockerize-staging:
     name: Build and Push to GitHub Container Registry
@@ -47,7 +37,7 @@ jobs:
           build-args: APP_VERSION=${{ github.sha }}
           tags: |
             ghcr.io/fwu-de/telli-api:latest
-            ghcr.io/fwu-de/telli-api:${{ env.COMMIT_HASH }}
+            ghcr.io/fwu-de/telli-api:${{ github.sha }}
           push: true
           provenance: mode=max
 
@@ -75,12 +65,10 @@ jobs:
           kubeconfig: ${{ secrets.KUBE_CONFIG }}
           context: ""
 
-      - name: Update Kubernetes Deployment
+      - name: Restart Kubernetes deployment
         run: |
-          COMMIT_HASH=${{ env.commit_hash }}
-          echo "Updating Kubernetes Deployment with image: ghcr.io/fwu-de/telli-api:${{ env.COMMIT_HASH }}"
-          kubectl set image deployment/telli-api-stage \
-            telli-api-stage=ghcr.io/fwu-de/telli-api:${{ env.COMMIT_HASH }} -n telli-stage
+          echo "Restarting Kubernetes deployment to pull new latest containers"
+          kubectl rollout restart deployment/telli-api-stage -n telli-stage
       - name: Wait for rollout to complete
         run: |
           echo "Waiting for rollout to complete"

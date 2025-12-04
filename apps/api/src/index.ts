@@ -5,8 +5,32 @@ import cors from "@fastify/cors";
 import * as Sentry from "@sentry/node";
 import buildApp from "./app";
 import { env } from "./env";
+import path from "node:path";
+import { db, migrateWithLock } from "@dgpt/db";
+
+async function runDatabaseMigration() {
+  try {
+    console.info("Running database migrations...");
+    await migrateWithLock(db, {
+      migrationsFolder: path.join(
+        process.cwd(),
+        "..",
+        "..",
+        "packages",
+        "database",
+        "migrations",
+      ),
+    });
+    console.info("Database migrations completed successfully.");
+  } catch (error) {
+    console.error("Error running database migrations:", error);
+    throw error;
+  }
+}
 
 async function main() {
+  await runDatabaseMigration();
+
   const fastify = await buildApp({
     logger: true,
     ajv: {

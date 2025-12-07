@@ -4,10 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "NODE_ENV=development dotenv -e ../../.env -- tsx src/index.ts",
+    "dev": "NODE_ENV=development dotenv -e ../../.env -- tsx watch src/index.ts",
     "clean": "find . -type d \\( -name node_modules -o -name dist -o -name .next \\) -not -path \"./.vercel/*\" -prune -exec rm -rf {} \\;",
     "start": "NODE_ENV=production tsx src/index.ts",
-    "build": "node build.js",
+    "build": "tsup",
     "lint": "tsc --noEmit && eslint --max-warnings 0",
     "types": "tsc --noEmit",
     "test": "vitest run --coverage",
@@ -40,7 +40,6 @@
     "openai": "6.9.1",
     "openaiv4": "npm:openai@4.104.0",
     "tiktoken": "1.0.22",
-    "tsx": "4.21.0",
     "zod": "4.1.13"
   },
   "devDependencies": {
@@ -51,6 +50,8 @@
     "dotenv": "17.2.3",
     "dotenv-cli": "11.0.0",
     "eslint": "9.39.1",
+    "tsup": "8.5.1",
+    "tsx": "4.21.0",
     "typescript": "5.9.3",
     "vitest": "4.0.15"
   }

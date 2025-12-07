@@ -4,4 +4,5 @@
 .env*
 !.env.example
 
+dist/
 **/coverage/**

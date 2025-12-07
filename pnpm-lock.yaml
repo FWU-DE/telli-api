@@ -86,6 +86,9 @@ importers:
       fastify:
         specifier: 5.6.2
         version: 5.6.2
+      fastify-graceful-shutdown:
+        specifier: 5.0.0
+        version: 5.0.0
       google-auth-library:
         specifier: 10.5.0
         version: 10.5.0
@@ -2356,6 +2359,10 @@ packages:
 
   fast-uri@3.1.0:
     resolution: {integrity: sha512-iPeeDKJSWf4IEOasVVrknXpaBV0IApz/gp7S2bb7Z4Lljbl2MGJRqInZiUrQwV16cpzw/D3S5j5Julj/gT52AA==}
+
+  fastify-graceful-shutdown@5.0.0:
+    resolution: {integrity: sha512-s6yP6ZUwkGFhKwIdKzMaWgQeAneQHn3qizbfjSubF234xS0RZPMASCF1S9OU9OQqfAH3ebaewbADYPQrpso25A==}
+    engines: {node: '>=20.0.0'}
 
   fastify-plugin@5.1.0:
     resolution: {integrity: sha512-FAIDA8eovSt5qcDgcBvDuX/v0Cjz0ohGhENZ/wpc3y+oZCY2afZ9Baqql3g/lC+OHRnciQol4ww7tuthOb9idw==}
@@ -5677,6 +5684,10 @@ snapshots:
       fast-decode-uri-component: 1.0.1
 
   fast-uri@3.1.0: {}
+
+  fastify-graceful-shutdown@5.0.0:
+    dependencies:
+      fastify-plugin: 5.1.0
 
   fastify-plugin@5.1.0: {}
 

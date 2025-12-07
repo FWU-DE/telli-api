@@ -15,6 +15,14 @@ export default defineConfig({
       authToken: process.env.SENTRY_AUTH_TOKEN,
       telemetry: false,
       debug: true,
+      release: {
+        create: process.env.NODE_ENV === "production",
+        setCommits: {
+          auto: true,
+          ignoreEmpty: true,
+          ignoreMissing: true,
+        },
+      },
       sourcemaps: {
         assets: "./dist/*",
       },

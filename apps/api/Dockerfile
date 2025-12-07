@@ -1,5 +1,6 @@
 FROM node:24.11.0-alpine AS base
 ENV TURBO_TELEMETRY_DISABLED=1
+ENV NODE_ENV=production
 
 FROM base AS pruner
 
@@ -44,8 +45,6 @@ RUN CI=true pnpm prune --prod && pnpm install --prod
 
 FROM base AS runner
 
-RUN apk add --no-cache tini
-
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nodejs
 USER nodejs
@@ -59,10 +58,6 @@ COPY --from=builder --chown=nodejs:nodejs /app/apps/api/node_modules apps/api/no
 
 ARG APP_VERSION
 ENV APP_VERSION=${APP_VERSION}
-ENV NODE_ENV=production
-
-# Use tini as the entrypoint for proper signal handling
-ENTRYPOINT ["/sbin/tini", "--"]
 
 WORKDIR /app/apps/api
 CMD ["node", "index.js"]

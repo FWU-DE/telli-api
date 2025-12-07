@@ -12,35 +12,57 @@ RUN pnpm install --frozen-lockfile --dev
 RUN pnpm turbo prune @dgpt/api --docker
 
 FROM base AS builder
-
 WORKDIR /app
 
-COPY --from=pruner /app/out/json/ .
-COPY --from=pruner /app/out/full/ .
+# Git is required for sentry
+RUN apk add --no-cache git
 
+# Copy lockfile and package.json's of isolated subworkspace
+COPY --from=pruner /app/out/pnpm-lock.yaml .
+COPY --from=pruner /app/out/pnpm-workspace.yaml .
+COPY --from=pruner /app/out/json/ .
+
+# First install the dependencies (as they change less often)
 RUN corepack enable && corepack prepare
 RUN pnpm install --frozen-lockfile
-RUN pnpm build
+
+# Copy source code of isolated subworkspace
+COPY --from=pruner /app/out/full/ .
+
+# Copy git history, required for sentry to determine release name
+COPY .git ./.git
+
+ARG CI
+
+RUN --mount=type=secret,id=SENTRY_AUTH_TOKEN,env=SENTRY_AUTH_TOKEN \
+    --mount=type=secret,id=SENTRY_ORG,env=SENTRY_ORG \
+    --mount=type=secret,id=SENTRY_PROJECT,env=SENTRY_PROJECT \
+    pnpm build
 
 # Remove dev dependencies from node_modules
 RUN CI=true pnpm prune --prod && pnpm install --prod
 
 FROM base AS runner
 
-#RUN addgroup --system --gid 1001 nodejs
-#RUN adduser --system --uid 1001 nodejs
-#USER nodejs
+RUN apk add --no-cache tini
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nodejs
+USER nodejs
 
 WORKDIR /app
 
-COPY --from=builder /app/apps/api/dist apps/api
-COPY --from=builder /app/packages/database/migrations packages/database/migrations
-COPY --from=builder /app/node_modules node_modules
-COPY --from=builder /app/apps/api/node_modules apps/api/node_modules
+COPY --from=builder --chown=nodejs:nodejs /app/apps/api/dist apps/api
+COPY --from=builder --chown=nodejs:nodejs /app/packages/database/migrations packages/database/migrations
+COPY --from=builder --chown=nodejs:nodejs /app/node_modules node_modules
+COPY --from=builder --chown=nodejs:nodejs /app/apps/api/node_modules apps/api/node_modules
 
 ARG APP_VERSION
 ENV APP_VERSION=${APP_VERSION}
 ENV NODE_ENV=production
+
+# Use tini as the entrypoint for proper signal handling
+ENTRYPOINT ["/sbin/tini", "--"]
 
 WORKDIR /app/apps/api
 CMD ["node", "index.js"]

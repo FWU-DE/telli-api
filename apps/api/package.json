@@ -45,6 +45,7 @@
   "devDependencies": {
     "@dgpt/eslint-config": "workspace:*",
     "@dgpt/typescript-config": "workspace:*",
+    "@sentry/esbuild-plugin": "4.6.1",
     "@types/node": "24.10.1",
     "@vitest/coverage-v8": "4.0.15",
     "dotenv": "17.2.3",

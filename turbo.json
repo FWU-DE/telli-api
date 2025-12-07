@@ -20,7 +20,8 @@
     "build": {
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": ["dist/**"],
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build"],
+      "passThroughEnv": ["CI", "SENTRY_AUTH_TOKEN", "SENTRY_ORG", "SENTRY_PROJECT"]
     },
     "test": {
       "outputs": ["coverage/**"],

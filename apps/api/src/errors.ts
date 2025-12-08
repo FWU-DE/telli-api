@@ -48,6 +48,6 @@ export function handleApiError(error: unknown) {
 export function isZodError(error: unknown): error is ZodError {
   return Boolean(
     error &&
-      (error instanceof ZodError || error.constructor.name === ZodError.name),
+    (error instanceof ZodError || error.constructor.name === ZodError.name),
   );
 }

@@ -62,4 +62,4 @@ ENV APP_VERSION=${APP_VERSION}
 WORKDIR /app/apps/api
 HEALTHCHECK --timeout=10s --start-period=5s \
   CMD wget http://127.0.0.1:3000/health -qO-
-CMD ["node", "index.js"]
+CMD ["node", "index.cjs"]

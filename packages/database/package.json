@@ -19,7 +19,6 @@
   },
   "dependencies": {
     "bcryptjs": "3.0.3",
-    "drizzle-kit": "0.31.7",
     "drizzle-orm": "0.44.7",
     "drizzle-zod": "0.8.3",
     "nanoid": "5.1.6",
@@ -34,6 +33,7 @@
     "@types/node": "24.10.1",
     "@types/pg": "8.15.6",
     "dotenv-cli": "11.0.0",
+    "drizzle-kit": "0.31.8",
     "eslint": "9.39.1",
     "tsx": "4.21.0",
     "typescript": "5.9.3"

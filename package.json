@@ -19,10 +19,8 @@
     "lint": "turbo run lint",
     "test": "turbo run test"
   },
-  "dependencies": {
-    "dotenv-cli": "11.0.0"
-  },
   "devDependencies": {
+    "dotenv-cli": "11.0.0",
     "prettier": "3.7.3",
     "turbo": "2.6.1"
   },
@@ -30,7 +28,7 @@
     "node": ">=14.0.0",
     "npm": ">=7.0.0"
   },
-  "packageManager": "pnpm@10.20.0",
+  "packageManager": "pnpm@10.24.0",
   "pnpm": {
     "overrides": {
       "glob@<11.1.0": ">=11.1.0"

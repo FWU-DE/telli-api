@@ -1,5 +1,5 @@
 // this import has to be at the top of the file for fastify to be instrumented properly
-import "./instrumentation";
+import { shutdownTracing } from "@/instrumentation";
 import cors from "@fastify/cors";
 
 import * as Sentry from "@sentry/node";
@@ -39,6 +39,12 @@ async function main() {
         strict: false,
       },
     },
+  });
+
+  fastify.after(() => {
+    fastify.gracefulShutdown(async () => {
+      await shutdownTracing();
+    });
   });
 
   Sentry.setupFastifyErrorHandler(fastify);

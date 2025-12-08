@@ -1,11 +1,14 @@
 import fastify, { FastifyHttpOptions } from "fastify";
 import { constructHandlers } from "./handlers";
 import fastifyMultipart from "@fastify/multipart";
+import fastifyGracefulShutdown from "fastify-graceful-shutdown";
 import { initSwagger } from "@/swagger";
 import * as http from "node:http";
 
 async function buildApp(opts?: FastifyHttpOptions<http.Server>) {
   const app = fastify(opts);
+
+  app.register(fastifyGracefulShutdown);
 
   app.register(fastifyMultipart, {
     throwFileSizeLimit: true,

@@ -90,13 +90,13 @@ const sdk = new NodeSDK({
 
 sdk.start();
 
-// gracefully shut down the SDK on process exit
-process.on("SIGTERM", () => {
-  sdk
-    .shutdown()
-    .then(() => console.log("Tracing terminated"))
-    .catch((error) => console.log("Error terminating tracing", error))
-    .finally(() => process.exit(0));
-});
-
 Sentry.validateOpenTelemetrySetup();
+
+export async function shutdownTracing() {
+  try {
+    await sdk.shutdown();
+    console.log("Tracing terminated");
+  } catch (error) {
+    console.log("Error terminating tracing", error);
+  }
+}

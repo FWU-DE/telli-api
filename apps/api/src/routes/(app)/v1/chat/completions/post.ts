@@ -188,19 +188,19 @@ export async function handler(
           if (contentFilterTriggered) {
             controller.enqueue(
               new TextEncoder().encode(
-                `data: ${JSON.stringify(
+                JSON.stringify(
                   getContentFilterFailedChunk({
                     id: crypto.randomUUID(),
                     created: Date.now(),
                     model: model.name,
                   }),
-                )}\n\n`,
+                ) + "\n\n",
               ),
             );
           } else {
             controller.enqueue(
               new TextEncoder().encode(
-                `data: ${JSON.stringify(
+                JSON.stringify(
                   getErrorChunk({
                     id: crypto.randomUUID(),
                     created: Date.now(),
@@ -208,12 +208,12 @@ export async function handler(
                     errorMessage,
                     errorCode,
                   }),
-                )}\n\n`,
+                ) + "\n\n",
               ),
             );
           }
           // Always send [DONE] to close the stream properly
-          controller.enqueue(new TextEncoder().encode("data: [DONE]\n\n"));
+          controller.enqueue(new TextEncoder().encode("[DONE]\n\n"));
           controller.close();
         },
       });

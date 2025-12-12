@@ -71,6 +71,13 @@
       "when": 1765798005850,
       "tag": "0009_long_falcon",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1765798978143,
+      "tag": "0010_reflective_starfox",
+      "breakpoints": true
     }
   ]
 }

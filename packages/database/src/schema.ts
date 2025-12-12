@@ -156,7 +156,7 @@ export const completionUsageTrackingTable = pgTable(
       .defaultNow()
       .notNull(),
   },
-  (table) => [index().on(table.apiKeyId), index().on(table.createdAt)],
+  (table) => [index().on(table.apiKeyId, table.createdAt)],
 );
 export type CompletionUsageInsertModel =
   typeof completionUsageTrackingTable.$inferInsert;
@@ -182,7 +182,7 @@ export const imageGenerationUsageTrackingTable = pgTable(
       .defaultNow()
       .notNull(),
   },
-  (table) => [index().on(table.apiKeyId), index().on(table.createdAt)],
+  (table) => [index().on(table.apiKeyId, table.createdAt)],
 );
 export type ImageGenerationUsageInsertModel =
   typeof imageGenerationUsageTrackingTable.$inferInsert;

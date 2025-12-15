@@ -86,7 +86,6 @@ export async function handler(
     });
 
     await dbCreateCompletionUsage({
-      projectId: apiKey.projectId,
       apiKeyId: apiKey.id,
       modelId: model.id,
       completionTokens: 0,

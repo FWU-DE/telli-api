@@ -27,7 +27,6 @@ async function onUsageCallback({
   model: LlmModel;
 }) {
   await dbCreateImageGenerationUsage({
-    projectId: apiKey.projectId,
     apiKeyId: apiKey.id,
     modelId: model.id,
   });

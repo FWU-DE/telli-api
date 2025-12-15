@@ -148,10 +148,6 @@ export const completionUsageTrackingTable = pgTable(
     apiKeyId: uuid("api_key_id")
       .notNull()
       .references(() => apiKeyTable.id),
-    // this violates the norm of database tables, but is used to have one less join
-    projectId: text("project_id")
-      .notNull()
-      .references(() => projectTable.id),
     createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
       .defaultNow()
       .notNull(),
@@ -174,10 +170,6 @@ export const imageGenerationUsageTrackingTable = pgTable(
     apiKeyId: uuid("api_key_id")
       .notNull()
       .references(() => apiKeyTable.id),
-    // this violates the norm of database tables, but is used to have one less join
-    projectId: text("project_id")
-      .notNull()
-      .references(() => projectTable.id),
     createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
       .defaultNow()
       .notNull(),

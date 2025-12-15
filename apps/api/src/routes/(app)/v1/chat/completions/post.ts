@@ -67,7 +67,6 @@ async function onUsageCallback({
   model: LlmModel;
 }) {
   await dbCreateCompletionUsage({
-    projectId: apiKey.projectId,
     apiKeyId: apiKey.id,
     modelId: model.id,
     completionTokens: usage.completion_tokens,

@@ -56,6 +56,11 @@ If you develop locally it is enough to just copy the variables over:
 cp .env.example .env
 ```
 
+If you want to access Google Vertex AI models, you need to
+
+- save the service account file ([telli-llm-services-2681187dba55.json](https://fwuggmbh.1password.eu/app#/UWYBPUFO5NFK7AJEKCVW56JBOQ/Vault/UWYBPUFO5NFK7AJEKCVW56JBOQ:ixer5vuqkawipava543m2wxks4:ea5g7zmrg3xnebty3udghl4thu?itemListId=UWYBPUFO5NFK7AJEKCVW56JBOQ%3Aixer5vuqkawipava543m2wxks4)) in some (WSL-)directory, e.g. /home/service-account/telli-llm-services-2681187dba55.json
+- create the following environment variable pointing to the service account file path: export GOOGLE_APPLICATION_CREDENTIALS="/home/service-account/telli-llm-services-2681187dba55.json"
+
 ## Database
 
 We use postgres as our database.

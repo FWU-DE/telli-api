@@ -56,6 +56,11 @@ If you develop locally it is enough to just copy the variables over:
 cp .env.example .env
 ```
 
+If you want to access Google Vertex AI models, you need to:
+
+- save the service account file from 1Password in a (WSL-)directory, e.g. /home/service-account/file.json
+- create the following environment variable pointing to the service account file path: export GOOGLE_APPLICATION_CREDENTIALS="/home/service-account/file.json"
+
 ## Database
 
 We use postgres as our database.

@@ -36,8 +36,8 @@ jobs:
         uses: docker/build-push-action@v6
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_ORG: ${{ env.SENTRY_ORG }}
-          SENTRY_PROJECT: ${{ env.SENTRY_PROJECT }}
+          SENTRY_ORG: ${{ vars.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ vars.SENTRY_PROJECT }}
         with:
           context: .
           file: apps/api/Dockerfile

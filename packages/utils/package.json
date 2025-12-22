@@ -12,10 +12,10 @@
     "@dgpt/eslint-config": "workspace:*",
     "@dgpt/typescript-config": "workspace:*",
     "@types/node": "24.10.2",
-    "eslint": "9.39.1",
+    "eslint": "9.39.2",
     "typescript": "5.9.3"
   },
   "dependencies": {
-    "zod": "4.1.13"
+    "zod": "4.2.1"
   }
 }

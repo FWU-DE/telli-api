@@ -22,7 +22,7 @@
     "@fastify/multipart": "9.3.0",
     "@fastify/otel": "0.16.0",
     "@fastify/swagger": "9.6.1",
-    "@fastify/swagger-ui": "5.2.3",
+    "@fastify/swagger-ui": "5.2.4",
     "@opentelemetry/api": "1.9.0",
     "@opentelemetry/auto-instrumentations-node": "0.67.3",
     "@opentelemetry/exporter-metrics-otlp-http": "0.208.0",
@@ -41,7 +41,7 @@
     "openai": "6.15.0",
     "openaiv4": "npm:openai@4.104.0",
     "tiktoken": "1.0.22",
-    "zod": "4.2.1"
+    "zod": "4.3.5"
   },
   "devDependencies": {
     "@dgpt/eslint-config": "workspace:*",

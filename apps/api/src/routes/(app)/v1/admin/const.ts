@@ -1,5 +1,3 @@
-import { handler as v1_admin_apiKey_postHandler } from "./api-key/post";
-import { handler as v1_admin_model_originalPostHandler } from "./models/post";
 import { handler as v1_admin_model_getAllHandler } from "./organizations/$organizationId/models/get";
 import { handler as v1_admin_model_postHandler } from "./organizations/$organizationId/models/post";
 import { handler as v1_admin_model_getByIdHandler } from "./organizations/$organizationId/models/$id/get";
@@ -68,24 +66,11 @@ export const adminRouteHandlerDefinitions: Array<RouteHandlerDefinition> = [
     handler:
       v1_admin_organizations_$organizationId_projects_$projectId_apiKeys_getHandler,
   },
-
-  {
-    path: "/v1/admin/api-key",
-    method: "POST",
-    schema: { hide: true },
-    handler: v1_admin_apiKey_postHandler,
-  },
   {
     path: "/v1/admin/organizations/:organizationId/report/:year",
     method: "GET",
     schema: { hide: true },
     handler: v1_admin_organizations_$organizationId_report_getHandler,
-  },
-  {
-    path: "/v1/admin/models",
-    method: "POST",
-    schema: { hide: true },
-    handler: v1_admin_model_originalPostHandler,
   },
   {
     path: "/v1/admin/organizations/:organizationId/models",

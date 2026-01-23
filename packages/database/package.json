@@ -30,7 +30,7 @@
     "@dgpt/llm-model": "workspace:*",
     "@dgpt/typescript-config": "workspace:*",
     "@dgpt/utils": "workspace:*",
-    "@types/node": "24.10.2",
+    "@types/node": "25.0.9",
     "@types/pg": "8.16.0",
     "dotenv-cli": "11.0.0",
     "drizzle-kit": "0.31.8",

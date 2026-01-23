@@ -47,7 +47,7 @@
     "@dgpt/eslint-config": "workspace:*",
     "@dgpt/typescript-config": "workspace:*",
     "@sentry/esbuild-plugin": "4.6.2",
-    "@types/node": "24.10.2",
+    "@types/node": "25.0.9",
     "@vitest/coverage-v8": "4.0.17",
     "dotenv": "17.2.3",
     "dotenv-cli": "11.0.0",

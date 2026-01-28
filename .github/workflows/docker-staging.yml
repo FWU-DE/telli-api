@@ -62,10 +62,14 @@ jobs:
           push-to-registry: true
 
   deploy-staging:
-    name: Rollout to Staging
+    name: Rollout to Staging (${{ matrix.kube_context }})
     needs: dockerize-staging
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        kube_context: [ionos, otc]
 
     steps:
       - name: Checkout repository
@@ -76,7 +80,7 @@ jobs:
         with:
           method: kubeconfig
           kubeconfig: ${{ secrets.KUBE_CONFIG }}
-          context: ""
+          context: ${{ matrix.kube_context }}
 
       - name: Restart Kubernetes deployment
         run: |

@@ -53,6 +53,8 @@ jobs:
             ghcr.io/fwu-de/telli-api:${{ github.sha }}
           push: true
           provenance: mode=max
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v3

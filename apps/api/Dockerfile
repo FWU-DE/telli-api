@@ -9,7 +9,11 @@ WORKDIR /app
 COPY . .
 # setup pnpm and pnpm install in order to install turbo in the correct version
 RUN corepack enable && corepack prepare
-RUN pnpm install --frozen-lockfile --dev
+# Use a hoisted node_modules layout so runtime resolution works with our build output:
+# - tsup bundles internal workspace packages (e.g. @dgpt/*) into the API bundle
+# - any third‑party deps imported by those bundled packages (e.g. drizzle-orm) must be resolvable
+#   from the API's module resolution paths, i.e. /app/node_modules when running in the container
+RUN pnpm install --frozen-lockfile --dev --shamefully-hoist
 RUN pnpm turbo prune @dgpt/api --docker
 
 FROM base AS builder
@@ -25,7 +29,7 @@ COPY --from=pruner /app/out/json/ .
 
 # First install the dependencies (as they change less often)
 RUN corepack enable && corepack prepare
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile --shamefully-hoist
 
 # Copy source code of isolated subworkspace
 COPY --from=pruner /app/out/full/ .
@@ -41,7 +45,7 @@ RUN --mount=type=secret,id=SENTRY_AUTH_TOKEN,env=SENTRY_AUTH_TOKEN \
     pnpm build
 
 # Remove dev dependencies from node_modules
-RUN CI=true pnpm prune --prod && pnpm install --prod
+RUN CI=true pnpm prune --prod
 
 FROM base AS runner
 
@@ -54,7 +58,6 @@ WORKDIR /app
 COPY --from=builder --chown=nodejs:nodejs /app/apps/api/dist apps/api
 COPY --from=builder --chown=nodejs:nodejs /app/packages/database/migrations packages/database/migrations
 COPY --from=builder --chown=nodejs:nodejs /app/node_modules node_modules
-COPY --from=builder --chown=nodejs:nodejs /app/apps/api/node_modules apps/api/node_modules
 
 ARG APP_VERSION
 ENV APP_VERSION=${APP_VERSION}

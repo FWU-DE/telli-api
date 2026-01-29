@@ -8,7 +8,11 @@ export default defineConfig({
   clean: true,
   // externalize all imports at runtime so OTel can patch them.
   external: [/.*/],
-  // bundle all local code
+  // Important:
+  // We bundle all workspace packages (e.g. @dgpt/*) into the API bundle.
+  // Any third‑party modules imported from those packages must therefore be
+  // resolvable from the API's runtime node_modules (not from packages/*/node_modules),
+  // otherwise Node will fail at runtime.
   noExternal: [
     /@dgpt\//,
     /^@\//,

@@ -6,7 +6,16 @@ export default defineConfig({
   sourcemap: true,
   splitting: false,
   clean: true,
-  noExternal: [/@dgpt\//],
+  // externalize all imports at runtime so OTel can patch them.
+  external: [/.*/],
+  // bundle all local code
+  noExternal: [
+    /@dgpt\//,
+    /^@\//,
+    /^\./,
+    // injected by Sentry plugin; must be bundled or Node will try to require it at runtime
+    /_sentry-.*-injection-stub$/,
+  ],
   esbuildPlugins: [
     sentryEsbuildPlugin({
       org: process.env.SENTRY_ORG,

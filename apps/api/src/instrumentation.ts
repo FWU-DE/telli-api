@@ -14,20 +14,33 @@ import {
 import { BatchSpanProcessor } from "@opentelemetry/sdk-trace-node";
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
 import { SentrySampler, SentrySpanProcessor } from "@sentry/opentelemetry";
+import { env } from "@/env";
 
 const sentryClient = Sentry.init({
-  dsn: process.env.SENTRY_DSN,
+  dsn: env.sentryDsn,
   integrations: (integrations) => [
     // exclude Fastify, to prevent duplicate registration from ./instrumentation.node
     ...integrations.filter((i) => i.name !== "Fastify"),
     nodeProfilingIntegration(),
     Sentry.httpIntegration({ spans: false }),
   ],
-  tracesSampleRate: 1.0,
-  profilesSampleRate: 1.0,
-  profileSessionSampleRate: 1.0,
+  tracesSampler: ({ inheritOrSampleWith, normalizedRequest }) => {
+    const url = normalizedRequest?.url ?? "";
+    // Extract pathname if it's a full URL, otherwise use as-is
+    const pathname = url.startsWith("http")
+      ? new URL(url).pathname
+      : url.split("?")[0];
+
+    const isExcludedUrl = pathname === "/health";
+    if (isExcludedUrl) {
+      return 0;
+    }
+
+    return inheritOrSampleWith(env.sentryTracesSampleRate);
+  },
+  profileSessionSampleRate: env.sentryProfileSessionSampleRate,
   profileLifecycle: "trace",
-  environment: process.env.SENTRY_ENVIRONMENT ?? "development",
+  environment: env.sentryEnvironment,
   // Ensure that only traces from your own organization are continued
   strictTraceContinuation: true,
   // Use custom OpenTelemetry configuration, see https://docs.sentry.io/platforms/javascript/guides/node/opentelemetry/custom-setup/
@@ -44,12 +57,8 @@ const SERVICE_NAME = "telli-api";
 const exporter = new OTLPMetricExporter();
 const periodicExportingMetricReader = new PeriodicExportingMetricReader({
   exporter,
-  exportIntervalMillis: Number.parseInt(
-    process.env.OTEL_METRIC_EXPORT_INTERVAL ?? "60000",
-  ),
-  exportTimeoutMillis: Number.parseInt(
-    process.env.OTEL_METRIC_EXPORT_TIMEOUT ?? "30000",
-  ),
+  exportIntervalMillis: env.otelMetricExportInterval,
+  exportTimeoutMillis: env.otelMetricExportTimeout,
 });
 
 // Documentation for the OpenTelemetry SDK for Node.js can be found here:
@@ -76,7 +85,7 @@ const sdk = new NodeSDK({
   ],
   resource: resourceFromAttributes({
     [ATTR_SERVICE_NAME]: SERVICE_NAME,
-    [ATTR_SERVICE_VERSION]: process.env.APP_VERSION,
+    [ATTR_SERVICE_VERSION]: env.appVersion,
   }),
   metricReaders: [periodicExportingMetricReader],
   sampler: sentryClient ? new SentrySampler(sentryClient) : undefined,

@@ -13,6 +13,7 @@ export const env = createEnv({
     nodeEnv: z.string().default("development"),
     otelMetricExportInterval: z.coerce.number().default(60000),
     otelMetricExportTimeout: z.coerce.number().default(30000),
+    port: z.coerce.number().default(3002),
     sentryDsn: z.string(),
     sentryEnvironment: z.string().default("development"),
     sentryTracesSampleRate: z.coerce.number().default(1.0),
@@ -27,6 +28,7 @@ export const env = createEnv({
     otelMetricExportInterval: process.env.OTEL_METRIC_EXPORT_INTERVAL,
     otelMetricExportTimeout: process.env.OTEL_METRIC_EXPORT_TIMEOUT,
     sentryDsn: process.env.SENTRY_DSN,
+    port: process.env.PORT,
     sentryEnvironment: process.env.SENTRY_ENVIRONMENT,
     sentryProfileSessionSampleRate:
       process.env.SENTRY_PROFILE_SESSION_SAMPLE_RATE,

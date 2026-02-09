@@ -70,9 +70,12 @@ COPY --from=builder --chown=nodejs:nodejs /app/packages/database/migrations pack
 COPY --from=builder --chown=nodejs:nodejs /app/node_modules node_modules
 
 ARG APP_VERSION
+ARG PORT=3000
+
 ENV APP_VERSION=${APP_VERSION}
+ENV PORT=${PORT}
 
 WORKDIR /app/apps/api
 HEALTHCHECK --timeout=10s --start-period=5s \
-  CMD wget http://127.0.0.1:3000/health -qO-
+  CMD wget http://127.0.0.1:${PORT}/health -qO-
 CMD ["node", "index.cjs"]

@@ -66,7 +66,7 @@ async function main() {
 
   fastify.listen(
     {
-      port: env.nodeEnv === "development" ? 3002 : 3000,
+      port: env.port,
       host: "0.0.0.0",
     },
     (err, address) => {

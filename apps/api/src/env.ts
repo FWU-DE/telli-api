@@ -16,6 +16,17 @@ export const env = createEnv({
     port: z.coerce.number().default(3002),
     sentryDsn: z.string(),
     sentryEnvironment: z.string().default("development"),
+    sentryLogLevel: z
+      .union([
+        z.literal('fatal'),
+        z.literal('error'),
+        z.literal('warning'),
+        z.literal('log'),
+        z.literal('info'),
+        z.literal('debug'),
+      ])
+      .default('warning'),
+  },
     sentryTracesSampleRate: z.coerce.number().default(1.0),
     sentryProfileSessionSampleRate: z.coerce.number().default(0.0),
   },
@@ -30,6 +41,7 @@ export const env = createEnv({
     sentryDsn: process.env.SENTRY_DSN,
     port: process.env.PORT,
     sentryEnvironment: process.env.SENTRY_ENVIRONMENT,
+    sentryLogLevel: process.env.SENTRY_LOG_LEVEL,
     sentryProfileSessionSampleRate:
       process.env.SENTRY_PROFILE_SESSION_SAMPLE_RATE,
     sentryTraceSampleRate: process.env.SENTRY_TRACES_SAMPLE_RATE,

@@ -2,6 +2,7 @@ import {
   getCompletionFnByModel,
   getCompletionStreamFnByModel,
 } from "@/llm-model/providers";
+import { logError } from "@/logging";
 import {
   getContentFilterFailedChunk,
   getErrorChunk,
@@ -176,7 +177,7 @@ export async function handler(
       const errorMessage =
         error instanceof Error ? error.message : "Unknown error";
 
-      console.error("Error processing stream:", {
+      logError("Error processing stream:", {
         errorCode,
         contentFilterTriggered,
         message: errorMessage,
@@ -232,7 +233,7 @@ export async function handler(
 
     processStream()
       .catch((error) => {
-        console.error("Error processing stream:", error);
+        logError("Error processing stream:", error);
       })
       .finally(() => {
         reply.raw.write("[DONE]");

@@ -1,3 +1,4 @@
+import { logError } from "@/logging";
 import { ApiKeyModel, getUsageInCentByApiKeyId, ProjectModel } from "@dgpt/db";
 
 type CostReportRow = {
@@ -45,7 +46,7 @@ export async function createMonthlyCostReports({
             usageInCent: actualPrice,
           });
         } catch (error) {
-          console.error(
+          logError(
             `Error getting usage for API key ${apiKey.id} in ${startDate.toLocaleString("en-US", { month: "long", year: "numeric" })}:`,
             error,
           );

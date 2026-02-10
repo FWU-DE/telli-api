@@ -7,10 +7,11 @@ import buildApp from "./app";
 import { env } from "./env";
 import path from "node:path";
 import { db, migrateWithLock } from "@dgpt/db";
+import { logError, logInfo } from "@/logging";
 
 async function runDatabaseMigration() {
   try {
-    console.info("Running database migrations...");
+    logInfo("Running database migrations...");
     await migrateWithLock(db, {
       migrationsFolder: path.join(
         process.cwd(),
@@ -21,9 +22,9 @@ async function runDatabaseMigration() {
         "migrations",
       ),
     });
-    console.info("Database migrations completed successfully.");
+    logInfo("Database migrations completed successfully.");
   } catch (error) {
-    console.error("Error running database migrations:", error);
+    logError("Error running database migrations:", error);
     throw error;
   }
 }
@@ -71,7 +72,7 @@ async function main() {
     },
     (err, address) => {
       if (err) throw err;
-      console.info(`Server is now listening on ${address}`);
+      logInfo(`Server is now listening on ${address}`);
     },
   );
 }
@@ -79,6 +80,6 @@ async function main() {
 main()
   .then(() => {})
   .catch((err) => {
-    console.error(err);
+    logError("Failed to start the server:", err);
     process.exit(1);
   });

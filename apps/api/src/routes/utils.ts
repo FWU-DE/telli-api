@@ -1,3 +1,4 @@
+import { logError } from "@/logging";
 import { ApiKeyModel, dbValidateApiKey } from "@dgpt/db";
 import { errorifyAsyncFn } from "@dgpt/utils";
 import { FastifyReply, FastifyRequest } from "fastify";
@@ -111,7 +112,7 @@ export function handleLlmModelError(
   error: unknown,
   errorContext: string,
 ): void {
-  console.error(`${errorContext}:`, error);
+  logError(`${errorContext}:`, error);
 
   let statusCode = 500;
   let errorMessage = "An error occurred";

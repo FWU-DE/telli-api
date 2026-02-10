@@ -4,6 +4,7 @@ import {
   CompletionUsage,
 } from "openai/resources/index.js";
 import { ChatCompletionContentPartText } from "openai/resources/chat/completions.js";
+import { logError } from "@/logging";
 
 const textEncoder = new TextEncoder();
 
@@ -24,7 +25,7 @@ export async function streamToController(
     }
     controller.close();
   } catch (err) {
-    console.error("Error during streaming:", err);
+    logError("Error during streaming", err);
     controller.error(err);
   }
 }

@@ -12,7 +12,6 @@ jobs:
     env:
       DATABASE_URL: postgresql://test_user:test1234@localhost:5432/telli_api_db
       API_KEY: random-key-for-testing-only
-      SENTRY_DSN: test-sentry-dsn
 
     services:
       postgres:

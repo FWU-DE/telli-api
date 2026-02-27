@@ -62,33 +62,3 @@ jobs:
           subject-name: ghcr.io/fwu-de/telli-api
           subject-digest: ${{ steps.docker-build.outputs.digest }}
           push-to-registry: true
-
-  deploy-staging:
-    name: Rollout to Staging (${{ matrix.kube_context }})
-    needs: dockerize-staging
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    strategy:
-      fail-fast: false
-      matrix:
-        kube_context: [ionos, otc]
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-
-      - name: Set Kubernetes Context
-        uses: azure/k8s-set-context@v4
-        with:
-          method: kubeconfig
-          kubeconfig: ${{ secrets.KUBE_CONFIG }}
-          context: ${{ matrix.kube_context }}
-
-      - name: Restart Kubernetes deployment
-        run: |
-          echo "Restarting Kubernetes deployment to pull new latest containers"
-          kubectl rollout restart deployment/telli-api-stage -n telli-stage
-      - name: Wait for rollout to complete
-        run: |
-          echo "Waiting for rollout to complete"
-          kubectl rollout status deployment/telli-api-stage -n telli-stage

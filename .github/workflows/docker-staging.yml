@@ -57,7 +57,7 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Generate artifact attestation
-        uses: actions/attest-build-provenance@v3
+        uses: actions/attest-build-provenance@v4
         with:
           subject-name: ghcr.io/fwu-de/telli-api
           subject-digest: ${{ steps.docker-build.outputs.digest }}
